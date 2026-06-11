@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="38" viewBox="0 0 32 38" fill="none">
+  <defs>
+    <linearGradient id="cursorBody" x1="8" y1="0" x2="18" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#404040"/>
+      <stop offset="0.15" stop-color="#2c2c2c"/>
+      <stop offset="0.4" stop-color="#1a1a1a"/>
+      <stop offset="0.7" stop-color="#0e0e0e"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+    <linearGradient id="cursorGloss" x1="5" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="0.25" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cursorEdge" x1="3" y1="2" x2="22" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#666666"/>
+      <stop offset="0.3" stop-color="#3a3a3a"/>
+      <stop offset="0.7" stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <filter id="cursorShadow" x="-20%" y="-10%" width="150%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  
+  <!-- Main cursor shape with shadow -->
+  <g filter="url(#cursorShadow)">
+    <!-- Outer edge (rim light) -->
+    <path d="M3 2 L3 28 L8.5 23 L13.5 34 L17 32.5 L12 21.5 L20 21.5 Z" fill="url(#cursorEdge)"/>
+    
+    <!-- Inner body fill -->
+    <path d="M4 3.5 L4 27 L8.8 22.5 L13.6 33 L16.2 31.8 L11.5 21 L19 21 Z" fill="url(#cursorBody)"/>
+    
+    <!-- Gloss reflection overlay -->
+    <path d="M4 3.5 L4 27 L8.8 22.5 L13.6 33 L16.2 31.8 L11.5 21 L19 21 Z" fill="url(#cursorGloss)"/>
+    
+    <!-- Top edge specular line -->
+    <path d="M4.5 4.5 L4.5 18" stroke="rgba(255,255,255,0.22)" stroke-width="0.6" stroke-linecap="round"/>
+  </g>
+</svg>

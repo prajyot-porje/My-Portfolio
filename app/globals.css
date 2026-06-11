@@ -1,26 +1,427 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ─────────────────────────────────────────────────────────
+   PORTFOLIO V2 — DESIGN TOKENS
+   Every design value in the project lives here.
+   Never hardcode colors, spacing, shadows, or easing
+   anywhere else in the codebase.
+───────────────────────────────────────────────────────── */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* ── Surfaces ──────────────────────────────────────── */
+    --color-ground: #f4f2ed;
+    --color-surface-1: #ffffff;
+    --color-surface-2: #fafaf8;
+    --color-surface-3: #eceae4;
+    --color-surface-4: #e0ddd6;
+
+    /* ── Ink ───────────────────────────────────────────── */
+    --color-ink-1: #0d0d0d;
+    --color-ink-2: #555250;
+    --color-ink-3: #9b9891;
+    --color-ink-4: #c5c2bb;
+
+    /* ── Accent ────────────────────────────────────────── */
+    --color-accent: #94ff0b;
+    --color-accent-hover: #7fd600;
+    --color-accent-subtle: rgba(148, 255, 11, 0.08);
+    --color-accent-muted: rgba(148, 255, 11, 0.15);
+
+    /* ── Dark Surfaces ─────────────────────────────────── */
+    --color-dark-1: #0a0a0a; /* deepest — intro bg, dark card bg */
+    --color-dark-2: #111111; /* dark card hover */
+    --color-dark-3: #1a1a1a; /* dark card border/surface */
+    --color-dark-4: #2a2a2a; /* dark card divider */
+    --color-light-on-dark: #f4f2ed; /* text on dark surfaces */
+
+    /* ── Shadows (5 depth levels) ──────────────────────── */
+    --shadow-0: none;
+    --shadow-1:
+      0 1px 2px rgba(13, 13, 13, 0.06), 0 4px 12px rgba(13, 13, 13, 0.04);
+    --shadow-2:
+      0 2px 4px rgba(13, 13, 13, 0.07), 0 12px 32px rgba(13, 13, 13, 0.07),
+      0 24px 64px rgba(13, 13, 13, 0.04);
+    --shadow-3:
+      0 4px 8px rgba(13, 13, 13, 0.08), 0 24px 48px rgba(13, 13, 13, 0.1),
+      0 48px 96px rgba(13, 13, 13, 0.06);
+    --shadow-4:
+      0 8px 16px rgba(13, 13, 13, 0.08), 0 48px 96px rgba(13, 13, 13, 0.12),
+      0 96px 160px rgba(13, 13, 13, 0.08);
+    --shadow-premium-rest:
+      0 1px 2px rgba(0,0,0,0.35),
+      0 4px 12px rgba(0,0,0,0.3),
+      0 16px 32px rgba(0,0,0,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    --shadow-premium-hover:
+      0 2px 4px rgba(0,0,0,0.4),
+      0 8px 20px rgba(0,0,0,0.35),
+      0 24px 48px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.07);
+
+    /* ── Type Scale (Perfect Fourth · 1.333) ──────────── */
+    --text-xs: 0.563rem;
+    --text-sm: 0.75rem;
+    --text-base: 1rem;
+    --text-md: 1.333rem;
+    --text-lg: 1.777rem;
+    --text-xl: 2.369rem;
+    --text-2xl: 3.157rem;
+    --text-3xl: 4.209rem;
+    --text-4xl: 5.61rem;
+    --text-5xl: 7.478rem;
+
+    /* ── Line Heights ──────────────────────────────────── */
+    --lh-display: 1.05;
+    --lh-heading: 1.15;
+    --lh-title: 1.25;
+    --lh-body: 1.65;
+    --lh-label: 1.35;
+
+    /* ── Letter Spacing ────────────────────────────────── */
+    --ls-display: -0.04em;
+    --ls-heading: -0.025em;
+    --ls-title: -0.015em;
+    --ls-body: 0em;
+    --ls-caps: 0.08em;
+
+    /* ── Spacing (4px grid) ────────────────────────────── */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-7: 28px;
+    --sp-8: 32px;
+    --sp-10: 40px;
+    --sp-12: 48px;
+    --sp-16: 64px;
+    --sp-20: 80px;
+    --sp-24: 96px;
+    --sp-32: 128px;
+    --sp-40: 160px;
+    --sp-48: 192px;
+    --sp-64: 256px;
+
+    /* ── Section Rhythm ────────────────────────────────── */
+    --section-sm: var(--sp-20);
+    --section-md: var(--sp-32);
+    --section-lg: var(--sp-48);
+    --section-xl: var(--sp-64);
+
+    /* ── Easing ────────────────────────────────────────── */
+    --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-gentle: cubic-bezier(0, 0.55, 0.45, 1);
+    --ease-sharp: cubic-bezier(0.7, 0, 0.84, 0);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* ── Durations ─────────────────────────────────────── */
+    --dur-instant: 50ms;
+    --dur-fast: 120ms;
+    --dur-normal: 250ms;
+    --dur-deliberate: 400ms;
+    --dur-cinematic: 800ms;
+    --dur-epic: 1400ms;
+
+    /* ── Border Radius ─────────────────────────────────── */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 32px;
+    --radius-pill: 9999px;
+
+    /* ── Transitions (pre-composed) ────────────────────── */
+    --transition-hover:
+      transform var(--dur-fast) var(--ease-gentle),
+      box-shadow var(--dur-fast) var(--ease-gentle);
+    --transition-entrance:
+      transform var(--dur-cinematic) var(--ease-cinematic),
+      opacity var(--dur-cinematic) var(--ease-cinematic);
+  }
+
+  /* ── Base reset ──────────────────────────────────────── */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background-color: var(--color-ground);
+    color: var(--color-ink-1);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: auto; /* Lenis handles this */
+  }
+
+  body {
+    background-color: var(--color-ground);
+    overflow-x: hidden;
+  }
+
+  /* ── Reduced motion override ─────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─────────────────────────────────────────────────────────
+   DEPTH CARD — Mouse lighting effect
+───────────────────────────────────────────────────────── */
+@layer components {
+  .depth-card {
+    position: relative;
+    background: var(--color-surface-1);
+    border-radius: var(--radius-md);
+    transition: var(--transition-hover);
+  }
+
+  /* ── Concentric Double-Container Card Border Style ── */
+  .outer-shell {
+    background-color: #ECEDEF;
+    border-radius: 36px;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.90),
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 4px 8px rgba(0, 0, 0, 0.04),
+      0 16px 32px rgba(0, 0, 0, 0.07),
+      0 40px 72px rgba(0, 0, 0, 0.09),
+      0 80px 120px rgba(0, 0, 0, 0.06);
+  }
+
+  .inner-container {
+    border-radius: 28px;
+    border: 1px solid rgba(0, 0, 0, 0.055);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .outer-shell:hover .inner-container {
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+      0 8px 16px rgba(0, 0, 0, 0.06),
+      0 16px 32px rgba(0, 0, 0, 0.06),
+      0 32px 56px rgba(0, 0, 0, 0.06);
+  }
+
+  .depth-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.06) 30%,
+      transparent 60%
+    );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-normal) var(--ease-gentle);
+    z-index: 1;
+  }
+
+  .depth-card:hover::before {
+    opacity: 1;
+  }
+
+  .depth-card--1 {
+    box-shadow: var(--shadow-1);
+  }
+  .depth-card--2 {
+    box-shadow: var(--shadow-2);
+  }
+  .depth-card--3 {
+    box-shadow: var(--shadow-3);
+  }
+  .depth-card--4 {
+    box-shadow: var(--shadow-4);
+  }
+
+  .depth-card--1:hover {
+    box-shadow: var(--shadow-2);
+    transform: translateY(-2px);
+  }
+  .depth-card--2:hover {
+    box-shadow: var(--shadow-3);
+    transform: translateY(-3px);
+  }
+  .depth-card--3:hover {
+    box-shadow: var(--shadow-4);
+    transform: translateY(-4px);
+  }
+
+  /* ── Section label (Geist Mono, all-caps, metadata) ─── */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: var(--lh-label);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* ── Clip reveal — initial state ────────────────────── */
+  .clip-hidden {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .clip-visible {
+    clip-path: inset(0 0% 0 0);
+    transition: clip-path var(--dur-cinematic) var(--ease-cinematic);
+  }
+
+  /* ── Hero section ─────────────────────────────────────── */
+
+  /*
+   * Gradient veil — rgba values track --color-ground (#F4F2ED).
+   * If the ground color changes, update these rgba values to match.
+   */
+  .hero-veil {
+    background: linear-gradient(
+      to right,
+      rgba(244, 242, 237, 0.72) 0%,
+      rgba(244, 242, 237, 0.4) 35%,
+      rgba(244, 242, 237, 0) 60%
+    );
+  }
+
+  .hero-headline {
+    font-size: clamp(var(--text-xl), 4vw, var(--text-3xl));
+  }
+
+  .hero-wordmark {
+    font-size: clamp(1rem, 1.6vw, var(--text-md));
+  }
+
+  /*
+   * Entrance animation initial state.
+   * html.js is set by an inline script before first paint.
+   * Without JS → no .js class → content visible (accessible baseline).
+   * With JS → .hero-entrance starts hidden → GSAP animates to visible.
+   */
+  html.js .hero-entrance {
+    opacity: 0;
+  }
+
+  @media (max-width: 767px) {
+    .hero-veil {
+      /* Stronger gradient on mobile for text readability over photo */
+      background: linear-gradient(
+        to right,
+        rgba(244, 242, 237, 0.88) 0%,
+        rgba(244, 242, 237, 0.55) 50%,
+        rgba(244, 242, 237, 0) 75%
+      );
+    }
+
+    .hero-headline {
+      font-size: clamp(var(--text-lg), 7vw, var(--text-xl));
+    }
+
+    .hero-wordmark {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* ── Available Indicator Pulse Animation ─────────────────── */
+  @keyframes available-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.85);
+    }
+  }
+
+  .available-pulse {
+    animation: available-pulse 2s ease-in-out infinite;
+  }
+
+  /* ── Orbit dot and ring micro-interaction ───────────────── */
+  .orbit-dot-wrapper {
+    position: relative;
+    width: 5px;
+    height: 5px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .orbit-dot-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    margin-top: -4.5px;
+    margin-left: -4.5px;
+    border: 1px solid transparent;
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: orbit-rotate 3s linear infinite;
+  }
+
+  @keyframes orbit-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── CTA Underline Wipe Animation ───────────────────────── */
+  @keyframes underline-wipe {
+    0% {
+      transform: scaleX(1);
+      transform-origin: right center;
+    }
+    49.9% {
+      transform: scaleX(0);
+      transform-origin: right center;
+    }
+    50% {
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    100% {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+  }
+
+  .cta-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--color-accent);
+    transform-origin: left center;
+  }
+
+  .group:hover .cta-underline {
+    animation: underline-wipe 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }
