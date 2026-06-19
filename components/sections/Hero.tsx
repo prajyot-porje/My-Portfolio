@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import MagneticButton from "../ui/MagneticButton";
 
 interface HeroProps {
   isIntroActive: boolean;
@@ -17,10 +18,12 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
   // Left copy refs
   const chipRef = useRef<HTMLDivElement>(null);
-  const sublabelRef = useRef<HTMLSpanElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const bodyRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLAnchorElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+
+  // Time state
+  const [currentTime, setCurrentTime] = useState("");
 
   // Right card refs
   const card1Ref = useRef<HTMLAnchorElement>(null);
@@ -60,6 +63,22 @@ export default function Hero({ isIntroActive }: HeroProps) {
   const cursorCoordinates = useRef({ x: 0, y: 0 });
   const radiusObj = useRef({ r: 0 });
   const blobPhase = useRef(0);
+
+  // ── Track local time ────────────────────────────────────────────────
+  useEffect(() => {
+    const updateTime = () => {
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      };
+      setCurrentTime(new Date().toLocaleTimeString("en-US", options));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   // ── Track scroll state ─────────────────────────────────────────────
   useEffect(() => {
@@ -171,7 +190,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
     import("gsap").then(({ gsap }) => {
       if (prefersReducedMotion) {
         gsap.set(".hero-entrance", { opacity: 1, y: 0 });
-        gsap.set([card1Ref.current, card2Ref.current, card3Ref.current], { opacity: 1, x: 0 });
+        gsap.set([card1Ref.current, card2Ref.current, card3Ref.current], {
+          opacity: 1,
+          x: 0,
+        });
         if (progressFillRef.current)
           gsap.set(progressFillRef.current, { width: "60%" });
         return;
@@ -194,10 +216,9 @@ export default function Hero({ isIntroActive }: HeroProps) {
       // Then copy stack staggers in quickly
       const copyElements = [
         chipRef.current,
-        sublabelRef.current,
         headlineRef.current,
         bodyRef.current,
-      ];
+      ].filter(Boolean);
 
       tl.fromTo(
         copyElements,
@@ -476,7 +497,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           ease: "cubic-bezier(0.16,1,0.3,1)", // ease-cinematic
           overwrite: "auto",
         });
-
       };
 
       handleMouseMove = (e: MouseEvent) => {
@@ -501,7 +521,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           ease: "cubic-bezier(0.7,0,0.84,0)", // ease-sharp
           overwrite: "auto",
         });
-
       };
 
       container.addEventListener("mouseenter", handleMouseEnter);
@@ -591,7 +610,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
       aria-label="Hero"
       className="relative w-full h-[100svh] overflow-hidden bg-[var(--color-ground)]"
     >
-
       {/* ── LAYER 1: Photo background ──────────────────────────── */}
       <div
         ref={photoRef}
@@ -651,35 +669,24 @@ export default function Hero({ isIntroActive }: HeroProps) {
             ref={chipRef}
             className="inline-flex items-center gap-[var(--sp-2)] bg-[rgba(13,13,13,0.06)] rounded-[var(--radius-pill)] px-[var(--sp-3)] py-[var(--sp-1)] mb-[var(--sp-5)] hero-entrance will-change-[opacity,transform]"
           >
-            <span className="orbit-dot-wrapper" />
-            <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--color-ink-2)] tracking-[var(--ls-caps)] uppercase">
-              Pune, India
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]" />
+            </span>
+            <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--color-ink-2)] tracking-[var(--ls-caps)] uppercase font-semibold">
+              Pune, IN {currentTime && `· ${currentTime} IST`}
             </span>
           </div>
-
-          {/* Sub-label */}
-          <span
-            ref={sublabelRef}
-            className={[
-              "block font-[family-name:var(--font-mono)]",
-              "text-[length:var(--text-sm)] text-[var(--color-ink-2)]",
-              "tracking-[var(--ls-caps)] uppercase",
-              "mb-[var(--sp-3)]",
-              "hero-entrance will-change-[opacity,transform]",
-            ].join(" ")}
-          >
-            Full-Stack Engineer
-          </span>
 
           {/* Main headline with text shadow and scramble settle */}
           <h1
             ref={headlineRef}
             className={[
               "font-[family-name:var(--font-display)] font-bold",
-              "hero-headline",
+              "hero-headline text-wrap-balance",
               "text-[var(--color-ink-1)]",
               "tracking-[var(--ls-display)] leading-[var(--lh-display)]",
-              "mb-[var(--sp-5)]",
+              "mb-[var(--sp-4)]",
               "hero-entrance will-change-[opacity,transform]",
             ].join(" ")}
             style={{ textShadow: "0 2px 12px rgba(13,13,13,0.08)" }}
@@ -694,48 +701,39 @@ export default function Hero({ isIntroActive }: HeroProps) {
           <p
             ref={bodyRef}
             className={[
-              "font-[family-name:var(--font-sans)] font-normal",
+              "font-[family-name:var(--font-sans)] font-normal text-wrap-pretty",
               "text-[length:var(--text-base)] text-[var(--color-ink-2)]",
               "leading-[var(--lh-body)]",
-              "mb-[var(--sp-8)]",
+              "mb-[var(--sp-6)]",
               "hero-entrance will-change-[opacity,transform]",
             ].join(" ")}
           >
-            Systems thinker. Product builder.
-            <br />I close the gap between idea and production.
+            Product Engineer &amp; founder of Dev Studio.
+            <br />I design robust architectures and ship high-performance
+            software.
           </p>
 
-          {/* CTA — text link with accent underline, arrow micro-interaction */}
-          <a
+          {/* CTA — Magnetic pill button with arrow interaction */}
+          <MagneticButton
             ref={ctaRef}
+            asLink
             href="#work"
             className={[
-              "group relative inline-block",
-              "font-[family-name:var(--font-sans)]",
-              "text-[length:var(--text-base)] font-medium",
-              "text-[var(--color-ink-1)]",
-              "no-underline",
-              "pb-[var(--sp-1)]",
-              "transition-colors duration-[var(--dur-fast)] ease-[var(--ease-gentle)]",
-              "focus-visible:outline focus-visible:outline-2",
-              "focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]",
-              "hero-entrance will-change-[opacity,transform]",
+              "hero-entrance bg-[var(--color-ink-1)] text-[var(--color-ground)] px-[24px] py-[12px] rounded-[100px] hover:bg-[#151413] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] text-[length:var(--text-sm)] font-medium z-20 group relative overflow-hidden",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]",
             ].join(" ")}
           >
             <span>
               See the work{" "}
-              <span className="cta-arrow inline-block transition-transform duration-[var(--dur-fast)] ease-[var(--ease-spring)] group-hover:translate-x-1 group-hover:translate-y-1 group-hover:scale-110">
+              <span className="inline-block transition-transform duration-[var(--dur-fast)] ease-[var(--ease-spring)] group-hover:translate-y-0.5 group-hover:scale-105 ml-1.5">
                 ↓
               </span>
             </span>
-            <span className="cta-underline" />
-          </a>
+          </MagneticButton>
         </div>
 
         {/* ── BOTTOM-RIGHT (FLOATING CARDS): right-side hero content ───────────────── */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 right-[var(--sp-8)] flex flex-col gap-[var(--sp-3)] z-[3] max-md:hidden pointer-events-auto"
-        >
+        <div className="absolute top-1/2 -translate-y-1/2 right-[var(--sp-8)] flex flex-col gap-[var(--sp-3)] z-[3] max-md:hidden pointer-events-auto">
           {/* CARD 1 — Active Project */}
           <a
             href="#work"
@@ -745,7 +743,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
-              "motion-reduce:transform-none motion-reduce:transition-none"
+              "motion-reduce:transform-none motion-reduce:transition-none",
             ].join(" ")}
           >
             {/* Inner Content Container */}
@@ -785,9 +783,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
               {/* Top Flare Highlight Overlay */}
               <div
-                className="absolute top-0 left-[28px] right-[28px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
+                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 30%, rgba(255, 255, 255, 0.8) 70%, transparent 100%)"
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
                 }}
               />
 
@@ -858,7 +857,11 @@ export default function Hero({ isIntroActive }: HeroProps) {
               {/* Hover arrow indicator */}
               <span
                 className="absolute right-[var(--sp-4)] top-[var(--sp-4)] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                style={{ color: "rgba(255,255,255,0.45)", fontSize: "13px", lineHeight: 1 }}
+                style={{
+                  color: "rgba(255,255,255,0.45)",
+                  fontSize: "13px",
+                  lineHeight: 1,
+                }}
               >
                 ↗
               </span>
@@ -873,7 +876,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
-              "motion-reduce:transform-none motion-reduce:transition-none"
+              "motion-reduce:transform-none motion-reduce:transition-none",
             ].join(" ")}
           >
             {/* Inner Content Container */}
@@ -913,9 +916,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
               {/* Top Flare Highlight Overlay */}
               <div
-                className="absolute top-0 left-[28px] right-[28px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
+                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 30%, rgba(255, 255, 255, 0.8) 70%, transparent 100%)"
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
                 }}
               />
 
@@ -951,7 +955,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
               </div>
             </div>
           </div>
-          </div>
 
           {/* CARD 3 — Connect */}
           <div
@@ -961,7 +964,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
-              "motion-reduce:transform-none motion-reduce:transition-none"
+              "motion-reduce:transform-none motion-reduce:transition-none",
             ].join(" ")}
           >
             {/* Inner Content Container */}
@@ -1001,9 +1004,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
               {/* Top Flare Highlight Overlay */}
               <div
-                className="absolute top-0 left-[28px] right-[28px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
+                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 30%, rgba(255, 255, 255, 0.8) 70%, transparent 100%)"
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
                 }}
               />
 
@@ -1017,136 +1021,29 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   Connect
                 </span>
 
-              {/* Icon Buttons row */}
-              <div className="flex items-center gap-[var(--sp-3)]">
-                {/* LinkedIn */}
-                <a
-                  href="https://www.linkedin.com/in/prajyotporje/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn Profile"
-                  className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-sm)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.40)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.10)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                  }}
-                >
-                  <svg
-                    className="w-[18px] h-[18px]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <title>LinkedIn Profile</title>
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect x="2" y="9" width="4" height="12" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                </a>
-
-                {/* GitHub */}
-                <a
-                  href="https://github.com/prajyotporje"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub Profile"
-                  className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-sm)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.40)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.10)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                  }}
-                >
-                  <svg
-                    className="w-[18px] h-[18px]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <title>GitHub Profile</title>
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                  </svg>
-                </a>
-
-                {/* LeetCode */}
-                <a
-                  href="https://leetcode.com/u/prajyotporje/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LeetCode Profile"
-                  className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-sm)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.40)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.10)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                  }}
-                >
-                  <svg
-                    className="w-[18px] h-[18px]"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <title>LeetCode Profile</title>
-                    <path d="M13.483 0a1.374 1.374 0 0 0-.961.414L3.898 9.039a1.375 1.375 0 0 0-.414.962c0 .351.14.686.388.945l7.973 7.973a1.375 1.375 0 0 0 1.907.013l7.973-7.973a1.378 1.378 0 0 0 .388-.945 1.375 1.375 0 0 0-.414-.962L14.444.414A1.374 1.374 0 0 0 13.483 0zm0 1.954l6.096 6.096c.07.07.115.163.125.264H11.53c-.365 0-.714.145-.973.404L8.153 11.121a1.377 1.377 0 0 0 0 1.946l2.404 2.404c.259.259.608.404.973.404h8.174a1.374 1.374 0 0 0-.125.264l-6.096 6.096c-.18.18-.475.18-.655 0L4.855 14.262c-.18-.18-.18-.475 0-.655l2.404-2.404c.09-.09.213-.141.341-.141h4.095c.128 0 .251.051.341.141l1.5 1.5c.18.18.475.18.655 0l1.5-1.5c.18-.18.18-.475 0-.655l-1.5-1.5c-.09-.09-.213-.141-.341-.141H7.838a1.374 1.374 0 0 0-.973.404l-2.404 2.404a1.375 1.375 0 0 0 0 1.946l7.973 7.973c.18.18.475.18.655 0l6.096-6.096c.07-.07.115-.163.125-.264H11.034c-.365 0-.714-.145-.973-.404L7.657 11.121a1.377 1.377 0 0 1 0-1.946l2.404-2.404a1.375 1.375 0 0 1 .973-.404h8.174c-.01-.1-.055-.194-.125-.264L13.483 1.954z" />
-                  </svg>
-                </a>
-
-                {/* Email with Popover */}
-                <div className="relative">
-                  <button
-                    ref={emailButtonRef}
-                    onClick={() => setEmailPopoverOpen(!emailPopoverOpen)}
-                    aria-label="Contact Email"
-                    aria-expanded={emailPopoverOpen}
-                    type="button"
-                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-sm)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer outline-none"
+                {/* Icon Buttons row */}
+                <div className="flex items-center gap-[var(--sp-3)]">
+                  {/* LinkedIn */}
+                  <a
+                    href="https://www.linkedin.com/in/prajyotporje/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn Profile"
+                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
                     style={{
-                      backgroundColor: emailPopoverOpen ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.04)",
-                      color: emailPopoverOpen ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.40)",
-                      border: `1px solid ${emailPopoverOpen ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)"}`,
+                      backgroundColor: "rgba(255,255,255,0.04)",
+                      color: "rgba(255,255,255,0.40)",
+                      border: "1px solid rgba(255,255,255,0.06)",
                     }}
                     onMouseEnter={(e) => {
-                      if (!emailPopoverOpen) {
-                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.10)";
-                        e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                      }
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.10)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
                     }}
                     onMouseLeave={(e) => {
-                      if (!emailPopoverOpen) {
-                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
-                        e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                      }
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
                     }}
                   >
                     <svg
@@ -1158,87 +1055,234 @@ export default function Hero({ isIntroActive }: HeroProps) {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <title>Email</title>
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
+                      <title>LinkedIn Profile</title>
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect x="2" y="9" width="4" height="12" />
+                      <circle cx="4" cy="4" r="2" />
                     </svg>
-                  </button>
+                  </a>
 
-                  {/* Email popover */}
-                  <div
-                    ref={popoverRef}
-                    className={[
-                      "absolute bottom-full right-0 mb-3 z-[100] w-[240px]",
-                      "rounded-[var(--radius-md)] p-[var(--sp-3)]",
-                      "transition-[opacity,transform] duration-75 ease-[var(--ease-cinematic)] origin-bottom-right",
-                      emailPopoverOpen
-                        ? "opacity-100 scale-100 pointer-events-auto"
-                        : "opacity-0 scale-95 pointer-events-none"
-                    ].join(" ")}
+                  {/* GitHub */}
+                  <a
+                    href="https://github.com/prajyotporje"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub Profile"
+                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
                     style={{
-                      backgroundColor: "#151413",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+                      backgroundColor: "rgba(255,255,255,0.04)",
+                      color: "rgba(255,255,255,0.40)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.10)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
                     }}
                   >
-                    {/* Address */}
-                    <div
-                      className="font-[family-name:var(--font-mono)] text-[10px] select-all px-[var(--sp-3)] py-[6px] rounded-[var(--radius-sm)] mb-[var(--sp-2)] truncate text-center"
+                    <svg
+                      className="w-[18px] h-[18px]"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <title>GitHub Profile</title>
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    </svg>
+                  </a>
+
+                  {/* LeetCode */}
+                  <a
+                    href="https://leetcode.com/u/prajyotporje/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LeetCode Profile"
+                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.04)",
+                      color: "rgba(255,255,255,0.40)",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.10)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
+                    }}
+                  >
+                    <svg
+                      className="w-[18px] h-[18px]"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <title>LeetCode Profile</title>
+                      <path d="M13.483 0a1.374 1.374 0 0 0-.961.414L3.898 9.039a1.375 1.375 0 0 0-.414.962c0 .351.14.686.388.945l7.973 7.973a1.375 1.375 0 0 0 1.907.013l7.973-7.973a1.378 1.378 0 0 0 .388-.945 1.375 1.375 0 0 0-.414-.962L14.444.414A1.374 1.374 0 0 0 13.483 0zm0 1.954l6.096 6.096c.07.07.115.163.125.264H11.53c-.365 0-.714.145-.973.404L8.153 11.121a1.377 1.377 0 0 0 0 1.946l2.404 2.404c.259.259.608.404.973.404h8.174a1.374 1.374 0 0 0-.125.264l-6.096 6.096c-.18.18-.475.18-.655 0L4.855 14.262c-.18-.18-.18-.475 0-.655l2.404-2.404c.09-.09.213-.141.341-.141h4.095c.128 0 .251.051.341.141l1.5 1.5c.18.18.475.18.655 0l1.5-1.5c.18-.18.18-.475 0-.655l-1.5-1.5c-.09-.09-.213-.141-.341-.141H7.838a1.374 1.374 0 0 0-.973.404l-2.404 2.404a1.375 1.375 0 0 0 0 1.946l7.973 7.973c.18.18.475.18.655 0l6.096-6.096c.07-.07.115-.163.125-.264H11.034c-.365 0-.714-.145-.973-.404L7.657 11.121a1.377 1.377 0 0 1 0-1.946l2.404-2.404a1.375 1.375 0 0 1 .973-.404h8.174c-.01-.1-.055-.194-.125-.264L13.483 1.954z" />
+                    </svg>
+                  </a>
+
+                  {/* Email with Popover */}
+                  <div className="relative">
+                    <button
+                      ref={emailButtonRef}
+                      onClick={() => setEmailPopoverOpen(!emailPopoverOpen)}
+                      aria-label="Contact Email"
+                      aria-expanded={emailPopoverOpen}
+                      type="button"
+                      className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer outline-none"
                       style={{
-                        color: "rgba(255,255,255,0.90)",
-                        backgroundColor: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.04)",
+                        backgroundColor: emailPopoverOpen
+                          ? "rgba(255,255,255,0.10)"
+                          : "rgba(255,255,255,0.04)",
+                        color: emailPopoverOpen
+                          ? "rgba(255,255,255,0.85)"
+                          : "rgba(255,255,255,0.40)",
+                        border: `1px solid ${emailPopoverOpen ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)"}`,
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!emailPopoverOpen) {
+                          e.currentTarget.style.backgroundColor =
+                            "rgba(255,255,255,0.10)";
+                          e.currentTarget.style.color =
+                            "rgba(255,255,255,0.85)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!emailPopoverOpen) {
+                          e.currentTarget.style.backgroundColor =
+                            "rgba(255,255,255,0.04)";
+                          e.currentTarget.style.color =
+                            "rgba(255,255,255,0.40)";
+                        }
                       }}
                     >
-                      prajyotporje@gmail.com
-                    </div>
+                      <svg
+                        className="w-[18px] h-[18px]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <title>Email</title>
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                    </button>
 
-                    {/* Actions */}
-                    <div className="flex gap-[6px]">
-                      {/* Copy button */}
-                      <button
-                        onClick={handleCopy}
-                        type="button"
-                        className="flex-1 flex items-center justify-center gap-[6px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-sm)] text-[10px] font-medium transition-colors cursor-pointer"
+                    {/* Email popover */}
+                    <div
+                      ref={popoverRef}
+                      className={[
+                        "absolute bottom-full right-0 mb-3 z-[100] w-[240px]",
+                        "rounded-[var(--radius-lg)] p-[var(--sp-3)]",
+                        "transition-[opacity,transform] duration-75 ease-[var(--ease-cinematic)] origin-bottom-right",
+                        emailPopoverOpen
+                          ? "opacity-100 scale-100 pointer-events-auto"
+                          : "opacity-0 scale-95 pointer-events-none",
+                      ].join(" ")}
+                      style={{
+                        backgroundColor: "#151413",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+                      }}
+                    >
+                      {/* Address */}
+                      <div
+                        className="font-[family-name:var(--font-mono)] text-[10px] select-all px-[var(--sp-3)] py-[6px] rounded-[var(--radius-md)] mb-[var(--sp-2)] truncate text-center"
                         style={{
-                          backgroundColor: "rgba(255,255,255,0.06)",
-                          color: copied ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.8)",
+                          color: "rgba(255,255,255,0.90)",
+                          backgroundColor: "rgba(255,255,255,0.04)",
                           border: "1px solid rgba(255,255,255,0.04)",
                         }}
                       >
-                        {copied ? (
-                          <>
-                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <title>Success Checkmark</title>
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            <span>Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <title>Copy Icon</title>
-                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                            </svg>
-                            <span>Copy</span>
-                          </>
-                        )}
-                      </button>
+                        prajyotporje@gmail.com
+                      </div>
 
-                      {/* Open in Gmail */}
-                      <a
-                        href="https://mail.google.com/mail/?view=cm&to=prajyotporje@gmail.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-[4px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-sm)] text-[10px] font-semibold no-underline text-center cursor-pointer"
-                        style={{
-                          backgroundColor: "rgba(255,255,255,0.90)",
-                          color: "#0e0d0b",
-                        }}
-                      >
-                        <span>Open Gmail</span>
-                      </a>
+                      {/* Actions */}
+                      <div className="flex gap-[6px]">
+                        {/* Copy button */}
+                        <button
+                          onClick={handleCopy}
+                          type="button"
+                          className="flex-1 flex items-center justify-center gap-[6px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-md)] text-[10px] font-medium transition-colors cursor-pointer"
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.06)",
+                            color: copied
+                              ? "rgba(255,255,255,0.9)"
+                              : "rgba(255,255,255,0.8)",
+                            border: "1px solid rgba(255,255,255,0.04)",
+                          }}
+                        >
+                          {copied ? (
+                            <>
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <title>Success Checkmark</title>
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              <span>Copied</span>
+                            </>
+                          ) : (
+                            <>
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <title>Copy Icon</title>
+                                <rect
+                                  x="9"
+                                  y="9"
+                                  width="13"
+                                  height="13"
+                                  rx="2"
+                                  ry="2"
+                                />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                              </svg>
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </button>
+
+                        {/* Open in Gmail */}
+                        <a
+                          href="https://mail.google.com/mail/?view=cm&to=prajyotporje@gmail.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 flex items-center justify-center gap-[4px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-md)] text-[10px] font-semibold no-underline text-center cursor-pointer"
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.90)",
+                            color: "#0e0d0b",
+                          }}
+                        >
+                          <span>Open Gmail</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>

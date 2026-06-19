@@ -36,9 +36,22 @@ export default function Intro({ onComplete }: IntroProps) {
   useEffect(() => {
     if (shouldShow !== true) return;
 
+    let active = true;
     let ctx: { revert: () => void } | undefined;
 
     import("gsap").then(({ gsap }) => {
+      if (!active) return;
+
+      if (
+        !line1Ref.current ||
+        !line2Ref.current ||
+        !line3Ref.current ||
+        !accentRef.current ||
+        !containerRef.current
+      ) {
+        return;
+      }
+
       ctx = gsap.context(() => {
         const tl = gsap.timeline();
 
@@ -129,6 +142,7 @@ export default function Intro({ onComplete }: IntroProps) {
     });
 
     return () => {
+      active = false;
       if (ctx) ctx.revert();
     };
   }, [shouldShow, onComplete]);

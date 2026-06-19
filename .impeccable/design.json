@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-19T17:46:00Z",
+  "title": "Design System: Prajyot Porje Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Volt Accent",
+        "canonical": "#94ff0b",
+        "tonalRamp": [
+          "#142200",
+          "#2e4f00",
+          "#4d8200",
+          "#6eb900",
+          "#8fed00",
+          "#a1ff1a",
+          "#d6ff9e",
+          "#f2ffd6"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Warm Ground",
+        "canonical": "#f4f2ed",
+        "tonalRamp": [
+          "#191817",
+          "#32302e",
+          "#5a5652",
+          "#87817b",
+          "#b2aaa0",
+          "#d1c9be",
+          "#e6e0d7",
+          "#faf8f5"
+        ]
+      },
+      "surface-1": {
+        "role": "neutral",
+        "displayName": "Surface Card",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#000000",
+          "#202020",
+          "#484848",
+          "#787878",
+          "#a8a8a8",
+          "#d0d0d0",
+          "#f0f0f0",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display Title",
+        "purpose": "Used for name headlines and main hero metrics."
+      },
+      "body": {
+        "displayName": "Body Copy",
+        "purpose": "Paragraphs and descriptive text, capped at 75ch."
+      },
+      "label": {
+        "displayName": "Mono Label",
+        "purpose": "Monospace tags, stats, labels, and timestamps."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-1",
+        "value": "0 1px 2px rgba(13,13,13,0.06), 0 4px 12px rgba(13,13,13,0.04)",
+        "purpose": "Component cards at rest, proof strip metrics."
+      },
+      {
+        "name": "shadow-2",
+        "value": "0 2px 4px rgba(13,13,13,0.07), 0 12px 32px rgba(13,13,13,0.07), 0 24px 64px rgba(13,13,13,0.04)",
+        "purpose": "Cards on hover (lift), header nav, case study container."
+      },
+      {
+        "name": "shadow-3",
+        "value": "0 4px 8px rgba(13,13,13,0.08), 0 24px 48px rgba(13,13,13,0.1), 0 48px 96px rgba(13,13,13,0.06)",
+        "purpose": "Hero illustration components and case study screenshots."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-cinematic",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrance sequences and character reveals."
+      },
+      {
+        "name": "ease-gentle",
+        "value": "cubic-bezier(0, 0.55, 0.45, 1)",
+        "purpose": "Hover and direct user feedback state transitions."
+      }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "375px" },
+      { "name": "desktop", "value": "1440px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Magnetic Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Magnetic pill button used as primary call to action.",
+      "html": "<button class=\"ds-btn-primary\">Work with me</button>",
+      "css": ".ds-btn-primary { background: #94ff0b; color: #0d0d0d; font-family: 'Grift', sans-serif; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; padding: 12px 24px; border: none; border-radius: 9999px; cursor: pointer; transition: background 120ms cubic-bezier(0, 0.55, 0.45, 1), transform 120ms cubic-bezier(0, 0.55, 0.45, 1); } .ds-btn-primary:hover { background: #7fd600; transform: scale(1.02); } .ds-btn-primary:focus-visible { outline: 2px solid #0d0d0d; outline-offset: 2px; }"
+    },
+    {
+      "name": "Tech Stack Pill",
+      "kind": "chip",
+      "refersTo": "label",
+      "description": "Monospace pill showing tool, technology, or category.",
+      "html": "<span class=\"ds-tag\">Next.js</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; background: #fafaf8; border: 1px solid #eceae4; color: #555250; font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 400; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; }"
+    },
+    {
+      "name": "Depth Card",
+      "kind": "card",
+      "refersTo": "surface-1",
+      "description": "White card container that lifts on hover with dual-shadow layering.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Title</h3><p class=\"ds-card-desc\">Elaboration copy goes here...</p></div>",
+      "css": ".ds-card { background: #ffffff; border: 1px solid #eceae4; border-radius: 12px; padding: 24px; box-shadow: 0 1px 2px rgba(13,13,13,0.06), 0 4px 12px rgba(13,13,13,0.04); transition: transform 120ms cubic-bezier(0, 0.55, 0.45, 1), box-shadow 120ms cubic-bezier(0, 0.55, 0.45, 1); } .ds-card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(13,13,13,0.07), 0 12px 32px rgba(13,13,13,0.07), 0 24px 64px rgba(13,13,13,0.04); } .ds-card-title { font-family: 'Krovex', serif; font-size: 21px; color: #0d0d0d; margin-bottom: 8px; } .ds-card-desc { font-family: 'Grift', sans-serif; font-size: 14px; color: #555250; line-height: 1.65; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Product Engineer's Workshop",
+    "overview": "A personal portfolio built with extreme typographic contrast, a raw but highly-refined structural grid, and consistent lighting cues that simulate depth. The design communicates technical expertise and delivery. It rejects decorative clutter, opting instead for solid grids, precise mathematical spacing, and physical material behaviors.",
+    "keyCharacteristics": [
+      "High-contrast, custom-tailored font pairing (serif display & geometric sans body).",
+      "Warm, neutral canvas background contrasting with crisp card surfaces.",
+      "A single magnetic accent color utilized sparingly to direct visual focus.",
+      "Consistent top-overhead light source casting realistic CSS drop shadows."
+    ],
+    "rules": [
+      {
+        "name": "The Accent Spark Rule",
+        "body": "The accent color (#94ff0b) appears on at most ONE element per scrollable viewport. Its rarity is the point. Overuse turns guidance into noise.",
+        "section": "colors"
+      },
+      {
+        "name": "The Strict Font Separation Rule",
+        "body": "Krovex is reserved exclusively for headings at text-lg or larger. It must never be used for body text. Grift is reserved for body text and small labels. It must never be used for display titles.",
+        "section": "typography"
+      },
+      {
+        "name": "The Atmospheric Shadow Rule",
+        "body": "Every shadow must contain both an intimate component (close, dark, small blur) and an atmospheric component (far, diffuse, wide blur) to look realistic.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do maintain a strict 4px grid for all margins, paddings, and layout gaps.",
+      "Do ensure all text elements pass WCAG AA contrast against their backgrounds.",
+      "Do specify prefers-reduced-motion overrides for every transition and animation.",
+      "Do pair Krovex only with Grift or Geist Mono."
+    ],
+    "donts": [
+      "Don't use glassmorphism or frosted glass cards as a general design container.",
+      "Don't use gradient borders anywhere in the project.",
+      "Don't include spotlight cursor glow effects on cards that disrupt raw visual depth.",
+      "Don't render particle or canvas backgrounds that compete with the content grid.",
+      "Don't build skill percentage bars, progress indicators, or logo-heavy accordions.",
+      "Don't add typing or rotating text animations in the hero header.",
+      "Don't use a preloader or loading screen that blocks immediate interaction.",
+      "Don't use purple or teal gradients on white backgrounds.",
+      "Don't use transition: all in CSS; animate specific properties (transform, opacity) to prevent layout-triggering lag.",
+      "Don't use default CSS easings; always use custom cubic-beziers (--ease-cinematic, etc.)."
+    ]
+  }
+}

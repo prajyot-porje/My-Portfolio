@@ -3,8 +3,8 @@ import { GeistMono } from "geist/font/mono";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import LenisProvider from "@/components/ui/LenisProvider";
 import "./globals.css";
-
 
 // ── Self-hosted fonts ─────────────────────────────────────────────
 // Place your .woff2 files in /public/fonts/ before running
@@ -95,11 +95,10 @@ export default function RootLayout({
           <Script id="js-detect" strategy="beforeInteractive">
             {`document.documentElement.classList.add('js')`}
           </Script>
-          {/*
-          Lenis smooth scroll goes here once you install @studio-freight/react-lenis.
-          Wrap children in <ReactLenis root> with lenisOptions from lib/lenis.ts
-        */}
-          {children}
+          <LenisProvider>{children}</LenisProvider>
+          {/* impeccable-live-start */}
+          <script src="http://localhost:8400/live.js"></script>
+          {/* impeccable-live-end */}
         </body>
       </html>
       {process.env.NODE_ENV === "development" && <Agentation />}

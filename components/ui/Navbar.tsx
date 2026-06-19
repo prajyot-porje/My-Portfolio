@@ -1,14 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const NAV_LINKS = [
   { label: "Work", href: "#work", sectionId: "work", hideOnMobile: false },
-  { label: "Studio", href: "#studio", sectionId: "studio", hideOnMobile: false },
-  { label: "Blog", href: "#blog", sectionId: "blog", hideOnMobile: true },
-  { label: "Principles", href: "#principles", sectionId: "principles", hideOnMobile: true },
-  { label: "Contact", href: "#contact", sectionId: "contact", hideOnMobile: false },
+  {
+    label: "Studio",
+    href: "#studio",
+    sectionId: "studio",
+    hideOnMobile: false,
+  },
+  {
+    label: "Principles",
+    href: "#principles",
+    sectionId: "principles",
+    hideOnMobile: true,
+  },
+  {
+    label: "Contact",
+    href: "#contact",
+    sectionId: "contact",
+    hideOnMobile: false,
+  },
 ] as const;
 
 export default function Navbar() {
@@ -31,7 +45,8 @@ export default function Navbar() {
         for (const entry of entries) {
           if (
             entry.isIntersecting &&
-            (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio)
+            (!bestEntry ||
+              entry.intersectionRatio > bestEntry.intersectionRatio)
           ) {
             bestEntry = entry;
           }
@@ -114,7 +129,6 @@ export default function Navbar() {
                        backdrop-filter var(--dur-deliberate) var(--ease-gentle)`,
         }}
       >
-
         {NAV_LINKS.map(({ label, href, hideOnMobile }, idx) => {
           const isActive = activeIndex === idx;
           const isHovered = hoveredIndex === idx;
