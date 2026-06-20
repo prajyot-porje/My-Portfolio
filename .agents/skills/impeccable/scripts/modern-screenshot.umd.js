@@ -1337,7 +1337,7 @@
     r = r.replace(Pe, "");
     const n = /@import[\s\S]*?url\([^)]*\)[\s\S]*?;/gi,
       i =
-        /((\s*?(?:\\/\*[\s\S]*?\*\\/)?\s*?@media[\s\S]*?){([\s\S]*?)}\s*?})|(([\s\S]*?){([\s\S]*?)})/gi;
+        /((\s*?(?:\\/\*[\s\S]*?\*\\/)?\s*?@media[\s\S]*?)([\s\S]*?)\s*?})|(([\s\S]*?)([\s\S]*?))/gi;
     for (;;) {
       let a = n.exec(r);
       if (a) i.lastIndex = n.lastIndex;
@@ -1347,250 +1347,246 @@
     }
     return t;
   }
-  const Vt = /url\([^)]+\)\s*format\((["']?)([^"']+)\1\)/g,
-    zt = /src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g;
-  function Ue(e, t) {
-    const { font: r } = t,
-      n = r ? (r == null ? void 0 : r.preferredFormat) : void 0;
-    return n
-      ? e.replace(zt, (i) => {
-          for (;;) {
-            const [a, , s] = Vt.exec(i) || [];
-            if (!s) return "";
-            if (s === n) return `src: ${a};`;
-          }
-        })
-      : e;
-  }
-  function oe(e, t = []) {
-    for (const r of Array.from(e))
-      Ke(r)
-        ? t.push(...oe(r.cssRules))
-        : "cssRules" in r
-          ? oe(r.cssRules, t)
-          : t.push(r);
-    return t;
-  }
-  const Xt = /\bx?link:?href\s*=\s*["'](?!data:)[^"']+["']/i;
-  function Gt(e) {
-    return Xt.test(e.innerHTML);
-  }
-  function _e(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t);
-      if (I(r.node) && H(r.node) && !Gt(r.node)) return r.node;
-      const {
-        ownerDocument: n,
-        log: i,
-        tasks: a,
-        svgStyleElement: s,
-        svgDefsElement: o,
-        svgStyles: c,
-        font: u,
-        progress: l,
-        autoDestruct: d,
-        onCloneNode: m,
-        onEmbedNode: f,
-        onCreateForeignObjectSvg: h,
-      } = r;
-      i.time("clone node");
-      const g = yield ne(r.node, r, !0);
-      if (s && n) {
-        let S = "";
-        c.forEach((T, A) => {
-          S += `${T.join(`,
+const Vt = /url\([^)]+\)\s*format\((["']?)([^"']+)\1\)/g,
+  zt = /src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g;
+function Ue(e, t) {
+  const { font: r } = t,
+    n = r ? (r == null ? void 0 : r.preferredFormat) : void 0;
+  return n
+    ? e.replace(zt, (i) => {
+        for (;;) {
+          const [a, , s] = Vt.exec(i) || [];
+          if (!s) return "";
+          if (s === n) return `src: ${a};`;
+        }
+      })
+    : e;
+}
+function oe(e, t = []) {
+  for (const r of Array.from(e))
+    Ke(r)
+      ? t.push(...oe(r.cssRules))
+      : "cssRules" in r
+        ? oe(r.cssRules, t)
+        : t.push(r);
+  return t;
+}
+const Xt = /\bx?link:?href\s*=\s*["'](?!data:)[^"']+["']/i;
+function Gt(e) {
+  return Xt.test(e.innerHTML);
+}
+function _e(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t);
+    if (I(r.node) && H(r.node) && !Gt(r.node)) return r.node;
+    const {
+      ownerDocument: n,
+      log: i,
+      tasks: a,
+      svgStyleElement: s,
+      svgDefsElement: o,
+      svgStyles: c,
+      font: u,
+      progress: l,
+      autoDestruct: d,
+      onCloneNode: m,
+      onEmbedNode: f,
+      onCreateForeignObjectSvg: h,
+    } = r;
+    i.time("clone node");
+    const g = yield ne(r.node, r, !0);
+    if (s && n) {
+      let S = "";
+      c.forEach((T, A) => {
+        S += `${T.join(`,
 `)} {
   ${A}
 }
 `;
-        }),
-          s.appendChild(n.createTextNode(S));
-      }
-      i.timeEnd("clone node"),
-        yield m == null ? void 0 : m(g),
-        u !== !1 &&
-          I(g) &&
-          (i.time("embed web font"),
-          yield qt(g, r),
-          i.timeEnd("embed web font")),
-        i.time("embed node"),
-        De(g, r);
-      const p = a.length;
-      let E = 0;
-      const b = () =>
-        C(this, null, function* () {
-          for (;;) {
-            const S = a.pop();
-            if (!S) break;
-            try {
-              yield S;
-            } catch (T) {
-              r.log.warn("Failed to run task", T);
-            }
-            l == null || l(++E, p);
+      }),
+        s.appendChild(n.createTextNode(S));
+    }
+    i.timeEnd("clone node"),
+      yield m == null ? void 0 : m(g),
+      u !== !1 &&
+        I(g) &&
+        (i.time("embed web font"), yield qt(g, r), i.timeEnd("embed web font")),
+      i.time("embed node"),
+      De(g, r);
+    const p = a.length;
+    let E = 0;
+    const b = () =>
+      C(this, null, function* () {
+        for (;;) {
+          const S = a.pop();
+          if (!S) break;
+          try {
+            yield S;
+          } catch (T) {
+            r.log.warn("Failed to run task", T);
           }
-        });
-      l == null || l(E, p),
-        yield Promise.all([...Array.from({ length: 4 })].map(b)),
-        i.timeEnd("embed node"),
-        yield f == null ? void 0 : f(g);
-      const w = Yt(g, r);
-      return (
-        o && w.insertBefore(o, w.children[0]),
-        s && w.insertBefore(s, w.children[0]),
-        d && Ne(r),
-        yield h == null ? void 0 : h(w),
-        w
-      );
-    });
-  }
-  function Yt(e, t) {
-    const { width: r, height: n } = t,
-      i = fe(r, n, e.ownerDocument),
-      a = i.ownerDocument.createElementNS(i.namespaceURI, "foreignObject");
+          l == null || l(++E, p);
+        }
+      });
+    l == null || l(E, p),
+      yield Promise.all([...Array.from({ length: 4 })].map(b)),
+      i.timeEnd("embed node"),
+      yield f == null ? void 0 : f(g);
+    const w = Yt(g, r);
     return (
-      a.setAttributeNS(null, "x", "0%"),
-      a.setAttributeNS(null, "y", "0%"),
-      a.setAttributeNS(null, "width", "100%"),
-      a.setAttributeNS(null, "height", "100%"),
-      a.append(e),
-      i.appendChild(a),
-      i
+      o && w.insertBefore(o, w.children[0]),
+      s && w.insertBefore(s, w.children[0]),
+      d && Ne(r),
+      yield h == null ? void 0 : h(w),
+      w
     );
-  }
-  function Q(e, t) {
-    return C(this, null, function* () {
-      var s;
-      const r = yield k(e, t),
-        n = yield _e(r),
-        i = de(n, r.isEnable("removeControlCharacter"));
-      r.autoDestruct ||
-        ((r.svgStyleElement = be(r.ownerDocument)),
-        (r.svgDefsElement =
-          (s = r.ownerDocument) == null
-            ? void 0
-            : s.createElementNS(K, "defs")),
-        r.svgStyles.clear());
-      const a = _(i, n.ownerDocument);
-      return yield yt(a, r);
-    });
-  }
-  function Jt(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t),
-        { log: n, type: i, quality: a, dpi: s } = r,
-        o = yield Q(r);
-      n.time("canvas to blob");
-      const c = yield ft(o, i, a);
-      if (["image/png", "image/jpeg"].includes(i) && s) {
-        const u = yield mt(c.slice(0, 33));
-        let l = new Uint8Array(u);
-        return (
-          i === "image/png"
-            ? (l = ae(l, s))
-            : i === "image/jpeg" && (l = v(l, s)),
-          n.timeEnd("canvas to blob"),
-          new Blob([l, c.slice(33)], { type: i })
-        );
-      }
-      return n.timeEnd("canvas to blob"), c;
-    });
-  }
-  function x(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t),
-        { log: n, quality: i, type: a, dpi: s } = r,
-        o = yield Q(r);
-      n.time("canvas to data url");
-      let c = o.toDataURL(a, i);
-      if (["image/png", "image/jpeg"].includes(a) && s && ie && Xe) {
-        const [u, l] = c.split(",");
-        let d = 0,
-          m = !1;
-        if (a === "image/png") {
-          const w = Ve(l);
-          w >= 0
-            ? ((d = Math.ceil((w + 28) / 3) * 4), (m = !0))
-            : (d = (33 / 3) * 4);
-        } else a === "image/jpeg" && (d = (18 / 3) * 4);
-        const f = l.substring(0, d),
-          h = l.substring(d),
-          g = window.atob(f),
-          p = new Uint8Array(g.length);
-        for (let w = 0; w < p.length; w++) p[w] = g.charCodeAt(w);
-        const E = a === "image/png" ? ae(p, s, m) : v(p, s),
-          b = window.btoa(String.fromCharCode(...E));
-        c = [u, ",", b, h].join("");
-      }
-      return n.timeEnd("canvas to data url"), c;
-    });
-  }
-  function Fe(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t),
-        { width: n, height: i, ownerDocument: a } = r,
-        s = yield x(r),
-        o = fe(n, i, a),
-        c = o.ownerDocument.createElementNS(o.namespaceURI, "image");
+  });
+}
+function Yt(e, t) {
+  const { width: r, height: n } = t,
+    i = fe(r, n, e.ownerDocument),
+    a = i.ownerDocument.createElementNS(i.namespaceURI, "foreignObject");
+  return (
+    a.setAttributeNS(null, "x", "0%"),
+    a.setAttributeNS(null, "y", "0%"),
+    a.setAttributeNS(null, "width", "100%"),
+    a.setAttributeNS(null, "height", "100%"),
+    a.append(e),
+    i.appendChild(a),
+    i
+  );
+}
+function Q(e, t) {
+  return C(this, null, function* () {
+    var s;
+    const r = yield k(e, t),
+      n = yield _e(r),
+      i = de(n, r.isEnable("removeControlCharacter"));
+    r.autoDestruct ||
+      ((r.svgStyleElement = be(r.ownerDocument)),
+      (r.svgDefsElement =
+        (s = r.ownerDocument) == null ? void 0 : s.createElementNS(K, "defs")),
+      r.svgStyles.clear());
+    const a = _(i, n.ownerDocument);
+    return yield yt(a, r);
+  });
+}
+function Jt(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t),
+      { log: n, type: i, quality: a, dpi: s } = r,
+      o = yield Q(r);
+    n.time("canvas to blob");
+    const c = yield ft(o, i, a);
+    if (["image/png", "image/jpeg"].includes(i) && s) {
+      const u = yield mt(c.slice(0, 33));
+      let l = new Uint8Array(u);
       return (
-        c.setAttributeNS(null, "href", s),
-        c.setAttributeNS(null, "height", "100%"),
-        c.setAttributeNS(null, "width", "100%"),
-        o.appendChild(c),
-        de(o, r.isEnable("removeControlCharacter"))
+        i === "image/png"
+          ? (l = ae(l, s))
+          : i === "image/jpeg" && (l = v(l, s)),
+        n.timeEnd("canvas to blob"),
+        new Blob([l, c.slice(33)], { type: i })
       );
-    });
-  }
-  function Kt(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t),
-        { ownerDocument: n, width: i, height: a, scale: s, type: o } = r,
-        c = o === "image/svg+xml" ? yield Fe(r) : yield x(r),
-        u = _(c, n);
-      return (
-        (u.width = Math.floor(i * s)),
-        (u.height = Math.floor(a * s)),
-        (u.style.width = `${i}px`),
-        (u.style.height = `${a}px`),
-        u
-      );
-    });
-  }
-  function Qt(e, t) {
-    return C(this, null, function* () {
-      return x(yield k(e, M(D({}, t), { type: "image/jpeg" })));
-    });
-  }
-  function Zt(e, t) {
-    return C(this, null, function* () {
-      const r = yield k(e, t),
-        n = yield Q(r);
-      return n.getContext("2d").getImageData(0, 0, n.width, n.height).data;
-    });
-  }
-  function er(e, t) {
-    return C(this, null, function* () {
-      return x(yield k(e, M(D({}, t), { type: "image/png" })));
-    });
-  }
-  function tr(e, t) {
-    return C(this, null, function* () {
-      return x(yield k(e, M(D({}, t), { type: "image/webp" })));
-    });
-  }
-  (y.createContext = ye),
-    (y.destroyContext = Ne),
-    (y.domToBlob = Jt),
-    (y.domToCanvas = Q),
-    (y.domToDataUrl = x),
-    (y.domToForeignObjectSvg = _e),
-    (y.domToImage = Kt),
-    (y.domToJpeg = Qt),
-    (y.domToPixel = Zt),
-    (y.domToPng = er),
-    (y.domToSvg = Fe),
-    (y.domToWebp = tr),
-    (y.loadMedia = L),
-    (y.waitUntilLoad = me),
-    Object.defineProperty(y, Symbol.toStringTag, { value: "Module" });
-});
+    }
+    return n.timeEnd("canvas to blob"), c;
+  });
+}
+function x(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t),
+      { log: n, quality: i, type: a, dpi: s } = r,
+      o = yield Q(r);
+    n.time("canvas to data url");
+    let c = o.toDataURL(a, i);
+    if (["image/png", "image/jpeg"].includes(a) && s && ie && Xe) {
+      const [u, l] = c.split(",");
+      let d = 0,
+        m = !1;
+      if (a === "image/png") {
+        const w = Ve(l);
+        w >= 0
+          ? ((d = Math.ceil((w + 28) / 3) * 4), (m = !0))
+          : (d = (33 / 3) * 4);
+      } else a === "image/jpeg" && (d = (18 / 3) * 4);
+      const f = l.substring(0, d),
+        h = l.substring(d),
+        g = window.atob(f),
+        p = new Uint8Array(g.length);
+      for (let w = 0; w < p.length; w++) p[w] = g.charCodeAt(w);
+      const E = a === "image/png" ? ae(p, s, m) : v(p, s),
+        b = window.btoa(String.fromCharCode(...E));
+      c = [u, ",", b, h].join("");
+    }
+    return n.timeEnd("canvas to data url"), c;
+  });
+}
+function Fe(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t),
+      { width: n, height: i, ownerDocument: a } = r,
+      s = yield x(r),
+      o = fe(n, i, a),
+      c = o.ownerDocument.createElementNS(o.namespaceURI, "image");
+    return (
+      c.setAttributeNS(null, "href", s),
+      c.setAttributeNS(null, "height", "100%"),
+      c.setAttributeNS(null, "width", "100%"),
+      o.appendChild(c),
+      de(o, r.isEnable("removeControlCharacter"))
+    );
+  });
+}
+function Kt(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t),
+      { ownerDocument: n, width: i, height: a, scale: s, type: o } = r,
+      c = o === "image/svg+xml" ? yield Fe(r) : yield x(r),
+      u = _(c, n);
+    return (
+      (u.width = Math.floor(i * s)),
+      (u.height = Math.floor(a * s)),
+      (u.style.width = `${i}px`),
+      (u.style.height = `${a}px`),
+      u
+    );
+  });
+}
+function Qt(e, t) {
+  return C(this, null, function* () {
+    return x(yield k(e, M(D({}, t), { type: "image/jpeg" })));
+  });
+}
+function Zt(e, t) {
+  return C(this, null, function* () {
+    const r = yield k(e, t),
+      n = yield Q(r);
+    return n.getContext("2d").getImageData(0, 0, n.width, n.height).data;
+  });
+}
+function er(e, t) {
+  return C(this, null, function* () {
+    return x(yield k(e, M(D({}, t), { type: "image/png" })));
+  });
+}
+function tr(e, t) {
+  return C(this, null, function* () {
+    return x(yield k(e, M(D({}, t), { type: "image/webp" })));
+  });
+}
+(y.createContext = ye),
+  (y.destroyContext = Ne),
+  (y.domToBlob = Jt),
+  (y.domToCanvas = Q),
+  (y.domToDataUrl = x),
+  (y.domToForeignObjectSvg = _e),
+  (y.domToImage = Kt),
+  (y.domToJpeg = Qt),
+  (y.domToPixel = Zt),
+  (y.domToPng = er),
+  (y.domToSvg = Fe),
+  (y.domToWebp = tr),
+  (y.loadMedia = L),
+  (y.waitUntilLoad = me),
+  Object.defineProperty(y, Symbol.toStringTag, { value: "Module" });
+})

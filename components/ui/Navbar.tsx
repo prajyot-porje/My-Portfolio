@@ -146,7 +146,7 @@ export default function Navbar() {
                 "px-[var(--sp-4)] py-[6px] rounded-[var(--radius-pill)]",
                 "no-underline cursor-pointer flex items-center justify-center",
                 "focus-visible:outline focus-visible:outline-2",
-                "focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
+                "focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]",
                 hideOnMobile ? "hidden md:inline-flex" : "inline-flex",
               ].join(" ")}
               style={{
@@ -193,9 +193,9 @@ export default function Navbar() {
           "shadow-[0_0_0_0.5px_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.28)]",
         ].join(" ")}
       >
-        <div className="w-[6px] h-[6px] bg-[var(--color-accent)] rounded-full available-pulse" />
+        <div className="w-[6px] h-[6px] bg-[var(--color-status-green)] rounded-full available-pulse" />
         <span
-          className="font-normal text-[var(--color-accent)] tracking-[0.02em]"
+          className="font-normal text-[var(--color-status-green)] tracking-[0.02em]"
           style={{
             fontFamily: "var(--font-sans)",
             fontSize: "var(--text-sm)",

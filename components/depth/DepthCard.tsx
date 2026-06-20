@@ -47,7 +47,7 @@ const DepthCard = forwardRef<HTMLElement, DepthCardProps>(
           "depth-card",
           level > 0 && `depth-card--${level}`,
           "border border-[var(--color-surface-3)]",
-          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]",
+          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-ink-1)]",
           className,
         )}
         {...(props as any)}

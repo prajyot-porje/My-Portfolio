@@ -89,7 +89,7 @@ const MagneticButton = forwardRef<HTMLElement, MagneticButtonProps>(
     const buttonClass = clsx(
       "relative inline-flex items-center justify-center select-none",
       "transition-shadow duration-[var(--dur-fast)] ease-[var(--ease-gentle)]",
-      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-ink-1)]",
       className,
     );
 

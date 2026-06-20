@@ -1,206 +1,97 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@/hooks/useGSAP";
-import DepthCard from "../depth/DepthCard";
+import { motion, useReducedMotion } from "framer-motion";
+import { principles } from "@/lib/data/principles";
 import SectionLabel from "../ui/SectionLabel";
 
-const PRINCIPLES = [
-  {
-    number: "01",
-    headline: "Shipping is the only real feedback loop",
-    highlightedWord: "feedback",
-    elaboration:
-      "Everything before launch is a hypothesis. The gap between what you think users want and what they actually do is only visible in production. I optimize for deployed, not polished.",
-  },
-  {
-    number: "02",
-    headline: "Every abstraction must earn its complexity",
-    highlightedWord: "complexity",
-    elaboration:
-      "An abstraction that saves 10 lines now but requires mental overhead every future edit is a net negative. I treat simplicity as an engineering requirement, not a luxury.",
-  },
-  {
-    number: "03",
-    headline: "Product thinking before engineering thinking",
-    highlightedWord: "Product",
-    elaboration:
-      "The best technical solution to the wrong problem is still the wrong solution. Before designing a system, I define what the user is actually trying to accomplish - and validate that the system solves that, not a more interesting version of it.",
-  },
-  {
-    number: "04",
-    headline: "Real constraints produce better design than total freedom",
-    highlightedWord: "constraints",
-    elaboration:
-      "Client deadlines, tight budgets, and legacy systems have produced more elegant solutions in my work than greenfield projects with no constraints. Limits force precision.",
-  },
-  {
-    number: "05",
-    headline: "Own the deploy, not just the code",
-    highlightedWord: "deploy",
-    elaboration:
-      "Writing code that works locally is the minimum. Owning the outcome means monitoring, debugging production, and being accountable for what happens after the PR merges. I don't hand off and move on.",
-  },
-];
-
 export default function Principles() {
-  const containerRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const prefersReducedMotion = useReducedMotion();
 
-  // GSAP Entrance Scroll Animation
-  useGSAP(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([{ gsap }, { ScrollTrigger }]) => {
-        gsap.registerPlugin(ScrollTrigger);
-
-        const header = headerRef.current;
-        const cards = cardRefs.current.filter(Boolean);
-
-        if (!header || cards.length === 0) return;
-
-        // Set initial animation state (hidden)
-        if (prefersReducedMotion) {
-          gsap.set(header, { opacity: 0 });
-          gsap.set(cards, { opacity: 0 });
-        } else {
-          gsap.set(header, { opacity: 0, y: 16 });
-          gsap.set(cards, { opacity: 0, y: 24 });
-        }
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        });
-
-        if (prefersReducedMotion) {
-          tl.to(header, {
-            opacity: 1,
-            duration: 0.4,
-            ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-          });
-
-          tl.to(
-            cards,
-            {
-              opacity: 1,
-              duration: 0.4,
-              stagger: 0.08,
-              ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-            },
-            "-=0.2",
-          );
-        } else {
-          tl.to(header, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-          });
-
-          tl.to(
-            cards,
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.4,
-              stagger: 0.08,
-              ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-            },
-            "-=0.2",
-          );
-        }
-      },
-    );
-  }, []);
-
-  const renderHeadline = (headline: string, highlightedWord: string) => {
-    const parts = headline.split(new RegExp(`(${highlightedWord})`, "gi"));
-    return parts.map((part, index) => {
-      if (part.toLowerCase() === highlightedWord.toLowerCase()) {
-        return (
-          <span
-            // biome-ignore lint/suspicious/noArrayIndexKey: parts of headline are static
-            key={index}
-            className="inline-block bg-[var(--color-ink-1)] text-[var(--color-accent)] px-1.5 py-0.5 rounded-[4px] font-bold"
-          >
-            {part}
-          </span>
-        );
+  const rowVariants = prefersReducedMotion
+    ? {
+        hidden: { opacity: 1, y: 0 },
+        visible: { opacity: 1, y: 0 },
       }
-      return part;
-    });
-  };
+    : {
+        hidden: { opacity: 0, y: 30 },
+        visible: (i: number) => ({
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.7,
+            delay: i * 0.1,
+            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+          },
+        }),
+      };
 
   return (
     <section
-      ref={containerRef}
       id="principles"
-      className="max-w-[1000px] mx-auto px-[var(--sp-8)] py-[var(--section-lg)] bg-[var(--color-ground)]"
+      className="bg-[var(--color-ground)] px-[var(--sp-8)] py-[var(--sp-24)] border-t border-[var(--color-surface-3)] max-md:px-[var(--sp-6)] max-md:py-[var(--sp-16)]"
     >
-      {/* Section Header */}
-      <div ref={headerRef} className="mb-[var(--sp-12)]">
-        <SectionLabel
-          label="03 / PRINCIPLES"
-          className="mb-[var(--sp-3)] block"
-        />
-        <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-2xl)] text-[var(--color-ink-1)] leading-[var(--lh-heading)] mt-0 font-bold">
-          How I think about building.
-        </h2>
-        <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-[var(--color-ink-2)] mt-[var(--sp-2)]">
-          Five beliefs formed from building, not from reading about it.
-        </p>
-      </div>
+      <div className="max-w-[1000px] mx-auto">
+        {/* Section Header */}
+        <div className="flex flex-col mb-16 max-w-[620px]">
+          <SectionLabel label="04 / PRINCIPLES" />
+          <h2 className="text-[2.5rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
+            Engineering beliefs developed in{" "}
+            <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">
+              active production.
+            </span>
+          </h2>
+        </div>
 
-      {/* The Five Principles */}
-      <div className="flex flex-col gap-[var(--sp-3)]">
-        {PRINCIPLES.map((principle, index) => (
-          <DepthCard
-            key={principle.number}
-            level={1}
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
-            className="group relative px-[var(--sp-8)] py-[var(--sp-6)] overflow-hidden cursor-default rounded-[var(--radius-md)]"
-          >
-            {/* Absolute Decorative Background Counter */}
-            <div className="absolute right-[var(--sp-6)] top-1/2 -translate-y-1/2 font-[family-name:var(--font-display)] text-[140px] text-[var(--color-surface-3)] opacity-60 group-hover:opacity-90 transition-opacity duration-[var(--dur-normal)] ease-[var(--ease-gentle)] pointer-events-none select-none z-0">
-              {principle.number}
-            </div>
+        {/* Principles list */}
+        <div className="flex flex-col border-t border-[var(--color-surface-3)]">
+          {principles.map((p, index) => (
+            <motion.div
+              key={p.index}
+              custom={index}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={rowVariants}
+              className="flex flex-col md:flex-row items-start md:items-center py-8 sm:py-10 md:py-12 border-b border-[var(--color-surface-3)] gap-4 md:gap-12"
+            >
+              {/* Number Index */}
+              <span
+                className="font-[family-name:var(--font-sans)] font-extrabold text-[var(--color-ink-1)] select-none shrink-0"
+                style={{
+                  fontSize: "clamp(3rem, 10vw, 140px)",
+                  lineHeight: 1,
+                  letterSpacing: "-0.05em",
+                }}
+              >
+                {p.index}
+              </span>
 
-            {/* Two-Column Layout */}
-            <div className="relative z-[1] flex flex-row items-stretch">
-              {/* Left Column (fixed 72px) */}
-              <div className="w-[72px] shrink-0 flex items-center">
-                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-md)] text-[var(--color-ink-3)] tracking-[0.02em] leading-none">
-                  {principle.number}
-                </span>
-              </div>
-
-              {/* Right Column */}
-              <div className="flex-1">
-                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-lg)] text-[var(--color-ink-1)] leading-[var(--lh-title)] mt-0 mb-0">
-                  {renderHeadline(
-                    principle.headline,
-                    principle.highlightedWord,
-                  )}
+              {/* Statement + Elaboration */}
+              <div className="flex-1 flex flex-col gap-2">
+                <h3
+                  className="font-[family-name:var(--font-sans)] font-semibold uppercase text-[var(--color-ink-1)] tracking-tight"
+                  style={{
+                    fontSize: "clamp(1.1rem, 2.2vw, 1.8rem)",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {p.statement}
                 </h3>
-                <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-[var(--color-ink-2)] leading-[var(--lh-body)] mt-[var(--sp-3)] mb-0">
-                  {principle.elaboration}
+                <p
+                  className="font-[family-name:var(--font-sans)] font-light text-[var(--color-ink-2)]"
+                  style={{
+                    fontSize: "clamp(0.85rem, 1.6vw, 1.05rem)",
+                    opacity: 0.7,
+                    lineHeight: 1.5,
+                    maxWidth: "75ch",
+                  }}
+                >
+                  {p.elaboration}
                 </p>
               </div>
-            </div>
-          </DepthCard>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

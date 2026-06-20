@@ -1,14 +1,53 @@
 "use client";
 
+import { animate, onScroll } from "animejs";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import MagneticButton from "../ui/MagneticButton";
+import { TextEffect } from "../ui/text-effect";
 
 interface HeroProps {
   isIntroActive: boolean;
 }
 
+const blurSlideVariants = {
+  container: {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.01 } },
+    exit: { transition: { staggerChildren: 0.01, staggerDirection: 1 } },
+  },
+  item: {
+    hidden: { opacity: 0, filter: "blur(10px) brightness(0%)" },
+    visible: {
+      opacity: 1,
+      filter: "blur(0px) brightness(100%)",
+      transition: { duration: 0.4 },
+    },
+    exit: {
+      opacity: 0,
+      y: -12,
+      filter: "blur(10px) brightness(0%)",
+      transition: { duration: 0.4 },
+    },
+  },
+};
+
+const focusItems = [
+  {
+    label: "ACTIVE PROJECT",
+    name: "ContextGraph",
+    desc: "Multi-tenant MCP context engine — Next.js, TypeScript",
+  },
+  {
+    label: "ACTIVE PROJECT",
+    name: "DevFlow",
+    desc: "AI code generation platform — Next.js, TypeScript",
+  },
+];
+
 export default function Hero({ isIntroActive }: HeroProps) {
+  const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLElement>(null);
   const photoRef = useRef<HTMLDivElement>(null);
   const maskRef = useRef<HTMLImageElement>(null);
@@ -19,7 +58,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
   // Left copy refs
   const chipRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const bodyRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
 
   // Time state
@@ -49,19 +87,12 @@ export default function Hero({ isIntroActive }: HeroProps) {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
   const [imgError, setImgError] = useState(false);
-  const entranceDone = useRef(false);
 
-  // Time & Scramble state
-  const headlineText = "BUILT TO SHIP.";
-  const [scrambledText, setScrambledText] = useState<string[]>(
-    headlineText.split(""),
-  );
   const [hasScrolled, setHasScrolled] = useState(false);
 
   // biome-ignore lint/suspicious/noExplicitAny: GSAP animation instance is loaded dynamically
   const scrollLineAnim = useRef<any>(null);
   const cursorCoordinates = useRef({ x: 0, y: 0 });
-  const radiusObj = useRef({ r: 0 });
   const blobPhase = useRef(0);
 
   // ── Track local time ────────────────────────────────────────────────
@@ -129,250 +160,53 @@ export default function Hero({ isIntroActive }: HeroProps) {
     }
   }, [hasScrolled]);
 
-  // ── Scramble Settle Effect ─────────────────────────────────────────
+  // ── Scroll Parallax (anime.js v4 onScroll, desktop only) ───────────
   useEffect(() => {
-    if (isIntroActive) return;
-
-    const original = headlineText.split("");
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    // Initialize scramble text to random values instantly
-    const initialScramble = original.map((char) =>
-      char === " " || char === "."
-        ? char
-        : chars[Math.floor(Math.random() * chars.length)],
-    );
-    setScrambledText(initialScramble);
-
-    // Start scramble sequence 200ms after intro exits
-    const startTimeout = setTimeout(() => {
-      const startTime = Date.now();
-
-      const intervalId = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-
-        const nextText = original.map((char, index) => {
-          if (char === " " || char === ".") return char;
-          const settleTime = index * 35; // 35ms stagger left-to-right
-          if (elapsed >= settleTime) {
-            return char;
-          }
-          return chars[Math.floor(Math.random() * chars.length)];
-        });
-
-        setScrambledText(nextText);
-
-        const allSettled = nextText.every(
-          (char, index) => char === original[index],
-        );
-        if (allSettled) {
-          clearInterval(intervalId);
-        }
-      }, 40);
-
-      return () => clearInterval(intervalId);
-    }, 200);
-
-    return () => clearTimeout(startTimeout);
-  }, [isIntroActive]);
-
-  // ── Entrance animation (fires after intro unmounts) ────────────────
-  useEffect(() => {
-    if (isIntroActive || entranceDone.current) return;
-    entranceDone.current = true;
-
     if (typeof window === "undefined") return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    if (prefersReducedMotion || isMobile) return;
 
-    import("gsap").then(({ gsap }) => {
-      if (prefersReducedMotion) {
-        gsap.set(".hero-entrance", { opacity: 1, y: 0 });
-        gsap.set([card1Ref.current, card2Ref.current, card3Ref.current], {
-          opacity: 1,
-          x: 0,
-        });
-        if (progressFillRef.current)
-          gsap.set(progressFillRef.current, { width: "60%" });
-        return;
-      }
+    const photo = photoRef.current;
+    const veil = veilRef.current;
+    const content = contentRef.current;
+    const container = containerRef.current;
+    if (!photo || !veil || !content || !container) return;
 
-      const tl = gsap.timeline();
-
-      // Photo fades in over 1s
-      tl.fromTo(
-        photoRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0,
-      );
-
-      // Then copy stack staggers in quickly
-      const copyElements = [
-        chipRef.current,
-        headlineRef.current,
-        bodyRef.current,
-      ].filter(Boolean);
-
-      tl.fromTo(
-        copyElements,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0.35,
-      );
-
-      // CTA arrives last with slightly longer delay
-      tl.fromTo(
-        ctaRef.current,
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0.75,
-      );
-
-      // Card stack entrance (staggered)
-      const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
-      tl.fromTo(
-        cards,
-        { opacity: 0, x: 20 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.4,
-          stagger: 0.08,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0.6,
-      );
-
-      // Progress bar fill inside Card 1 (ContextGraph)
-      tl.fromTo(
-        progressFillRef.current,
-        { width: "0%" },
-        {
-          width: "60%",
-          duration: 0.8,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0.6,
-      );
-
-      // Scroll indicator fades in quietly at the end
-      tl.fromTo(
-        scrollIndicatorRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.5,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        },
-        0.9,
-      );
+    // Photo + veil drift at 0.2x scroll speed
+    const anim1 = animate([photo, veil], {
+      translateY: [0, window.innerHeight * 0.2],
+      ease: "linear",
+      autoplay: onScroll({
+        target: container,
+        enter: "top top",
+        leave: "bottom top",
+        sync: 0.3,
+      }),
     });
-  }, [isIntroActive]);
 
-  // ── Parallax scroll (GSAP ScrollTrigger, desktop only) ─────────────
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (prefersReducedMotion) return;
-
-    let ctx: { revert: () => void } | undefined;
-
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([{ gsap }, { ScrollTrigger }]) => {
-        gsap.registerPlugin(ScrollTrigger);
-
-        ctx = gsap.context(() => {
-          const mm = gsap.matchMedia();
-
-          mm.add("(min-width: 768px)", () => {
-            // Photo + veil drift at 0.2× scroll speed
-            gsap.to([photoRef.current, veilRef.current], {
-              y: () => window.innerHeight * 0.2,
-              ease: "none",
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: 1.5,
-              },
-            });
-
-            // Content drifts at 0.08×
-            gsap.to(contentRef.current, {
-              y: () => window.innerHeight * 0.08,
-              ease: "none",
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: 1.5,
-              },
-            });
-          });
-        }, containerRef);
-      },
-    );
-
-    return () => {
-      if (ctx) ctx.revert();
-    };
-  }, []);
-
-  // ── Scroll indicator — looping accent line ─────────────────────────
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (prefersReducedMotion) return;
-
-    import("gsap").then(({ gsap }) => {
-      if (!scrollLineRef.current) return;
-      const anim = gsap.fromTo(
-        scrollLineRef.current,
-        { scaleY: 0, transformOrigin: "top center" },
-        {
-          scaleY: 1,
-          transformOrigin: "top center",
-          duration: 2,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-          repeat: -1,
-          repeatDelay: 0.4,
-        },
-      );
-      scrollLineAnim.current = anim;
+    // Content drifts at 0.08x scroll speed
+    const anim2 = animate(content, {
+      translateY: [0, window.innerHeight * 0.08],
+      ease: "linear",
+      autoplay: onScroll({
+        target: container,
+        enter: "top top",
+        leave: "bottom top",
+        sync: 0.3,
+      }),
     });
 
     return () => {
-      if (scrollLineAnim.current) {
-        scrollLineAnim.current.kill();
-      }
+      anim1.pause();
+      anim2.pause();
     };
   }, []);
 
-  // ── Cursor mask hover effect (Liquid Canvas Mask) ──────────────────
+  // ── Cursor mask hover effect (Liquid Canvas Mask, vanilla lerp) ───
   useEffect(() => {
     if (isIntroActive) return;
     if (typeof window === "undefined") return;
@@ -387,12 +221,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
     const mask = maskRef.current;
     if (!container || !canvas || !mask) return;
 
-    let followX: ((val: number) => void) | null = null;
-    let followY: ((val: number) => void) | null = null;
-    let enterTween: { kill: () => void } | null = null;
-    let leaveTween: { kill: () => void } | null = null;
-
-    // Handle canvas sizing (using 0.5x scaling factor for dataURL output speed)
     const handleResize = () => {
       canvas.width = Math.ceil(container.clientWidth / 2);
       canvas.height = Math.ceil(container.clientHeight / 2);
@@ -401,14 +229,20 @@ export default function Hero({ isIntroActive }: HeroProps) {
     window.addEventListener("resize", handleResize);
 
     let animationFrameId: number;
+    const currentCoords = { x: 0, y: 0 };
+    let currentR = 0;
+    let targetR = 0;
 
     const tick = () => {
-      const scale = 0.5;
-      const x = cursorCoordinates.current.x * scale;
-      const y = cursorCoordinates.current.y * scale;
-      const r = radiusObj.current.r * scale;
+      currentCoords.x += (cursorCoordinates.current.x - currentCoords.x) * 0.08;
+      currentCoords.y += (cursorCoordinates.current.y - currentCoords.y) * 0.08;
+      currentR += (targetR - currentR) * 0.08;
 
-      // Advance phase for organic edge animation
+      const scale = 0.5;
+      const x = currentCoords.x * scale;
+      const y = currentCoords.y * scale;
+      const r = currentR * scale;
+
       blobPhase.current += 0.015;
 
       const ctx = canvas.getContext("2d");
@@ -416,8 +250,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (r > 0) {
-          // Draw organic blob shape using sine-wave displacement
-          // This creates the liquid edge WITHOUT an SVG filter on the image
           const segments = 120;
           const angleStep = (Math.PI * 2) / segments;
           const phase = blobPhase.current;
@@ -425,7 +257,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           ctx.beginPath();
           for (let i = 0; i <= segments; i++) {
             const angle = i * angleStep;
-            // Layer multiple sine waves for organic, non-repeating displacement
             const displacement =
               Math.sin(angle * 3 + phase * 1.2) * 0.08 +
               Math.sin(angle * 5 - phase * 0.9) * 0.05 +
@@ -441,7 +272,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           }
           ctx.closePath();
 
-          // Create a radial gradient that fills the blob with a soft edge
           const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 1.1);
           grad.addColorStop(0, "rgba(255, 255, 255, 1)");
           grad.addColorStop(0.7, "rgba(255, 255, 255, 1)");
@@ -467,84 +297,43 @@ export default function Hero({ isIntroActive }: HeroProps) {
     };
     animationFrameId = requestAnimationFrame(tick);
 
-    let handleMouseEnter: (e: MouseEvent) => void;
-    let handleMouseMove: (e: MouseEvent) => void;
-    let handleMouseLeave: (e: MouseEvent) => void;
+    const handleMouseEnter = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      cursorCoordinates.current.x = mouseX;
+      cursorCoordinates.current.y = mouseY;
+      currentCoords.x = mouseX;
+      currentCoords.y = mouseY;
+      targetR = 220;
+    };
 
-    import("gsap").then(({ gsap }) => {
-      followX = gsap.quickTo(cursorCoordinates.current, "x", {
-        duration: 0.5,
-        ease: "power3",
-      });
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      cursorCoordinates.current.x = e.clientX - rect.left;
+      cursorCoordinates.current.y = e.clientY - rect.top;
+    };
 
-      followY = gsap.quickTo(cursorCoordinates.current, "y", {
-        duration: 0.5,
-        ease: "power3",
-      });
+    const handleMouseLeave = () => {
+      targetR = 0;
+    };
 
-      handleMouseEnter = (e: MouseEvent) => {
-        const rect = container.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        cursorCoordinates.current.x = mouseX;
-        cursorCoordinates.current.y = mouseY;
-
-        if (leaveTween) leaveTween.kill();
-        enterTween = gsap.to(radiusObj.current, {
-          r: 220,
-          duration: 0.7,
-          ease: "cubic-bezier(0.16,1,0.3,1)", // ease-cinematic
-          overwrite: "auto",
-        });
-      };
-
-      handleMouseMove = (e: MouseEvent) => {
-        const rect = container.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        if (followX && followY) {
-          followX(mouseX);
-          followY(mouseY);
-        } else {
-          cursorCoordinates.current.x = mouseX;
-          cursorCoordinates.current.y = mouseY;
-        }
-      };
-
-      handleMouseLeave = () => {
-        if (enterTween) enterTween.kill();
-        leaveTween = gsap.to(radiusObj.current, {
-          r: 0,
-          duration: 0.4,
-          ease: "cubic-bezier(0.7,0,0.84,0)", // ease-sharp
-          overwrite: "auto",
-        });
-      };
-
-      container.addEventListener("mouseenter", handleMouseEnter);
-      container.addEventListener("mousemove", handleMouseMove);
-      container.addEventListener("mouseleave", handleMouseLeave);
-    });
+    container.addEventListener("mouseenter", handleMouseEnter);
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
       if (container) {
-        if (handleMouseEnter)
-          container.removeEventListener("mouseenter", handleMouseEnter);
-        if (handleMouseMove)
-          container.removeEventListener("mousemove", handleMouseMove);
-        if (handleMouseLeave)
-          container.removeEventListener("mouseleave", handleMouseLeave);
+        container.removeEventListener("mouseenter", handleMouseEnter);
+        container.removeEventListener("mousemove", handleMouseMove);
+        container.removeEventListener("mouseleave", handleMouseLeave);
       }
-      if (enterTween) enterTween.kill();
-      if (leaveTween) leaveTween.kill();
     };
   }, [isIntroActive]);
 
-  // ── Magnetic CTA Button Behavior ──────────────────────────────────
+  // ── Magnetic CTA Button Behavior (anime.js v4) ────────────────────
   useEffect(() => {
     if (isIntroActive) return;
     if (typeof window === "undefined") return;
@@ -572,26 +361,20 @@ export default function Hero({ isIntroActive }: HeroProps) {
         const targetX = Math.cos(angle) * factor;
         const targetY = Math.sin(angle) * factor;
 
-        import("gsap").then(({ gsap }) => {
-          gsap.to(cta, {
-            x: targetX,
-            y: targetY,
-            duration: 0.2,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
+        animate(cta, {
+          translateX: targetX,
+          translateY: targetY,
+          duration: 200,
+          ease: "easeOutQuad",
         });
       } else {
         if (isMagnetic) {
           isMagnetic = false;
-          import("gsap").then(({ gsap }) => {
-            gsap.to(cta, {
-              x: 0,
-              y: 0,
-              duration: 0.4,
-              ease: "cubic-bezier(0.34,1.56,0.64,1.00)", // ease-spring
-              overwrite: "auto",
-            });
+          animate(cta, {
+            translateX: 0,
+            translateY: 0,
+            duration: 400,
+            ease: "easeOutElastic(1, .6)",
           });
         }
       }
@@ -603,6 +386,27 @@ export default function Hero({ isIntroActive }: HeroProps) {
     };
   }, [isIntroActive]);
 
+  // ── Active Project Card rotation (TextEffect with Exit) ───────────
+  const [focusIndex, setFocusIndex] = useState(0);
+  const [focusTrigger, setFocusTrigger] = useState(true);
+
+  useEffect(() => {
+    if (isIntroActive) return;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReduced) return;
+
+    const id = setInterval(() => {
+      setFocusTrigger(false);
+      setTimeout(() => {
+        setFocusIndex((i) => (i + 1) % focusItems.length);
+        setFocusTrigger(true);
+      }, 400); // matches the text-effect exit transition duration
+    }, 5000);
+    return () => clearInterval(id);
+  }, [isIntroActive]);
+
   return (
     <section
       ref={containerRef}
@@ -611,44 +415,51 @@ export default function Hero({ isIntroActive }: HeroProps) {
       className="relative w-full h-[100svh] overflow-hidden bg-[var(--color-ground)]"
     >
       {/* ── LAYER 1: Photo background ──────────────────────────── */}
-      <div
-        ref={photoRef}
-        data-cursor="photo"
-        className="absolute inset-0 z-0 hero-entrance will-change-[transform,opacity]"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isIntroActive ? {} : { opacity: 1 }}
+        transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
+        className="absolute inset-0 z-0"
       >
-        {imgError ? (
-          <div className="w-full h-full bg-[var(--color-surface-3)]" />
-        ) : (
-          <>
-            {/* Image 1 (base): always visible */}
-            <Image
-              src="/images/profile/hero.png?v=3"
-              alt="Prajyot Porje"
-              fill
-              priority
-              unoptimized
-              className="object-cover object-[center_top]"
-              onError={() => setImgError(true)}
-            />
-            {/* Image 2 (mask): revealed via canvas-generated organic mask */}
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 w-full h-full pointer-events-none opacity-0 z-10"
-            />
-            <Image
-              src="/images/profile/hero-mask.png?v=3"
-              alt="Prajyot Porje Mask"
-              fill
-              priority
-              unoptimized
-              className="object-cover object-[center_top] pointer-events-none absolute inset-0 z-10"
-              style={{ opacity: 0 }}
-              ref={maskRef}
-              onError={() => setImgError(true)}
-            />
-          </>
-        )}
-      </div>
+        <div
+          ref={photoRef}
+          data-cursor="photo"
+          className="absolute inset-0 will-change-[transform]"
+        >
+          {imgError ? (
+            <div className="w-full h-full bg-[var(--color-surface-3)]" />
+          ) : (
+            <>
+              {/* Image 1 (base): always visible */}
+              <Image
+                src="/images/profile/hero.png?v=3"
+                alt="Prajyot Porje"
+                fill
+                priority
+                unoptimized
+                className="object-cover object-[center_top]"
+                onError={() => setImgError(true)}
+              />
+              {/* Image 2 (mask): revealed via canvas-generated organic mask */}
+              <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full pointer-events-none opacity-0 z-10"
+              />
+              <Image
+                src="/images/profile/hero-mask.png?v=3"
+                alt="Prajyot Porje Mask"
+                fill
+                priority
+                unoptimized
+                className="object-cover object-[center_top] pointer-events-none absolute inset-0 z-10"
+                style={{ opacity: 0 }}
+                ref={maskRef}
+                onError={() => setImgError(true)}
+              />
+            </>
+          )}
+        </div>
+      </motion.div>
 
       {/* ── LAYER 2: Gradient veil ─────────────────────────────── */}
       <div
@@ -662,56 +473,96 @@ export default function Hero({ isIntroActive }: HeroProps) {
         ref={contentRef}
         className="absolute inset-0 z-[2] will-change-transform"
       >
+
         {/* ── BOTTOM-LEFT: Hero copy ───────────────────────── */}
         <div className="absolute left-[var(--sp-8)] bottom-[var(--sp-16)] max-w-[480px] max-md:bottom-[var(--sp-10)]">
           {/* Location + time chip */}
-          <div
+          <motion.div
             ref={chipRef}
-            className="inline-flex items-center gap-[var(--sp-2)] bg-[rgba(13,13,13,0.06)] rounded-[var(--radius-pill)] px-[var(--sp-3)] py-[var(--sp-1)] mb-[var(--sp-5)] hero-entrance will-change-[opacity,transform]"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center gap-[var(--sp-2)] bg-[rgba(13,13,13,0.06)] rounded-[var(--radius-pill)] px-[var(--sp-3)] py-[var(--sp-1)] mb-[var(--sp-5)]"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-status-green)] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-status-green)]" />
             </span>
             <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--color-ink-2)] tracking-[var(--ls-caps)] uppercase font-semibold">
               Pune, IN {currentTime && `· ${currentTime} IST`}
             </span>
-          </div>
+          </motion.div>
 
-          {/* Main headline with text shadow and scramble settle */}
+          {/* Main headline with text shadow and TextEffect reveal */}
           <h1
             ref={headlineRef}
-            className={[
-              "font-[family-name:var(--font-display)] font-bold",
-              "hero-headline text-wrap-balance",
-              "text-[var(--color-ink-1)]",
-              "tracking-[var(--ls-display)] leading-[var(--lh-display)]",
-              "mb-[var(--sp-4)]",
-              "hero-entrance will-change-[opacity,transform]",
-            ].join(" ")}
+            className="hero-headline text-wrap-balance tracking-[var(--ls-display)] leading-[var(--lh-display)] mb-[var(--sp-4)] text-[var(--color-ink-1)] select-none"
             style={{ textShadow: "0 2px 12px rgba(13,13,13,0.08)" }}
           >
-            {scrambledText.map((char, index) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Headline characters are static
-              <span key={index}>{char}</span>
-            ))}
+            <TextEffect
+              as="span"
+              per="char"
+              delay={0.2}
+              variants={{
+                container: {
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.03 },
+                  },
+                },
+                item: {
+                  hidden: { opacity: 0, rotateX: 90, y: 10 },
+                  visible: {
+                    opacity: 1,
+                    rotateX: 0,
+                    y: 0,
+                    transition: { duration: 0.2 },
+                  },
+                },
+              }}
+              className="font-[family-name:var(--font-sans)] uppercase font-semibold text-[var(--color-ink-1)]"
+            >
+              Built to 
+            </TextEffect>
+            <TextEffect
+              as="span"
+              per="char"
+              delay={0.45}
+              variants={{
+                container: {
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.03 },
+                  },
+                },
+                item: {
+                  hidden: { opacity: 0, rotateX: 90, y: 10 },
+                  visible: {
+                    opacity: 1,
+                    rotateX: 0,
+                    y: 0,
+                    transition: { duration: 0.2 },
+                  },
+                },
+              }}
+              className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal"
+            >
+              Ship.
+            </TextEffect>
           </h1>
 
           {/* Body line (2 lines exactly) */}
-          <p
-            ref={bodyRef}
-            className={[
-              "font-[family-name:var(--font-sans)] font-normal text-wrap-pretty",
-              "text-[length:var(--text-base)] text-[var(--color-ink-2)]",
-              "leading-[var(--lh-body)]",
-              "mb-[var(--sp-6)]",
-              "hero-entrance will-change-[opacity,transform]",
-            ].join(" ")}
+          <TextEffect
+            as="p"
+            per="word"
+            delay={0.8}
+            className="font-[family-name:var(--font-sans)] font-normal text-wrap-pretty text-[length:var(--text-base)] text-[var(--color-ink-2)] leading-[var(--lh-body)] mb-[var(--sp-6)]"
           >
-            Product Engineer &amp; founder of Dev Studio.
-            <br />I design robust architectures and ship high-performance
-            software.
-          </p>
+            Product Engineer & founder of Dev Studio. I design robust
+            architectures and ship high-performance software.
+          </TextEffect>
 
           {/* CTA — Magnetic pill button with arrow interaction */}
           <MagneticButton
@@ -719,9 +570,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
             asLink
             href="#work"
             className={[
-              "hero-entrance bg-[var(--color-ink-1)] text-[var(--color-ground)] px-[24px] py-[12px] rounded-[100px] hover:bg-[#151413] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] text-[length:var(--text-sm)] font-medium z-20 group relative overflow-hidden",
-              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-accent)]",
+              "bg-[var(--color-ink-1)] text-[var(--color-ground)] px-[24px] py-[12px] rounded-[100px] hover:bg-[#151413] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] text-[length:var(--text-sm)] font-medium z-20 group relative overflow-hidden",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ink)]",
             ].join(" ")}
+            style={{ display: "inline-block" }}
           >
             <span>
               See the work{" "}
@@ -733,12 +585,39 @@ export default function Hero({ isIntroActive }: HeroProps) {
         </div>
 
         {/* ── BOTTOM-RIGHT (FLOATING CARDS): right-side hero content ───────────────── */}
-        <div className="absolute top-1/2 -translate-y-1/2 right-[var(--sp-8)] flex flex-col gap-[var(--sp-3)] z-[3] max-md:hidden pointer-events-auto">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.15,
+              },
+            },
+          }}
+          className="absolute top-1/2 -translate-y-1/2 right-[var(--sp-8)] flex flex-col gap-[var(--sp-3)] z-[3] max-md:hidden pointer-events-auto"
+        >
           {/* CARD 1 — Active Project */}
-          <a
+          <motion.a
             href="#work"
             ref={card1Ref}
             data-cursor-no-ring="true"
+            variants={
+              prefersReducedMotion
+                ? {
+                    hidden: { opacity: 1, x: 0 },
+                    visible: { opacity: 1, x: 0 },
+                  }
+                : {
+                    hidden: { opacity: 0, x: 20 },
+                    visible: {
+                      opacity: 1,
+                      x: 0,
+                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }
+            }
             className={[
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
@@ -748,7 +627,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           >
             {/* Inner Content Container */}
             <div className="relative w-full h-full overflow-hidden inner-container">
-              {/* Silver-grey textured background */}
               <div
                 className="absolute inset-0"
                 style={{
@@ -817,25 +695,37 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 {/* Project name + description */}
                 <div>
                   <div
-                    className="font-[family-name:var(--font-sans)] font-semibold tracking-[0.01em]"
+                    className="font-[family-name:var(--font-sans)] font-semibold tracking-[0.01em] min-h-[1.5rem]"
                     style={{
                       fontSize: "1.05rem",
                       color: "rgba(255,255,255,0.92)",
                       lineHeight: 1.2,
                     }}
                   >
-                    ContextGraph
+                    <TextEffect
+                      per="char"
+                      variants={blurSlideVariants}
+                      trigger={focusTrigger}
+                    >
+                      {focusItems[focusIndex].name}
+                    </TextEffect>
                   </div>
-                  <p
-                    className="font-[family-name:var(--font-sans)] font-normal mt-[2px]"
+                  <div
+                    className="font-[family-name:var(--font-sans)] font-normal mt-[2px] min-h-[2.5rem]"
                     style={{
                       fontSize: "11px",
                       color: "rgba(255,255,255,0.35)",
                       lineHeight: 1.3,
                     }}
                   >
-                    Multi-tenant MCP context engine — Next.js, TypeScript
-                  </p>
+                    <TextEffect
+                      per="word"
+                      variants={blurSlideVariants}
+                      trigger={focusTrigger}
+                    >
+                      {focusItems[focusIndex].desc}
+                    </TextEffect>
+                  </div>
                 </div>
 
                 {/* Progress bar */}
@@ -845,9 +735,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 >
                   <div
                     ref={progressFillRef}
-                    className="h-full rounded-full will-change-[width]"
+                    className="h-full rounded-full"
                     style={{
-                      width: "0%",
+                      width: focusTrigger ? "100%" : "0%",
+                      transition: focusTrigger ? "width 4600ms linear" : "none",
                       backgroundColor: "rgba(255,255,255,0.28)",
                     }}
                   />
@@ -866,12 +757,27 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 ↗
               </span>
             </div>
-          </a>
+          </motion.a>
 
           {/* CARD 2 — Current Focus */}
-          <div
+          <motion.div
             ref={card2Ref}
             data-cursor-no-ring="true"
+            variants={
+              prefersReducedMotion
+                ? {
+                    hidden: { opacity: 1, x: 0 },
+                    visible: { opacity: 1, x: 0 },
+                  }
+                : {
+                    hidden: { opacity: 0, x: 20 },
+                    visible: {
+                      opacity: 1,
+                      x: 0,
+                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }
+            }
             className={[
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
@@ -954,12 +860,27 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* CARD 3 — Connect */}
-          <div
+          <motion.div
             ref={card3Ref}
             data-cursor-no-ring="true"
+            variants={
+              prefersReducedMotion
+                ? {
+                    hidden: { opacity: 1, x: 0 },
+                    visible: { opacity: 1, x: 0 },
+                  }
+                : {
+                    hidden: { opacity: 0, x: 20 },
+                    visible: {
+                      opacity: 1,
+                      x: 0,
+                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }
+            }
             className={[
               "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
@@ -1288,16 +1209,18 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── BOTTOM-RIGHT: Scroll indicator ───────────────── */}
-        <div
-          ref={scrollIndicatorRef}
+        <motion.div
+          ref={scrollIndicatorRef as any}
+          initial={{ opacity: 0, y: 10 }}
+          animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           aria-hidden="true"
           className={[
             "absolute bottom-[var(--sp-8)] right-[var(--sp-8)]",
-            "hero-entrance will-change-[opacity,transform]",
             "max-md:hidden pointer-events-none z-10",
           ].join(" ")}
         >
@@ -1326,7 +1249,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
               Scroll
             </span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

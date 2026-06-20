@@ -1,312 +1,188 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@/hooks/useGSAP";
-import ElevatedImage from "../depth/ElevatedImage";
-import MagneticButton from "../ui/MagneticButton";
+import Image from "next/image";
+import DepthCard from "../depth/DepthCard";
 import SectionLabel from "../ui/SectionLabel";
+import Tag from "../ui/Tag";
 
 export default function DevStudio() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (prefersReducedMotion) return;
-
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([{ gsap }, { ScrollTrigger }]) => {
-        gsap.registerPlugin(ScrollTrigger);
-
-        const header = headerRef.current;
-        const cards = cardsRef.current;
-        if (!header || !cards) return;
-
-        // Entrance animation on viewport enter
-        gsap.fromTo(
-          header,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-            scrollTrigger: {
-              trigger: header,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-
-        const cardItems = cards.querySelectorAll(".studio-card");
-        gsap.fromTo(
-          cardItems,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-            scrollTrigger: {
-              trigger: cards,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-      },
-    );
-  }, []);
+  const clients = [
+    {
+      id: "cresults",
+      client: "cResults Consulting",
+      location: "United States (Retainer)",
+      role: "Full-Stack Refactor",
+      problem:
+        "cResults needed a complete refactoring of their customer portal and marketing pipeline under a strict 45-day deadline with zero operational downtime allowed.",
+      decision:
+        "Built a hybrid Headless CMS setup using Next.js Incremental Static Regeneration (ISR) and integrated it with their legacy CRM endpoints to avoid data migration risks.",
+      outcome:
+        "Delivered the system 5 days ahead of schedule, resulting in a 40% improvement in lighthouse performance and leading to the foundation of Dev Studio.",
+      stack: [
+        "Next.js",
+        "TypeScript",
+        "CRM Integration",
+        "ISR",
+        "Tailwind CSS",
+      ],
+      metrics: [
+        { value: "-5 Days", label: "Delivery Speedup" },
+        { value: "+40%", label: "Lighthouse Performance" },
+        { value: "Zero", label: "Migration Downtime" },
+      ],
+      image: null, // Pure editorial text-focused layout
+    },
+    {
+      id: "namrl",
+      client: "NAMRL",
+      location: "India",
+      role: "SEO & Growth Architecture",
+      problem:
+        "NAMRL required search visibility for their multi-brand pharmaceutical portfolio to acquire organic business leads without paid advertising campaigns.",
+      decision:
+        "Engineered on-page SEO, configured custom schema structures, and optimized content publishing flows using Rank Math across 4 primary brand sites.",
+      outcome:
+        "Drove 41,600+ Google search impressions and 1,280+ organic clicks; successfully ranked 3 primary keywords in top-3 Google search positions.",
+      stack: [
+        "Next.js",
+        "Rank Math",
+        "SEO Engine",
+        "Analytics",
+        "Google Console",
+      ],
+      metrics: [
+        { value: "41,600+", label: "Google Impressions" },
+        { value: "1,280+", label: "Organic Clicks" },
+        { value: "Top-3", label: "Rank Positions" },
+      ],
+      image: "/images/projects/Namrl.png",
+    },
+    {
+      id: "kiyomi",
+      client: "KIYOMI Facilities",
+      location: "India",
+      role: "Frontend Brand Engineering",
+      problem:
+        "KIYOMI Facilities needed an online brand showcase that matched their high-end, premium service quality and allowed clean code handoff to their internal IT team.",
+      decision:
+        "Developed custom, section-based landing page architectures utilizing Next.js, Framer Motion, and shadcn/ui for smooth interaction rhythm.",
+      outcome:
+        "Delivered a fully responsive site scoring 100% on performance and accessibility checklists, featuring 60fps animations and reusable layouts.",
+      stack: [
+        "Next.js",
+        "TypeScript",
+        "Framer Motion",
+        "shadcn/ui",
+        "Tailwind CSS",
+      ],
+      metrics: [
+        { value: "100%", label: "Lighthouse Score" },
+        { value: "60fps", label: "Animation Rhythm" },
+        { value: "100%", label: "Component Reusability" },
+      ],
+      image: "/images/projects/Kiyomi.png",
+    },
+  ];
 
   return (
     <section
-      ref={containerRef}
       id="studio"
-      className="w-full bg-[var(--color-dark-1)] text-[var(--color-light-on-dark)] py-[var(--section-xl)] px-[var(--sp-8)] md:px-[var(--sp-16)] relative overflow-hidden"
+      className="bg-[var(--color-ground)] px-[var(--sp-8)] py-[var(--sp-24)] border-t border-[var(--color-surface-3)] max-md:px-[var(--sp-6)] max-md:py-[var(--sp-16)]"
     >
-      {/* Background design accents */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/5" />
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-white/5" />
-
-      <div className="max-w-[1280px] mx-auto w-full">
-        {/* Section Header */}
-        <div ref={headerRef} className="mb-[var(--sp-12)] max-w-2xl">
-          <SectionLabel
-            label="02 / DEV STUDIO"
-            className="text-white/40 mb-[var(--sp-3)] block"
-          />
-          <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-3xl)] text-white tracking-[var(--ls-display)] leading-[var(--lh-display)] mb-[var(--sp-4)]">
-            Dev Studio.
-          </h2>
-          <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-white/70 leading-[var(--lh-body)]">
-            I founded Dev Studio to ship production-grade products for US
-            clients. I manage client relations, architectural decisions, and
-            product speed under real business constraints.
+      <div className="max-w-[1280px] mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="flex flex-col max-w-[620px]">
+            <SectionLabel label="03 / DEV STUDIO" />
+            <h2 className="text-[2.5rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
+              Delivering commercial products under{" "}
+              <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">
+                real-world constraints.
+              </span>
+            </h2>
+          </div>
+          <p className="text-[13px] text-[var(--color-ink-2)] leading-relaxed max-w-[450px]">
+            Dev Studio is a boutique development agency founded to build robust,
+            high-performance web products for companies globally. From US CRM
+            integrations to technical SEO growth campaigns, I deliver code under
+            strict deadlines.
           </p>
         </div>
 
-        {/* 12-Column Grid of Cards */}
-        <div
-          ref={cardsRef}
-          className="grid grid-cols-1 md:grid-cols-12 gap-[var(--sp-4)] w-full"
-        >
-          {/* Card 1: Kiyomi (Headless Commerce Storefront) - 7 cols */}
-          <div className="studio-card col-span-12 md:col-span-7 flex flex-col justify-between bg-[var(--color-dark-2)] border border-white/5 rounded-[var(--radius-lg)] p-[var(--sp-6)] min-h-[460px] relative overflow-hidden group">
-            {/* Top row */}
-            <div className="flex justify-between items-start w-full relative z-10">
-              <div>
-                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] text-[#94ff0b] uppercase block mb-1">
-                  E-COMMERCE
-                </span>
-                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] text-white tracking-[var(--ls-title)]">
-                  Kiyomi
-                </h3>
-              </div>
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] bg-white/10 text-white px-[10px] py-[6px] rounded-[100px] uppercase font-semibold">
-                ACTIVE PORTFOLIO
-              </span>
-            </div>
-
-            {/* Description & Impact */}
-            <div className="mt-[var(--sp-4)] relative z-10">
-              <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-white/75 leading-[var(--lh-body)] mb-[var(--sp-4)]">
-                A premium, minimalist headless skincare store built to scale.
-                Integrates Shopify Checkout, customizable cart components, and
-                hyper-optimized static generation.
-              </p>
-              <div className="flex flex-col gap-1.5 border-l border-white/15 pl-[var(--sp-4)] mb-[var(--sp-4)]">
-                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-white/50 uppercase">
-                  Impact
-                </span>
-                <span className="font-[family-name:var(--font-sans)] text-[length:var(--text-sm)] text-white/90 leading-[var(--lh-label)]">
-                  Implemented headless checkout flow that reduced drop-offs and
-                  increased checkout performance by 25%.
-                </span>
-              </div>
-            </div>
-
-            {/* Mockup Image container */}
-            <div className="h-[180px] w-full mt-[var(--sp-4)] relative overflow-hidden rounded-[var(--radius-md)]">
-              <ElevatedImage
-                src="/images/projects/Kiyomi.png"
-                alt="Kiyomi Storefront mockup"
-                width={700}
-                height={400}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Tags footer */}
-            <div className="flex justify-between items-end mt-[var(--sp-4)] relative z-10">
-              <div className="flex flex-wrap gap-[var(--sp-2)]">
-                {["Next.js", "Shopify API", "Tailwind CSS", "Vercel"].map(
-                  (tech) => (
-                    <span
-                      key={tech}
-                      className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] bg-white/5 border border-white/10 text-white/60 px-[10px] py-[4px] rounded-[100px]"
-                    >
-                      {tech}
-                    </span>
-                  ),
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Agency Operations / Focus - 5 cols */}
-          <div className="studio-card col-span-12 md:col-span-5 flex flex-col justify-between bg-[var(--color-dark-2)] border border-white/5 rounded-[var(--radius-lg)] p-[var(--sp-6)] min-h-[460px]">
-            <div>
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] text-[#94ff0b] uppercase block mb-1">
-                STUDIO VALUE
-              </span>
-              <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] text-white tracking-[var(--ls-title)] mb-[var(--sp-4)]">
-                How We Deliver.
-              </h3>
-              <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-white/75 leading-[var(--lh-body)]">
-                Dev Studio is built on a direct engineering model. We skip
-                account managers and fluff. We build robust systems that are
-                fast to load and simple to maintain.
-              </p>
-            </div>
-
-            {/* Key metrics list */}
-            <div className="flex flex-col gap-[var(--sp-3)] my-[var(--sp-4)]">
-              {[
-                { label: "Active US Clients", val: "4" },
-                { label: "Production Sites Live", val: "10+" },
-                { label: "On-time Delivery Rate", val: "100%" },
-                { label: "Pune, IN to Global", val: "Remote" },
-              ].map((metric) => (
-                <div
-                  key={metric.label}
-                  className="flex items-center justify-between border-b border-white/5 pb-2"
-                >
-                  <span className="font-[family-name:var(--font-sans)] text-[length:var(--text-sm)] text-white/60">
-                    {metric.label}
+        {/* Clients Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {clients.map((c) => (
+            <DepthCard
+              key={c.id}
+              level={1}
+              className="flex flex-col bg-white overflow-hidden p-6 h-full justify-between shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
+            >
+              <div className="flex flex-col">
+                {/* Meta details */}
+                <div className="flex justify-between items-center mb-4">
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] uppercase tracking-wider">
+                    {c.location}
                   </span>
-                  <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] text-[#94ff0b] font-bold">
-                    {metric.val}
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-2)] uppercase tracking-wider font-semibold">
+                    {c.role}
                   </span>
                 </div>
-              ))}
-            </div>
 
-            <div>
-              <MagneticButton
-                asLink
-                href="mailto:prajyotporje@gmail.com"
-                className="bg-white text-[var(--color-dark-1)] px-[18px] py-[10px] rounded-[100px] text-[length:var(--text-sm)] font-medium hover:bg-white/90 w-full text-center"
-              >
-                Inquire for Work
-              </MagneticButton>
-            </div>
-          </div>
-
-          {/* Card 3: Agency Ethos - 5 cols */}
-          <div className="studio-card col-span-12 md:col-span-5 flex flex-col justify-between bg-[var(--color-dark-2)] border border-white/5 rounded-[var(--radius-lg)] p-[var(--sp-6)] min-h-[460px]">
-            <div>
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] text-[#94ff0b] uppercase block mb-1">
-                ENGINEERING STANDARDS
-              </span>
-              <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] text-white tracking-[var(--ls-title)] mb-[var(--sp-4)]">
-                The Product Mindset.
-              </h3>
-              <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-white/75 leading-[var(--lh-body)]">
-                A personal conviction to stand behind our software. We monitor
-                production performance, optimize resource loads, and ensure
-                accessibility. Our sites achieve 95+ lighthouse scores.
-              </p>
-            </div>
-
-            <div className="border border-white/10 bg-white/5 rounded-[var(--radius-md)] p-[var(--sp-4)] mt-[var(--sp-2)]">
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[#94ff0b] block mb-1">
-                SYSTEM REPORT
-              </span>
-              <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-sm)] text-white/60 italic">
-                &ldquo;Every line of code is written with semantic execution. We
-                swap defaults, calibrate colors, and build animations that have
-                static fallback layouts.&rdquo;
-              </p>
-            </div>
-
-            <div className="mt-[var(--sp-4)]">
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-white/40">
-                DEV STUDIO CO - 2025
-              </span>
-            </div>
-          </div>
-
-          {/* Card 4: Namrl (Technical Infrastructure Site) - 7 cols */}
-          <div className="studio-card col-span-12 md:col-span-7 flex flex-col justify-between bg-[var(--color-dark-2)] border border-white/5 rounded-[var(--radius-lg)] p-[var(--sp-6)] min-h-[460px] relative overflow-hidden group">
-            {/* Top row */}
-            <div className="flex justify-between items-start w-full relative z-10">
-              <div>
-                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] text-[#94ff0b] uppercase block mb-1">
-                  BRAND INFRASTRUCTURE
-                </span>
-                <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-xl)] text-white tracking-[var(--ls-title)]">
-                  Namrl
+                {/* Title */}
+                <h3 className="text-[1.3rem] font-[family-name:var(--font-sans)] font-semibold text-[var(--color-ink-1)] mb-4">
+                  {c.client}
                 </h3>
-              </div>
-              <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tracking-[var(--ls-caps)] bg-white/10 text-white px-[10px] py-[6px] rounded-[100px] uppercase font-semibold">
-                COMPLETED
-              </span>
-            </div>
 
-            {/* Description & Impact */}
-            <div className="mt-[var(--sp-4)] relative z-10">
-              <p className="font-[family-name:var(--font-sans)] text-[length:var(--text-base)] text-white/75 leading-[var(--lh-body)] mb-[var(--sp-4)]">
-                A high-fidelity landing and brand engine designed for a
-                technical system provider. Focuses on premium, interactive
-                layouts, fine-grained details, and high-framerate motion curves.
-              </p>
-              <div className="flex flex-col gap-1.5 border-l border-white/15 pl-[var(--sp-4)] mb-[var(--sp-4)]">
-                <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-white/50 uppercase">
-                  Details
-                </span>
-                <span className="font-[family-name:var(--font-sans)] text-[length:var(--text-sm)] text-white/90 leading-[var(--lh-label)]">
-                  Built complex SVG layout systems and GSAP animation triggers.
-                  Optimizations resulted in a sub-1.2s Largest Contentful Paint
-                  (LCP) score.
-                </span>
-              </div>
-            </div>
-
-            {/* Mockup Image container */}
-            <div className="h-[180px] w-full mt-[var(--sp-4)] relative overflow-hidden rounded-[var(--radius-md)]">
-              <ElevatedImage
-                src="/images/projects/Namrl.png"
-                alt="Namrl Interface mockup"
-                width={700}
-                height={400}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Tags footer */}
-            <div className="flex justify-between items-end mt-[var(--sp-4)] relative z-10">
-              <div className="flex flex-wrap gap-[var(--sp-2)]">
-                {["Next.js", "GSAP ScrollTrigger", "SVG Path", "SEO"].map(
-                  (tech) => (
-                    <span
-                      key={tech}
-                      className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] bg-white/5 border border-white/10 text-white/60 px-[10px] py-[4px] rounded-[100px]"
-                    >
-                      {tech}
+                {/* Screenshot if available, else editorial spacing */}
+                {c.image ? (
+                  <div className="w-full h-[160px] relative rounded-lg overflow-hidden border border-[var(--color-surface-3)] mb-6">
+                    <Image
+                      src={c.image}
+                      alt={c.client}
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-300 hover:scale-102"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-[160px] flex items-center justify-center bg-[var(--color-surface-2)] border border-dashed border-[var(--color-surface-3)] rounded-lg mb-6">
+                    <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-ink-3)] uppercase">
+                      Enterprise CRM Architecture
                     </span>
-                  ),
+                  </div>
                 )}
+
+                {/* Details */}
+                <p className="text-[12px] text-[var(--color-ink-2)] leading-relaxed mb-6">
+                  {c.decision} {c.outcome}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 mb-6">
+                  {c.stack.slice(0, 4).map((tag) => (
+                    <Tag key={tag} className="text-[9px] px-2 py-0.5">
+                      {tag}
+                    </Tag>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
+
+              {/* Metrics Footer */}
+              <div className="grid grid-cols-3 gap-2 pt-4 border-t border-[var(--color-surface-3)] mt-auto">
+                {c.metrics.map((m) => (
+                  <div key={m.label} className="flex flex-col">
+                    <span className="text-[1.15rem] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)] leading-none">
+                      {m.value}
+                    </span>
+                    <span className="text-[8px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider mt-1">
+                      {m.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </DepthCard>
+          ))}
         </div>
       </div>
     </section>

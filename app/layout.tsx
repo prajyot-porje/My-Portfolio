@@ -90,14 +90,25 @@ export default function RootLayout({
         }
         suppressHydrationWarning
       >
-        <body>
+        <head>
           {/* JS-detect: enables .hero-entrance hidden state only when JS runs */}
-          <Script id="js-detect" strategy="beforeInteractive">
-            {`document.documentElement.classList.add('js')`}
-          </Script>
+          <script
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: JS detect inline script
+            dangerouslySetInnerHTML={{
+              __html: "document.documentElement.classList.add('js')",
+            }}
+          />
+        </head>
+        <body>
           <LenisProvider>{children}</LenisProvider>
           {/* impeccable-live-start */}
-          <script src="http://localhost:8400/live.js"></script>
+          {process.env.NODE_ENV === "development" && (
+            <Script
+              id="impeccable-live"
+              src="http://localhost:8400/live.js"
+              strategy="lazyOnload"
+            />
+          )}
           {/* impeccable-live-end */}
         </body>
       </html>

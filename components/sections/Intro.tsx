@@ -1,19 +1,26 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { TextEffect } from "../ui/text-effect";
 
 interface IntroProps {
   onComplete: () => void;
 }
 
+const flipVariants = {
+  container: {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.03 } },
+  },
+  item: {
+    hidden: { opacity: 0, rotateX: 90, y: 10 },
+    visible: { opacity: 1, rotateX: 0, y: 0, transition: { duration: 0.2 } },
+  },
+};
+
 export default function Intro({ onComplete }: IntroProps) {
-  // null = not yet determined, false = show, true = skip
   const [shouldShow, setShouldShow] = useState<boolean | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const line1Ref = useRef<HTMLDivElement>(null);
-  const line2Ref = useRef<HTMLDivElement>(null);
-  const line3Ref = useRef<HTMLDivElement>(null);
-  const accentRef = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState<number>(0); // 0 = line 1, 1 = line 2, 2 = line 3, 3 = fade out container
 
   // ── Determine whether to show the intro ────────────────────────────
   useEffect(() => {
@@ -32,218 +39,171 @@ export default function Intro({ onComplete }: IntroProps) {
     }
   }, [onComplete]);
 
-  // ── GSAP animation sequence ─────────────────────────────────────────
+  // ── Step progression sequence ──────────────────────────────────────
   useEffect(() => {
     if (shouldShow !== true) return;
 
-    let active = true;
-    let ctx: { revert: () => void } | undefined;
-
-    import("gsap").then(({ gsap }) => {
-      if (!active) return;
-
-      if (
-        !line1Ref.current ||
-        !line2Ref.current ||
-        !line3Ref.current ||
-        !accentRef.current ||
-        !containerRef.current
-      ) {
-        return;
-      }
-
-      ctx = gsap.context(() => {
-        const tl = gsap.timeline();
-
-        // ── Initial state: all lines invisible, positioned below ──
-        gsap.set([line1Ref.current, line2Ref.current, line3Ref.current], {
-          opacity: 0,
-          y: 24,
-        });
-        gsap.set(accentRef.current, { opacity: 0, scaleX: 0 });
-
-        // ── LINE 1: "Ideas are cheap." ─────────────────────────────
-        // in: 700ms ease-cinematic
-        tl.to(line1Ref.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        });
-        // hold: 1400ms
-        tl.to(line1Ref.current, { duration: 1.4 });
-        // out: 500ms ease-sharp
-        tl.to(line1Ref.current, {
-          opacity: 0,
-          y: -16,
-          duration: 0.5,
-          ease: "cubic-bezier(0.7,0,0.84,0)",
-        });
-
-        // ── LINE 2: "Execution is rare." ───────────────────────────
-        tl.to(line2Ref.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        });
-        tl.to(line2Ref.current, { duration: 1.4 });
-        tl.to(line2Ref.current, {
-          opacity: 0,
-          y: -16,
-          duration: 0.5,
-          ease: "cubic-bezier(0.7,0,0.84,0)",
-        });
-
-        // ── LINE 3: "Here's mine." ─────────────────────────────────
-        tl.to(line3Ref.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-        });
-
-        // Accent line flashes after line 3 appears
-        tl.to(
-          accentRef.current,
-          {
-            opacity: 1,
-            scaleX: 1,
-            duration: 0.2,
-            ease: "cubic-bezier(0.16,1,0.3,1)",
-          },
-          "+=0.1",
-        );
-
-        // hold: 2200ms (line 3 + accent)
-        tl.to(line3Ref.current, { duration: 2.2 });
-
-        // out: line 3 + accent fade together
-        tl.to([line3Ref.current, accentRef.current], {
-          opacity: 0,
-          y: -16,
-          duration: 0.5,
-          ease: "cubic-bezier(0.7,0,0.84,0)",
-        });
-
-        // ── Overlay fade out ───────────────────────────────────────
-        // pause 200ms then full overlay fades
-        tl.to(containerRef.current, { duration: 0.2 });
-        tl.to(containerRef.current, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "cubic-bezier(0.16,1,0.3,1)",
-          onComplete: () => {
-            sessionStorage.setItem("intro-seen", "true");
-            onComplete();
-          },
-        });
-      }, containerRef);
-    });
+    // Timing matching the original GSAP timeline
+    const timers = [
+      setTimeout(() => setStep(1), 2600), // Move to Line 2 after 2.6s
+      setTimeout(() => setStep(2), 5200), // Move to Line 3 after 5.2s
+      setTimeout(() => setStep(3), 8600), // Fade out container after 8.6s
+      setTimeout(() => {
+        sessionStorage.setItem("intro-seen", "true");
+        onComplete();
+      }, 9200), // Finish intro at 9.2s
+    ];
 
     return () => {
-      active = false;
-      if (ctx) ctx.revert();
+      for (const t of timers) clearTimeout(t);
     };
   }, [shouldShow, onComplete]);
 
-  // Don't render until we know whether to show
   if (shouldShow === null || shouldShow === false) return null;
 
+  // Animation variants for lines
+  const lineVariants = {
+    hidden: { opacity: 1 },
+    visible: { opacity: 1 },
+    exit: {
+      opacity: 0,
+      y: -12,
+      transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] as [number, number, number, number] },
+    },
+  };
+
   return (
-    <div
-      ref={containerRef}
-      aria-hidden="true"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "var(--color-dark-1)",
-        overflow: "hidden",
-      }}
-    >
-      {/* Line 1 */}
-      <div
-        ref={line1Ref}
-        style={{
-          position: "absolute",
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(2rem, 5vw, 4.5rem)",
-          fontWeight: 700,
-          color: "var(--color-light-on-dark)",
-          letterSpacing: "var(--ls-heading)",
-          lineHeight: "var(--lh-heading)",
-          textAlign: "center",
-          maxWidth: 700,
-          willChange: "opacity, transform",
-        }}
-      >
-        Ideas are cheap.
-      </div>
-
-      {/* Line 2 */}
-      <div
-        ref={line2Ref}
-        style={{
-          position: "absolute",
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(2rem, 5vw, 4.5rem)",
-          fontWeight: 700,
-          color: "var(--color-light-on-dark)",
-          letterSpacing: "var(--ls-heading)",
-          lineHeight: "var(--lh-heading)",
-          textAlign: "center",
-          maxWidth: 700,
-          willChange: "opacity, transform",
-        }}
-      >
-        Execution is rare.
-      </div>
-
-      {/* Line 3 + accent mark */}
-      <div
-        style={{
-          position: "absolute",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "var(--sp-4)",
-        }}
-      >
-        <div
-          ref={line3Ref}
+    <AnimatePresence>
+      {step < 3 && (
+        <motion.div
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+          }}
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(2rem, 5vw, 4.5rem)",
-            fontWeight: 700,
-            color: "var(--color-light-on-dark)",
-            letterSpacing: "var(--ls-heading)",
-            lineHeight: "var(--lh-heading)",
-            textAlign: "center",
-            maxWidth: 700,
-            willChange: "opacity, transform",
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "var(--color-dark-1)",
+            overflow: "hidden",
           }}
         >
-          Here&apos;s mine.
-        </div>
+          <AnimatePresence mode="wait">
+            {step === 0 && (
+              <motion.div
+                key="line1"
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
+                  position: "absolute",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(1.2rem, 3.5vw, 2rem)",
+                  fontWeight: 500,
+                  color: "var(--color-light-on-dark)",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.2,
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  willChange: "opacity, transform",
+                }}
+              >
+                <TextEffect per="char" delay={0.1} variants={flipVariants}>
+                  Ideas are cheap.
+                </TextEffect>
+              </motion.div>
+            )}
 
-        {/* Accent underline — 2px × 40px lime, appears with line 3 */}
-        <div
-          ref={accentRef}
-          style={{
-            width: 40,
-            height: 2,
-            backgroundColor: "var(--color-accent)",
-            borderRadius: 1,
-            transformOrigin: "center",
-            willChange: "opacity, transform",
-          }}
-        />
-      </div>
-    </div>
+            {step === 1 && (
+              <motion.div
+                key="line2"
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
+                  position: "absolute",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(1.2rem, 3.5vw, 2rem)",
+                  fontWeight: 500,
+                  color: "var(--color-light-on-dark)",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.2,
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  willChange: "opacity, transform",
+                }}
+              >
+                <TextEffect per="char" delay={0.1} variants={flipVariants}>
+                  Execution is rare.
+                </TextEffect>
+              </motion.div>
+            )}
+
+            {step === 2 && (
+              <motion.div
+                key="line3"
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
+                  position: "absolute",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "var(--sp-4)",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "clamp(1.2rem, 3.5vw, 2rem)",
+                    fontWeight: 500,
+                    color: "var(--color-light-on-dark)",
+                    letterSpacing: "-0.01em",
+                    lineHeight: 1.2,
+                    textAlign: "center",
+                    whiteSpace: "nowrap",
+                    willChange: "opacity, transform",
+                  }}
+                >
+                  <TextEffect per="char" delay={0.1} variants={flipVariants}>
+                    Here's mine.
+                  </TextEffect>
+                </div>
+
+                {/* Accent line flashes after line 3 appears */}
+                <motion.div
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={{
+                    opacity: 1,
+                    scaleX: 1,
+                    transition: {
+                      delay: 0.5,
+                      duration: 0.2,
+                      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+                    },
+                  }}
+                  style={{
+                    width: 40,
+                    height: 2,
+                    backgroundColor: "var(--color-accent)",
+                    borderRadius: 1,
+                    transformOrigin: "center",
+                    willChange: "opacity, transform",
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

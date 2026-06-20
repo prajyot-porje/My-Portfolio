@@ -9,6 +9,8 @@ export type CaseStudy = {
   stack: string[];
   liveUrl?: string;
   year: string;
+  image: string;
+  metrics: { value: string; label: string }[];
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -18,44 +20,81 @@ export const caseStudies: CaseStudy[] = [
     title: "DevFlow",
     tagline: "The problem wasn't AI. The problem was context.",
     problem:
-      "AI assistants were fast but lacked codebase awareness, producing generic and incorrect code. Existing tools were slow, indexing entire repositories naively and exhausting context windows.",
+      "AI code assistants produced generic, buggy code because they lacked full codebase context. Naive context indexing was too slow and quickly overloaded LLM prompt token windows.",
     decision:
-      "Built a local indexing engine using TypeScript that analyzes imports, active file coordinates, and AST node relationships to construct a minimal, high-relevance context payload for LLM prompts.",
+      "Engineered an AST validation layer with a Gemini-powered 2-attempt self-repair loop to auto-correct syntax errors, and optimized WebContainers by blocking node_modules traversal.",
     outcome:
-      "Successfully launched with paying users in launch week. Deployed as a full SaaS with sub-second context construction times and verified improvements in AI code generation accuracy.",
-    stack: ["Next.js", "TypeScript", "Tailwind CSS", "LLM APIs"],
+      "Launched to paying users. Cut browser-native preview load times from 5 minutes to under 60 seconds, and slashed runtime preview crashes from 12% to under 0.5%.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "WASM",
+      "Babel AST",
+      "OpenRouter",
+    ],
     liveUrl: "https://devflow.in",
-    year: "2024",
+    year: "2026",
+    image: "/images/projects/Devflow.png",
+    metrics: [
+      { value: "5m → <60s", label: "WASM Preview Load Time" },
+      { value: "99.2%", label: "Uptime on OpenRouter Cascade" },
+      { value: "<0.5%", label: "Preview Sandbox Crash Rate" },
+    ],
   },
   {
     id: "contextgraph",
     index: "02",
     title: "ContextGraph",
-    tagline:
-      "Multi-tenant context architecture - built when no pattern existed.",
+    tagline: "Multi-tenant context architecture — designed from scratch.",
     problem:
-      "Integrating multi-tenant context engine into collaborative developer environments meant handling high write concurrency, complex graph structures, and absolute tenant security isolation.",
+      "Integrating a multi-tenant context engine into collaborative environments required handling high write concurrency, complex graph memory, and absolute security boundaries.",
     decision:
-      "Designed a multi-tenant graph persistence layer from scratch using isolated schema namespaces and transaction-safe schema migrations to prevent cross-tenant data leaks.",
+      "Built a production JSON-RPC 2.0 MCP server with zero-trust PostgreSQL tenant isolation and designed an automated memory decay cron that applies 8% exponential decay to stale nodes.",
     outcome:
-      "Achieved sub-15ms graph query response times under simulated load of 1000 concurrent requests, with zero security boundary leaks detected during penetration testing.",
-    stack: ["Next.js", "TypeScript", "Graph DB", "Redis"],
-    year: "2025",
+      "Achieved sub-15ms graph query response times under simulated load of 1000 concurrent requests, and fixed a WebGL pointer-event desync between Three.js Controls.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Three.js",
+      "WebGL",
+      "Redis",
+    ],
+    year: "2026",
+    image: "/images/projects/contextGraph.png",
+    metrics: [
+      { value: "<15ms", label: "Graph Query Response Latency" },
+      { value: "8%", label: "Weekly Exponential Memory Decay" },
+      { value: "Zero", label: "Security Boundary Leak Incidents" },
+    ],
   },
   {
-    id: "dev-studio",
+    id: "cresults",
     index: "03",
-    title: "Dev Studio x cResults",
-    tagline:
-      "Shipped for a US client under real constraints. Then turned it into a studio.",
+    title: "cResults / Dev Studio",
+    tagline: "Enterprise client portal — shipped 5 days ahead of deadline.",
     problem:
-      "cResults needed a complete refactoring of their customer portal and marketing pipeline under a strict 45-day deadline with zero operational downtime allowed.",
+      "A US client's legacy CRM integration had severe sync delays, causing inconsistent tenant states and critical data loss. The portal refactor had a hard 45-day SLA deadline.",
     decision:
-      "Built a hybrid Headless CMS setup using Next.js Incremental Static Regeneration (ISR) and integrated it with their legacy CRM endpoints to avoid data migration risks.",
+      "Implemented a Next.js Incremental Static Regeneration (ISR) layer over PostgreSQL to decouple reads, and wrote a concurrent CRM synchronizer with transaction rollbacks.",
     outcome:
-      "Delivered the system 5 days ahead of schedule, resulting in a 40% improvement in lighthouse performance and leading to the foundation of Dev Studio to handle ongoing US contracts.",
-    stack: ["Next.js", "TypeScript", "CRM Integration", "SEO"],
-    liveUrl: "https://dev-studio.in",
-    year: "2024 - Present",
+      "Delivered 5 days ahead of the 45-day deadline. Slashed portal load latency from 4.5 seconds to 150ms, boosted Lighthouse performance to 100%, and achieved zero downtime sync.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL",
+      "ISR",
+      "Tailwind CSS",
+      "CRM API",
+    ],
+    liveUrl: "https://devstudio.io",
+    year: "2026",
+    image: "/images/projects/Kiyomi.png",
+    metrics: [
+      { value: "5 Days Early", label: "Delivery Speedup" },
+      { value: "+40%", label: "Lighthouse Performance" },
+      { value: "0.0%", label: "Data Sync Downtime" },
+    ],
   },
 ];
