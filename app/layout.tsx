@@ -74,6 +74,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://prajyot.dev"),
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 // ── Root Layout ───────────────────────────────────────────────────
 export default function RootLayout({
   children,

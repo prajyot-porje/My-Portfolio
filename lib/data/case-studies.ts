@@ -8,6 +8,7 @@ export type CaseStudy = {
   outcome: string;
   stack: string[];
   liveUrl?: string;
+  githubUrl?: string;
   year: string;
   image: string;
   metrics: { value: string; label: string }[];
@@ -20,11 +21,11 @@ export const caseStudies: CaseStudy[] = [
     title: "DevFlow",
     tagline: "The problem wasn't AI. The problem was context.",
     problem:
-      "AI code assistants produced generic, buggy code because they lacked full codebase context. Naive context indexing was too slow and quickly overloaded LLM prompt token windows.",
+      "AI code assistants produced generic code due to slow, unoptimized context parsing.",
     decision:
-      "Engineered an AST validation layer with a Gemini-powered 2-attempt self-repair loop to auto-correct syntax errors, and optimized WebContainers by blocking node_modules traversal.",
+      "Engineered a Gemini self-repair validation layer and optimized WebContainers WASM structure.",
     outcome:
-      "Launched to paying users. Cut browser-native preview load times from 5 minutes to under 60 seconds, and slashed runtime preview crashes from 12% to under 0.5%.",
+      "Cut preview loads from 5m to <60s, slashing runtime sandbox crashes to <0.5%.",
     stack: [
       "Next.js",
       "TypeScript",
@@ -33,7 +34,8 @@ export const caseStudies: CaseStudy[] = [
       "Babel AST",
       "OpenRouter",
     ],
-    liveUrl: "https://devflow.in",
+    liveUrl: "https://dev-flow-lime.vercel.app/",
+    githubUrl: "https://github.com/prajyot-porje/DevFlow",
     year: "2026",
     image: "/images/projects/Devflow.png",
     metrics: [
@@ -48,11 +50,11 @@ export const caseStudies: CaseStudy[] = [
     title: "ContextGraph",
     tagline: "Multi-tenant context architecture — designed from scratch.",
     problem:
-      "Integrating a multi-tenant context engine into collaborative environments required handling high write concurrency, complex graph memory, and absolute security boundaries.",
+      "Multi-tenant context engines face concurrency and memory bloat under scale.",
     decision:
-      "Built a production JSON-RPC 2.0 MCP server with zero-trust PostgreSQL tenant isolation and designed an automated memory decay cron that applies 8% exponential decay to stale nodes.",
+      "Built a JSON-RPC 2.0 MCP server with PostgreSQL tenant isolation and 8% decay cron.",
     outcome:
-      "Achieved sub-15ms graph query response times under simulated load of 1000 concurrent requests, and fixed a WebGL pointer-event desync between Three.js Controls.",
+      "Achieved sub-15ms graph queries and resolved critical WebGL pointer-event desync.",
     stack: [
       "Next.js",
       "TypeScript",
@@ -61,6 +63,8 @@ export const caseStudies: CaseStudy[] = [
       "WebGL",
       "Redis",
     ],
+    liveUrl: "https://context-graph-amber.vercel.app/",
+    githubUrl: "https://github.com/prajyot-porje/Context-Graph",
     year: "2026",
     image: "/images/projects/contextGraph.png",
     metrics: [
@@ -75,11 +79,11 @@ export const caseStudies: CaseStudy[] = [
     title: "cResults / Dev Studio",
     tagline: "Enterprise client portal — shipped 5 days ahead of deadline.",
     problem:
-      "A US client's legacy CRM integration had severe sync delays, causing inconsistent tenant states and critical data loss. The portal refactor had a hard 45-day SLA deadline.",
+      "US client CRM sync latency caused critical data delays on a 45-day SLA.",
     decision:
-      "Implemented a Next.js Incremental Static Regeneration (ISR) layer over PostgreSQL to decouple reads, and wrote a concurrent CRM synchronizer with transaction rollbacks.",
+      "Implemented a Next.js ISR read-decoupling layer and concurrent transactional sync.",
     outcome:
-      "Delivered 5 days ahead of the 45-day deadline. Slashed portal load latency from 4.5 seconds to 150ms, boosted Lighthouse performance to 100%, and achieved zero downtime sync.",
+      "Delivered 5 days early with 150ms portal load speed and zero downtime.",
     stack: [
       "Next.js",
       "TypeScript",
@@ -89,6 +93,7 @@ export const caseStudies: CaseStudy[] = [
       "CRM API",
     ],
     liveUrl: "https://devstudio.io",
+    githubUrl: "https://github.com/prajyot-porje",
     year: "2026",
     image: "/images/projects/Kiyomi.png",
     metrics: [

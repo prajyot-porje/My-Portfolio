@@ -27,7 +27,7 @@
 
     --accent: #000000; /* clean black accent */
     --accent-hover: #262626;
-    --success: #15803d; /* status green */
+    --success: #94ff0b; /* yellowish status green */
 
     /* ── Compatibility Mappings ───────────────────────── */
     --color-ground: var(--canvas);
@@ -337,12 +337,13 @@
 
   @media (max-width: 767px) {
     .hero-veil {
-      /* Stronger gradient on mobile for text readability over photo */
+      /* Vertical gradient overlay on mobile ensures centered text is perfectly readable over the portrait */
       background: linear-gradient(
-        to right,
-        rgba(250, 250, 250, 0.88) 0%,
-        rgba(250, 250, 250, 0.55) 50%,
-        rgba(250, 250, 250, 0) 75%
+        to top,
+        rgba(250, 250, 250, 0.95) 0%,
+        rgba(250, 250, 250, 0.8) 40%,
+        rgba(250, 250, 250, 0.45) 75%,
+        rgba(250, 250, 250, 0.2) 100%
       );
     }
 

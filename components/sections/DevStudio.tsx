@@ -1,188 +1,178 @@
 "use client";
 
-import Image from "next/image";
 import DepthCard from "../depth/DepthCard";
 import SectionLabel from "../ui/SectionLabel";
 import Tag from "../ui/Tag";
 
 export default function DevStudio() {
-  const clients = [
-    {
-      id: "cresults",
-      client: "cResults Consulting",
-      location: "United States (Retainer)",
-      role: "Full-Stack Refactor",
-      problem:
-        "cResults needed a complete refactoring of their customer portal and marketing pipeline under a strict 45-day deadline with zero operational downtime allowed.",
-      decision:
-        "Built a hybrid Headless CMS setup using Next.js Incremental Static Regeneration (ISR) and integrated it with their legacy CRM endpoints to avoid data migration risks.",
-      outcome:
-        "Delivered the system 5 days ahead of schedule, resulting in a 40% improvement in lighthouse performance and leading to the foundation of Dev Studio.",
-      stack: [
-        "Next.js",
-        "TypeScript",
-        "CRM Integration",
-        "ISR",
-        "Tailwind CSS",
-      ],
-      metrics: [
-        { value: "-5 Days", label: "Delivery Speedup" },
-        { value: "+40%", label: "Lighthouse Performance" },
-        { value: "Zero", label: "Migration Downtime" },
-      ],
-      image: null, // Pure editorial text-focused layout
-    },
-    {
-      id: "namrl",
-      client: "NAMRL",
-      location: "India",
-      role: "SEO & Growth Architecture",
-      problem:
-        "NAMRL required search visibility for their multi-brand pharmaceutical portfolio to acquire organic business leads without paid advertising campaigns.",
-      decision:
-        "Engineered on-page SEO, configured custom schema structures, and optimized content publishing flows using Rank Math across 4 primary brand sites.",
-      outcome:
-        "Drove 41,600+ Google search impressions and 1,280+ organic clicks; successfully ranked 3 primary keywords in top-3 Google search positions.",
-      stack: [
-        "Next.js",
-        "Rank Math",
-        "SEO Engine",
-        "Analytics",
-        "Google Console",
-      ],
-      metrics: [
-        { value: "41,600+", label: "Google Impressions" },
-        { value: "1,280+", label: "Organic Clicks" },
-        { value: "Top-3", label: "Rank Positions" },
-      ],
-      image: "/images/projects/Namrl.png",
-    },
-    {
-      id: "kiyomi",
-      client: "KIYOMI Facilities",
-      location: "India",
-      role: "Frontend Brand Engineering",
-      problem:
-        "KIYOMI Facilities needed an online brand showcase that matched their high-end, premium service quality and allowed clean code handoff to their internal IT team.",
-      decision:
-        "Developed custom, section-based landing page architectures utilizing Next.js, Framer Motion, and shadcn/ui for smooth interaction rhythm.",
-      outcome:
-        "Delivered a fully responsive site scoring 100% on performance and accessibility checklists, featuring 60fps animations and reusable layouts.",
-      stack: [
-        "Next.js",
-        "TypeScript",
-        "Framer Motion",
-        "shadcn/ui",
-        "Tailwind CSS",
-      ],
-      metrics: [
-        { value: "100%", label: "Lighthouse Score" },
-        { value: "60fps", label: "Animation Rhythm" },
-        { value: "100%", label: "Component Reusability" },
-      ],
-      image: "/images/projects/Kiyomi.png",
-    },
-  ];
-
   return (
     <section
       id="studio"
       className="bg-[var(--color-ground)] px-[var(--sp-8)] py-[var(--sp-24)] border-t border-[var(--color-surface-3)] max-md:px-[var(--sp-6)] max-md:py-[var(--sp-16)]"
     >
-      <div className="max-w-[1280px] mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div className="flex flex-col max-w-[620px]">
-            <SectionLabel label="03 / DEV STUDIO" />
-            <h2 className="text-[2.5rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
-              Delivering commercial products under{" "}
-              <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">
-                real-world constraints.
-              </span>
-            </h2>
-          </div>
-          <p className="text-[13px] text-[var(--color-ink-2)] leading-relaxed max-w-[450px]">
-            Dev Studio is a boutique development agency founded to build robust,
-            high-performance web products for companies globally. From US CRM
-            integrations to technical SEO growth campaigns, I deliver code under
-            strict deadlines.
+      <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row gap-12 md:gap-16 items-start">
+        {/* Left Column: Origin Story & Brand Narrative */}
+        <div className="w-full md:w-[45%] flex flex-col">
+          <SectionLabel label="03 / DEV STUDIO" />
+
+          <h2 className="text-[2.6rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
+            Boutique product engineering for{" "}
+            <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">
+              global clients.
+            </span>
+          </h2>
+
+          <p className="text-[13px] text-[var(--color-ink-2)] leading-relaxed mt-6 max-w-[42ch]">
+            Dev Studio was founded to engineer high-performance web products
+            under intense commercial constraints. What started as a rapid 45-day
+            refactor for a US customer portal has grown into a specialized
+            boutique agency shipping clean Next.js architectures, secure
+            database integrations, and high-visibility SEO engines.
           </p>
+
+          <p className="text-[13px] text-[var(--color-ink-2)] leading-relaxed mt-4 max-w-[42ch]">
+            Whether it is establishing zero-trust database security boundaries,
+            syncing legacy CRM platforms, or optimizing on-page SEO pipelines, I
+            build systems that work under real-world constraints.
+          </p>
+
+          {/* Agency Metric Summary */}
+          <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-[var(--color-surface-3)] max-w-[320px]">
+            <div className="flex flex-col">
+              <span className="text-[1.8rem] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)] leading-none">
+                100%
+              </span>
+              <span className="text-[8px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider mt-1.5">
+                Delivery Success
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[1.8rem] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)] leading-none">
+                41k+
+              </span>
+              <span className="text-[8px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider mt-1.5">
+                Organic search impressions
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Clients Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {clients.map((c) => (
-            <DepthCard
-              key={c.id}
-              level={1}
-              className="flex flex-col bg-white overflow-hidden p-6 h-full justify-between shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
-            >
+        {/* Right Column: Capabilities Stack */}
+        <div className="w-full md:w-[55%] flex flex-col gap-6">
+          {/* Card 1: Frontend Architecture */}
+          <DepthCard
+            level={1}
+            className="bg-white p-6 rounded-xl border border-[var(--color-surface-3)] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
+          >
+            <div className="flex items-start gap-4">
+              <div className="p-2.5 bg-[var(--color-surface-2)] rounded-lg border border-[var(--color-surface-3)] shrink-0 text-[var(--color-ink-2)]">
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <title>Code Icon</title>
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </div>
               <div className="flex flex-col">
-                {/* Meta details */}
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] uppercase tracking-wider">
-                    {c.location}
-                  </span>
-                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-2)] uppercase tracking-wider font-semibold">
-                    {c.role}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-[1.3rem] font-[family-name:var(--font-sans)] font-semibold text-[var(--color-ink-1)] mb-4">
-                  {c.client}
+                <h3 className="text-[14px] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)]">
+                  Performance-First Next.js Systems
                 </h3>
-
-                {/* Screenshot if available, else editorial spacing */}
-                {c.image ? (
-                  <div className="w-full h-[160px] relative rounded-lg overflow-hidden border border-[var(--color-surface-3)] mb-6">
-                    <Image
-                      src={c.image}
-                      alt={c.client}
-                      fill
-                      unoptimized
-                      className="object-cover transition-transform duration-300 hover:scale-102"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-[160px] flex items-center justify-center bg-[var(--color-surface-2)] border border-dashed border-[var(--color-surface-3)] rounded-lg mb-6">
-                    <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-ink-3)] uppercase">
-                      Enterprise CRM Architecture
-                    </span>
-                  </div>
-                )}
-
-                {/* Details */}
-                <p className="text-[12px] text-[var(--color-ink-2)] leading-relaxed mb-6">
-                  {c.decision} {c.outcome}
+                <p className="text-[11.5px] text-[var(--color-ink-2)] leading-relaxed mt-1.5 mb-4">
+                  Engineering bespoke web interfaces optimized for Core Web
+                  Vitals, sub-second route changes, and smooth 60fps interaction
+                  rhythm.
                 </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                  {c.stack.slice(0, 4).map((tag) => (
-                    <Tag key={tag} className="text-[9px] px-2 py-0.5">
-                      {tag}
-                    </Tag>
-                  ))}
+                <div className="flex flex-wrap gap-1.5">
+                  <Tag className="text-[8px] px-2 py-0.5">Next.js 14</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">TypeScript</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">Tailwind v4</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">Framer Motion</Tag>
                 </div>
               </div>
+            </div>
+          </DepthCard>
 
-              {/* Metrics Footer */}
-              <div className="grid grid-cols-3 gap-2 pt-4 border-t border-[var(--color-surface-3)] mt-auto">
-                {c.metrics.map((m) => (
-                  <div key={m.label} className="flex flex-col">
-                    <span className="text-[1.15rem] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)] leading-none">
-                      {m.value}
-                    </span>
-                    <span className="text-[8px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider mt-1">
-                      {m.label}
-                    </span>
-                  </div>
-                ))}
+          {/* Card 2: System Migrations */}
+          <DepthCard
+            level={1}
+            className="bg-white p-6 rounded-xl border border-[var(--color-surface-3)] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
+          >
+            <div className="flex items-start gap-4">
+              <div className="p-2.5 bg-[var(--color-surface-2)] rounded-lg border border-[var(--color-surface-3)] shrink-0 text-[var(--color-ink-2)]">
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <title>Database Migration Icon</title>
+                  <ellipse cx="12" cy="5" rx="9" ry="3" />
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                  <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+                </svg>
               </div>
-            </DepthCard>
-          ))}
+              <div className="flex flex-col">
+                <h3 className="text-[14px] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)]">
+                  CRM Integration & Database Security
+                </h3>
+                <p className="text-[11.5px] text-[var(--color-ink-2)] leading-relaxed mt-1.5 mb-4">
+                  Refactoring legacy synchronization pipelines and establishing
+                  isolated database boundaries with transactional protection to
+                  ensure zero data loss.
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  <Tag className="text-[8px] px-2 py-0.5">PostgreSQL</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">CRM APIs</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">Zero-Trust SQL</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">Better Auth</Tag>
+                </div>
+              </div>
+            </div>
+          </DepthCard>
+
+          {/* Card 3: SEO Architecture */}
+          <DepthCard
+            level={1}
+            className="bg-white p-6 rounded-xl border border-[var(--color-surface-3)] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
+          >
+            <div className="flex items-start gap-4">
+              <div className="p-2.5 bg-[var(--color-surface-2)] rounded-lg border border-[var(--color-surface-3)] shrink-0 text-[var(--color-ink-2)]">
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <title>Search SEO Icon</title>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h3 className="text-[14px] font-[family-name:var(--font-sans)] font-bold text-[var(--color-ink-1)]">
+                  SEO Architecture & Organic Conversion
+                </h3>
+                <p className="text-[11.5px] text-[var(--color-ink-2)] leading-relaxed mt-1.5 mb-4">
+                  Structuring clean site indexing, metadata systems, and schema
+                  scripts that rank primary keywords in top search positions
+                  organically.
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  <Tag className="text-[8px] px-2 py-0.5">Rank Math</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">ISR Caching</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">JSON-LD</Tag>
+                  <Tag className="text-[8px] px-2 py-0.5">Console Engine</Tag>
+                </div>
+              </div>
+            </div>
+          </DepthCard>
         </div>
       </div>
     </section>

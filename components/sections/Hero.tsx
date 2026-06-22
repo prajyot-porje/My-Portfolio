@@ -60,25 +60,18 @@ export default function Hero({ isIntroActive }: HeroProps) {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
 
-  // Time state
-  const [currentTime, setCurrentTime] = useState("");
-
   // Right card refs
-  const card1Ref = useRef<HTMLAnchorElement>(null);
+  const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
 
-  // Social/Email Popover state
-  const [emailPopoverOpen, setEmailPopoverOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const emailButtonRef = useRef<HTMLButtonElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("prajyotporje@gmail.com").then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  // Card 3 Copy state
+  const [card3Copied, setCard3Copied] = useState(false);
+  const handleCard3Click = () => {
+    navigator.clipboard.writeText("porjeprajyot@gmail.com").then(() => {
+      setCard3Copied(true);
+      setTimeout(() => setCard3Copied(false), 2000);
     });
   };
 
@@ -95,21 +88,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
   const cursorCoordinates = useRef({ x: 0, y: 0 });
   const blobPhase = useRef(0);
 
-  // ── Track local time ────────────────────────────────────────────────
-  useEffect(() => {
-    const updateTime = () => {
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      };
-      setCurrentTime(new Date().toLocaleTimeString("en-US", options));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
-    return () => clearInterval(interval);
-  }, []);
+
 
   // ── Track scroll state ─────────────────────────────────────────────
   useEffect(() => {
@@ -121,34 +100,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── Email Popover event listeners ──────────────────────────────────
-  useEffect(() => {
-    if (!emailPopoverOpen) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setEmailPopoverOpen(false);
-      }
-    };
-
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(e.target as Node) &&
-        emailButtonRef.current &&
-        !emailButtonRef.current.contains(e.target as Node)
-      ) {
-        setEmailPopoverOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [emailPopoverOpen]);
 
   // ── Scroll Indicator Play/Pause ────────────────────────────────────
   useEffect(() => {
@@ -475,21 +427,21 @@ export default function Hero({ isIntroActive }: HeroProps) {
       >
 
         {/* ── BOTTOM-LEFT: Hero copy ───────────────────────── */}
-        <div className="absolute left-[var(--sp-8)] bottom-[var(--sp-16)] max-w-[480px] max-md:bottom-[var(--sp-10)]">
+        <div className="absolute left-[var(--sp-8)] bottom-[var(--sp-28)] max-w-[480px] max-md:bottom-[var(--sp-16)]">
           {/* Location + time chip */}
           <motion.div
             ref={chipRef}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-[var(--sp-2)] bg-[rgba(13,13,13,0.06)] rounded-[var(--radius-pill)] px-[var(--sp-3)] py-[var(--sp-1)] mb-[var(--sp-5)]"
+            className="inline-flex items-center gap-[var(--sp-2)] bg-[rgba(13,13,13,0.04)] border border-[var(--color-surface-3)] rounded-[var(--radius-pill)] px-[var(--sp-3)] py-[var(--sp-1)] mb-[var(--sp-5)] w-fit"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-status-green)] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-status-green)]" />
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-ink-1)] opacity-40" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--color-ink-1)]" />
             </span>
-            <span className="font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] text-[var(--color-ink-2)] tracking-[var(--ls-caps)] uppercase font-semibold">
-              Pune, IN {currentTime && `· ${currentTime} IST`}
+            <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-[var(--ls-caps)] uppercase font-semibold text-[var(--color-ink-2)]">
+              ACTIVE SPRINT {"//"} AVAILABLE
             </span>
           </motion.div>
 
@@ -585,7 +537,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
         </div>
 
         {/* ── BOTTOM-RIGHT (FLOATING CARDS): right-side hero content ───────────────── */}
-        <motion.div
+﻿        <motion.div
           initial="hidden"
           animate="visible"
           variants={{
@@ -598,9 +550,8 @@ export default function Hero({ isIntroActive }: HeroProps) {
           }}
           className="absolute top-1/2 -translate-y-1/2 right-[var(--sp-8)] flex flex-col gap-[var(--sp-3)] z-[3] max-md:hidden pointer-events-auto"
         >
-          {/* CARD 1 — Active Project */}
-          <motion.a
-            href="#work"
+          {/* CARD 1 — Active Build */}
+          <motion.div
             ref={card1Ref}
             data-cursor-no-ring="true"
             variants={
@@ -619,7 +570,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   }
             }
             className={[
-              "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
+              "group relative block w-[340px] h-[144px] p-[8px] select-none outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
               "motion-reduce:transform-none motion-reduce:transition-none",
@@ -644,122 +595,65 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
                 }}
               />
-              {/* Diagonal grain pattern */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.022]"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(
-                    135deg,
-                    transparent,
-                    transparent 1px,
-                    rgba(255,255,255,0.14) 1px,
-                    rgba(255,255,255,0.14) 2px
-                  )`,
-                  backgroundSize: "5px 5px",
-                }}
-              />
 
-              {/* Top Flare Highlight Overlay */}
-              <div
-                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
-                }}
-              />
-
-              {/* Card content — compact layout with tighter padding to prevent layout breaking */}
-              <div className="relative z-[1] px-[var(--sp-5)] py-[var(--sp-3)] h-full flex flex-col justify-between">
-                {/* Top row: label + status */}
+              {/* Card content — developer dashboard aesthetic */}
+              <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
+                {/* Top row: system label + status */}
                 <div className="flex justify-between items-center">
-                  <span
-                    className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.12em] uppercase"
-                    style={{ color: "rgba(255,255,255,0.35)" }}
-                  >
-                    Active Project
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.15em] uppercase text-white/40">
+                    SYSTEM {"//"} BUILD_LOG
                   </span>
-                  <div className="flex items-center gap-[4px]">
-                    <div
-                      className="w-[4px] h-[4px] rounded-full"
-                      style={{ backgroundColor: "rgba(255,255,255,0.45)" }}
-                    />
-                    <span
-                      className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.1em] uppercase font-medium"
-                      style={{ color: "rgba(255,255,255,0.45)" }}
-                    >
-                      In Progress
+                  <div className="flex items-center gap-1.5">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/40 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white/80" />
+                    </span>
+                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.1em] uppercase font-semibold text-white/70">
+                      Active
                     </span>
                   </div>
                 </div>
 
-                {/* Project name + description */}
+                {/* Project details */}
                 <div>
-                  <div
-                    className="font-[family-name:var(--font-sans)] font-semibold tracking-[0.01em] min-h-[1.5rem]"
-                    style={{
-                      fontSize: "1.05rem",
-                      color: "rgba(255,255,255,0.92)",
-                      lineHeight: 1.2,
-                    }}
-                  >
+                  <h4 className="font-[family-name:var(--font-sans)] font-semibold tracking-tight text-[1.2rem] text-white">
                     <TextEffect
                       per="char"
                       variants={blurSlideVariants}
                       trigger={focusTrigger}
                     >
-                      {focusItems[focusIndex].name}
+                      {focusItems[focusIndex].name.toLowerCase()}
                     </TextEffect>
-                  </div>
-                  <div
-                    className="font-[family-name:var(--font-sans)] font-normal mt-[2px] min-h-[2.5rem]"
-                    style={{
-                      fontSize: "11px",
-                      color: "rgba(255,255,255,0.35)",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    <TextEffect
-                      per="word"
-                      variants={blurSlideVariants}
-                      trigger={focusTrigger}
-                    >
-                      {focusItems[focusIndex].desc}
-                    </TextEffect>
-                  </div>
+                  </h4>
+                  <p className="font-[family-name:var(--font-mono)] text-[9px] text-white/35 mt-1">
+                    v2.0.4 · main · commit::7f3a9d2
+                  </p>
                 </div>
 
                 {/* Progress bar */}
-                <div
-                  className="w-full h-[2px] rounded-full overflow-hidden"
-                  style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-                >
+                <div>
                   <div
-                    ref={progressFillRef}
-                    className="h-full rounded-full"
-                    style={{
-                      width: focusTrigger ? "100%" : "0%",
-                      transition: focusTrigger ? "width 4600ms linear" : "none",
-                      backgroundColor: "rgba(255,255,255,0.28)",
-                    }}
-                  />
+                    className="w-full h-[2px] rounded-full overflow-hidden"
+                    style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                  >
+                    <div
+                      ref={progressFillRef}
+                      className="h-full rounded-full"
+                      style={{
+                        width: focusTrigger ? "100%" : "0%",
+                        transition: focusTrigger
+                          ? "width 4600ms linear"
+                          : "none",
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-
-              {/* Hover arrow indicator */}
-              <span
-                className="absolute right-[var(--sp-4)] top-[var(--sp-4)] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                style={{
-                  color: "rgba(255,255,255,0.45)",
-                  fontSize: "13px",
-                  lineHeight: 1,
-                }}
-              >
-                ↗
-              </span>
             </div>
-          </motion.a>
+          </motion.div>
 
-          {/* CARD 2 — Current Focus */}
+          {/* CARD 2 — Research Focus */}
           <motion.div
             ref={card2Ref}
             data-cursor-no-ring="true"
@@ -779,7 +673,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   }
             }
             className={[
-              "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
+              "group relative block w-[340px] h-[144px] p-[8px] select-none outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
               "motion-reduce:transform-none motion-reduce:transition-none",
@@ -787,7 +681,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           >
             {/* Inner Content Container */}
             <div className="relative w-full h-full overflow-hidden inner-container">
-              {/* Silver-grey textured bg */}
               <div
                 className="absolute inset-0"
                 style={{
@@ -798,65 +691,47 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   `,
                 }}
               />
-              {/* Noise texture */}
               <div
                 className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
                 }}
               />
-              {/* Diagonal grain */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.022]"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(
-                    135deg,
-                    transparent,
-                    transparent 1px,
-                    rgba(255,255,255,0.14) 1px,
-                    rgba(255,255,255,0.14) 2px
-                  )`,
-                  backgroundSize: "5px 5px",
-                }}
-              />
 
-              {/* Top Flare Highlight Overlay */}
-              <div
-                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
-                }}
-              />
-
-              {/* Content — compact layout with tighter padding to prevent layout breaking */}
-              <div className="relative z-[1] px-[var(--sp-5)] py-[var(--sp-3)] h-full flex flex-col justify-between">
-                {/* Label */}
-                <span
-                  className="block font-[family-name:var(--font-mono)] text-[9px] tracking-[0.12em] uppercase"
-                  style={{ color: "rgba(255,255,255,0.30)" }}
-                >
-                  Current Focus
-                </span>
+              {/* Content — R&D Focus layout */}
+              <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
+                {/* Top row: Label */}
+                <div className="flex justify-between items-center">
+                  <span className="block font-[family-name:var(--font-mono)] text-[9px] tracking-[0.15em] uppercase text-white/40">
+                    REGISTRY {"//"} METRICS
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.1em] uppercase font-semibold text-white/70">
+                      Optimal
+                    </span>
+                  </div>
+                </div>
 
                 {/* Focus keyword */}
                 <div>
-                  <div
-                    className="font-[family-name:var(--font-sans)] font-semibold tracking-[0.01em]"
-                    style={{
-                      fontSize: "1rem",
-                      color: "rgba(255,255,255,0.88)",
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    MCP Protocol &amp; Agentic Workflows
+                  <h4 className="font-[family-name:var(--font-sans)] font-semibold tracking-tight text-[1.1rem] text-white">
+                    context-graph-server
+                  </h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="font-[family-name:var(--font-mono)] text-[9px] text-white/50">
+                      12ms latency
+                    </span>
+                    <span className="text-white/20 text-[9px]">•</span>
+                    <span className="font-[family-name:var(--font-mono)] text-[9px] text-white/50">
+                      99.4% cache hit
+                    </span>
                   </div>
-                  <span
-                    className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.04em] mt-[2px] block"
-                    style={{ color: "rgba(255,255,255,0.22)" }}
-                  >
-                    Building toward autonomous dev tooling
-                  </span>
+                </div>
+
+                {/* Port details */}
+                <div className="font-[family-name:var(--font-mono)] text-[8px] text-white/35 uppercase tracking-wider">
+                  PORT 8080 {"//"} SECURE CONNECT
                 </div>
               </div>
             </div>
@@ -882,7 +757,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   }
             }
             className={[
-              "group relative block w-[340px] h-[120px] p-[8px] select-none cursor-pointer text-left no-underline outer-shell",
+              "group relative block w-[340px] h-[144px] p-[8px] select-none text-left outer-shell",
               "transition-transform duration-200 ease-[var(--ease-cinematic)]",
               "hover:-translate-y-0.5",
               "motion-reduce:transform-none motion-reduce:transition-none",
@@ -890,7 +765,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
           >
             {/* Inner Content Container */}
             <div className="relative w-full h-full overflow-hidden inner-container">
-              {/* Silver-grey textured bg */}
               <div
                 className="absolute inset-0"
                 style={{
@@ -901,316 +775,82 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   `,
                 }}
               />
-              {/* Noise texture */}
               <div
                 className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
                 }}
               />
-              {/* Diagonal grain */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.022]"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(
-                    135deg,
-                    transparent,
-                    transparent 1px,
-                    rgba(255,255,255,0.14) 1px,
-                    rgba(255,255,255,0.14) 2px
-                  )`,
-                  backgroundSize: "5px 5px",
-                }}
-              />
 
-              {/* Top Flare Highlight Overlay */}
-              <div
-                className="absolute top-0 left-[36px] right-[36px] h-[1px] pointer-events-none rounded-[0_0_4px_4px]"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(212, 212, 216, 0.65) 30%, rgba(212, 212, 216, 0.65) 70%, transparent 100%)",
-                }}
-              />
-
-              {/* Content — compact layout with tighter padding to prevent layout breaking */}
-              <div className="relative z-[1] px-[var(--sp-5)] py-[var(--sp-3)] h-full flex flex-col justify-between">
-                {/* Label */}
-                <span
-                  className="block font-[family-name:var(--font-mono)] text-[9px] tracking-[0.12em] uppercase"
-                  style={{ color: "rgba(255,255,255,0.30)" }}
-                >
-                  Connect
-                </span>
-
-                {/* Icon Buttons row */}
-                <div className="flex items-center gap-[var(--sp-3)]">
-                  {/* LinkedIn */}
-                  <a
-                    href="https://www.linkedin.com/in/prajyotporje/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn Profile"
-                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      color: "rgba(255,255,255,0.40)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.10)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                    }}
-                  >
-                    <svg
-                      className="w-[18px] h-[18px]"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <title>LinkedIn Profile</title>
-                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                      <rect x="2" y="9" width="4" height="12" />
-                      <circle cx="4" cy="4" r="2" />
-                    </svg>
-                  </a>
-
-                  {/* GitHub */}
-                  <a
-                    href="https://github.com/prajyotporje"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="GitHub Profile"
-                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      color: "rgba(255,255,255,0.40)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.10)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                    }}
-                  >
-                    <svg
-                      className="w-[18px] h-[18px]"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <title>GitHub Profile</title>
-                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                    </svg>
-                  </a>
-
-                  {/* LeetCode */}
-                  <a
-                    href="https://leetcode.com/u/prajyotporje/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LeetCode Profile"
-                    className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      color: "rgba(255,255,255,0.40)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.10)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.85)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.40)";
-                    }}
-                  >
-                    <svg
-                      className="w-[18px] h-[18px]"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <title>LeetCode Profile</title>
-                      <path d="M13.483 0a1.374 1.374 0 0 0-.961.414L3.898 9.039a1.375 1.375 0 0 0-.414.962c0 .351.14.686.388.945l7.973 7.973a1.375 1.375 0 0 0 1.907.013l7.973-7.973a1.378 1.378 0 0 0 .388-.945 1.375 1.375 0 0 0-.414-.962L14.444.414A1.374 1.374 0 0 0 13.483 0zm0 1.954l6.096 6.096c.07.07.115.163.125.264H11.53c-.365 0-.714.145-.973.404L8.153 11.121a1.377 1.377 0 0 0 0 1.946l2.404 2.404c.259.259.608.404.973.404h8.174a1.374 1.374 0 0 0-.125.264l-6.096 6.096c-.18.18-.475.18-.655 0L4.855 14.262c-.18-.18-.18-.475 0-.655l2.404-2.404c.09-.09.213-.141.341-.141h4.095c.128 0 .251.051.341.141l1.5 1.5c.18.18.475.18.655 0l1.5-1.5c.18-.18.18-.475 0-.655l-1.5-1.5c-.09-.09-.213-.141-.341-.141H7.838a1.374 1.374 0 0 0-.973.404l-2.404 2.404a1.375 1.375 0 0 0 0 1.946l7.973 7.973c.18.18.475.18.655 0l6.096-6.096c.07-.07.115-.163.125-.264H11.034c-.365 0-.714-.145-.973-.404L7.657 11.121a1.377 1.377 0 0 1 0-1.946l2.404-2.404a1.375 1.375 0 0 1 .973-.404h8.174c-.01-.1-.055-.194-.125-.264L13.483 1.954z" />
-                    </svg>
-                  </a>
-
-                  {/* Email with Popover */}
-                  <div className="relative">
-                    <button
-                      ref={emailButtonRef}
-                      onClick={() => setEmailPopoverOpen(!emailPopoverOpen)}
-                      aria-label="Contact Email"
-                      aria-expanded={emailPopoverOpen}
-                      type="button"
-                      className="flex items-center justify-center w-10 h-10 rounded-[var(--radius-md)] transition-[background-color,color] duration-200 ease-[var(--ease-gentle)] cursor-pointer outline-none"
-                      style={{
-                        backgroundColor: emailPopoverOpen
-                          ? "rgba(255,255,255,0.10)"
-                          : "rgba(255,255,255,0.04)",
-                        color: emailPopoverOpen
-                          ? "rgba(255,255,255,0.85)"
-                          : "rgba(255,255,255,0.40)",
-                        border: `1px solid ${emailPopoverOpen ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)"}`,
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!emailPopoverOpen) {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(255,255,255,0.10)";
-                          e.currentTarget.style.color =
-                            "rgba(255,255,255,0.85)";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!emailPopoverOpen) {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(255,255,255,0.04)";
-                          e.currentTarget.style.color =
-                            "rgba(255,255,255,0.40)";
-                        }
-                      }}
-                    >
-                      <svg
-                        className="w-[18px] h-[18px]"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <title>Email</title>
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
-                    </button>
-
-                    {/* Email popover */}
-                    <div
-                      ref={popoverRef}
-                      className={[
-                        "absolute bottom-full right-0 mb-3 z-[100] w-[240px]",
-                        "rounded-[var(--radius-lg)] p-[var(--sp-3)]",
-                        "transition-[opacity,transform] duration-75 ease-[var(--ease-cinematic)] origin-bottom-right",
-                        emailPopoverOpen
-                          ? "opacity-100 scale-100 pointer-events-auto"
-                          : "opacity-0 scale-95 pointer-events-none",
-                      ].join(" ")}
-                      style={{
-                        backgroundColor: "#151413",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
-                      }}
-                    >
-                      {/* Address */}
-                      <div
-                        className="font-[family-name:var(--font-mono)] text-[10px] select-all px-[var(--sp-3)] py-[6px] rounded-[var(--radius-md)] mb-[var(--sp-2)] truncate text-center"
-                        style={{
-                          color: "rgba(255,255,255,0.90)",
-                          backgroundColor: "rgba(255,255,255,0.04)",
-                          border: "1px solid rgba(255,255,255,0.04)",
-                        }}
-                      >
-                        prajyotporje@gmail.com
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex gap-[6px]">
-                        {/* Copy button */}
-                        <button
-                          onClick={handleCopy}
-                          type="button"
-                          className="flex-1 flex items-center justify-center gap-[6px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-md)] text-[10px] font-medium transition-colors cursor-pointer"
-                          style={{
-                            backgroundColor: "rgba(255,255,255,0.06)",
-                            color: copied
-                              ? "rgba(255,255,255,0.9)"
-                              : "rgba(255,255,255,0.8)",
-                            border: "1px solid rgba(255,255,255,0.04)",
-                          }}
-                        >
-                          {copied ? (
-                            <>
-                              <svg
-                                className="w-3.5 h-3.5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <title>Success Checkmark</title>
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                              <span>Copied</span>
-                            </>
-                          ) : (
-                            <>
-                              <svg
-                                className="w-3.5 h-3.5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <title>Copy Icon</title>
-                                <rect
-                                  x="9"
-                                  y="9"
-                                  width="13"
-                                  height="13"
-                                  rx="2"
-                                  ry="2"
-                                />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </svg>
-                              <span>Copy</span>
-                            </>
-                          )}
-                        </button>
-
-                        {/* Open in Gmail */}
-                        <a
-                          href="https://mail.google.com/mail/?view=cm&to=prajyotporje@gmail.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 flex items-center justify-center gap-[4px] py-[6px] px-[var(--sp-2)] rounded-[var(--radius-md)] text-[10px] font-semibold no-underline text-center cursor-pointer"
-                          style={{
-                            backgroundColor: "rgba(255,255,255,0.90)",
-                            color: "#0e0d0b",
-                          }}
-                        >
-                          <span>Open Gmail</span>
-                        </a>
-                      </div>
-                    </div>
+              {/* Content — Redesigned Gateway layout */}
+              <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
+                {/* Top row: Label */}
+                <div className="flex justify-between items-center">
+                  <span className="block font-[family-name:var(--font-mono)] text-[9px] tracking-[0.15em] uppercase text-white/40">
+                    GATEWAY {"//"} CONNECT
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.1em] uppercase font-semibold text-white/70">
+                      Ready
+                    </span>
                   </div>
+                </div>
+
+                {/* Email Address details */}
+                <button
+                  onClick={handleCard3Click}
+                  type="button"
+                  className="group/mail text-left w-full outline-none cursor-pointer"
+                >
+                  <span className="font-[family-name:var(--font-sans)] font-semibold tracking-tight text-[1.05rem] text-white group-hover/mail:text-white/80 transition-colors block">
+                    porjeprajyot@gmail.com
+                  </span>
+                  <span className="font-[family-name:var(--font-mono)] text-[8px] text-white/35 mt-1 block uppercase tracking-wider">
+                    {card3Copied ? "Copied to clipboard!" : "Click to copy address"}
+                  </span>
+                </button>
+
+                {/* Horizontal row of text links */}
+                <div className="flex gap-4 items-center">
+                  <a
+                    href="https://github.com/prajyot-porje"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-[family-name:var(--font-mono)] text-[9px] text-white/50 hover:text-white tracking-wider uppercase transition-colors"
+                  >
+                    GitHub
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/prajyot-porje/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-[family-name:var(--font-mono)] text-[9px] text-white/50 hover:text-white tracking-wider uppercase transition-colors"
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href="https://leetcode.com/u/prajyot-porje/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-[family-name:var(--font-mono)] text-[9px] text-white/50 hover:text-white tracking-wider uppercase transition-colors"
+                  >
+                    LeetCode
+                  </a>
+                  <a
+                    href="/Full_Stack_Developer_Resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-[family-name:var(--font-mono)] text-[9px] text-white/50 hover:text-white tracking-wider uppercase transition-colors"
+                  >
+                    Resume
+                  </a>
                 </div>
               </div>
             </div>
           </motion.div>
         </motion.div>
+
 
         {/* ── BOTTOM-RIGHT: Scroll indicator ───────────────── */}
         <motion.div

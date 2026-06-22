@@ -24,8 +24,8 @@ export default function Home() {
       <About />
       <CaseStudyTrack />
       <DevStudio />
-      <Principles />
       <Experience />
+      <Principles />
       <Achievements />
       <Contact />
       <Footer />

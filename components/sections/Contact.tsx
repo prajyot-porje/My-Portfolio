@@ -1,18 +1,55 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useState } from "react";
-import DepthCard from "../depth/DepthCard";
 import SectionLabel from "../ui/SectionLabel";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText("prajyotporje@gmail.com").then(() => {
+  const handleCopy = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText("porjeprajyot@gmail.com").then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
+  const links = [
+    {
+      index: "01",
+      label: "EMAIL",
+      value: "porjeprajyot@gmail.com",
+      href: "mailto:porjeprajyot@gmail.com",
+      isEmail: true,
+    },
+    {
+      index: "02",
+      label: "LINKEDIN",
+      value: "linkedin.com/in/prajyot-porje",
+      href: "https://www.linkedin.com/in/prajyot-porje/",
+    },
+    {
+      index: "03",
+      label: "GITHUB",
+      value: "github.com/prajyot-porje",
+      href: "https://github.com/prajyot-porje",
+    },
+    {
+      index: "04",
+      label: "LEETCODE",
+      value: "leetcode.com/u/prajyot-porje",
+      href: "https://leetcode.com/u/prajyot-porje/",
+    },
+    {
+      index: "05",
+      label: "RESUME",
+      value: "View Full Resume (PDF)",
+      href: "/Full_Stack_Developer_Resume.pdf",
+    },
+  ];
 
   return (
     <section
@@ -36,33 +73,69 @@ export default function Contact() {
           </p>
         </div>
 
-        {/* Right Column: CTA card */}
-        <div className="w-[45%] max-md:w-full">
-          <DepthCard
-            level={1}
-            className="flex flex-col bg-white p-8 rounded-[var(--radius-lg)] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200 border border-[var(--color-surface-3)]"
-          >
-            <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] uppercase tracking-wider mb-6 block">
-              Primary Channel
-            </span>
+        {/* Right Column: Redesigned Editorial Vertical Stack List */}
+        <div className="w-[45%] max-md:w-full flex flex-col relative">
+          <div className="flex flex-col border-t border-[var(--color-surface-3)] relative">
+            {links.map((link, idx) => {
+              const isHovered = hoveredIndex === idx;
 
-            {/* Email Address */}
-            <div className="font-[family-name:var(--font-mono)] text-[length:var(--text-md)] select-all px-4 py-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-surface-3)] mb-6 text-center text-[var(--color-ink-1)] break-all font-semibold">
-              prajyotporje@gmail.com
-            </div>
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.isEmail ? undefined : "_blank"}
+                  rel={link.isEmail ? undefined : "noopener noreferrer"}
+                  onMouseEnter={() => setHoveredIndex(idx)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className="group relative flex items-center justify-between py-6 px-4 border-b border-[var(--color-surface-3)] no-underline cursor-pointer overflow-hidden transition-colors duration-200"
+                >
+                  {/* Sliding Hover Background Pill */}
+                  {isHovered && (
+                    <motion.div
+                      layoutId="contact-hover-pill"
+                      className="absolute inset-0 bg-[var(--color-surface-2)] z-0"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
 
-            {/* Frictionless actions */}
-            <div className="flex gap-4">
-              {/* Copy action */}
-              <button
-                onClick={handleCopy}
-                type="button"
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-full text-[12px] font-semibold transition-colors cursor-pointer border border-[var(--color-surface-3)] bg-[var(--color-surface-2)] text-[var(--color-ink-2)] hover:bg-[var(--color-surface-3)] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ink-1)]"
-              >
-                {copied ? (
-                  <>
+                  <div className="relative z-10 flex flex-col gap-1 text-left">
+                    {/* Index & Label */}
+                    <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] tracking-widest uppercase font-semibold">
+                      {link.index} {"//"} {link.label}
+                    </span>
+                    {/* Value */}
+                    <span className="font-[family-name:var(--font-sans)] font-semibold text-[15px] text-[var(--color-ink-1)] tracking-tight">
+                      {link.value}
+                    </span>
+                  </div>
+
+                  {/* Right side arrow / copy action */}
+                  <div className="relative z-10 flex items-center gap-3">
+                    {link.isEmail && (
+                      <button
+                        onClick={handleCopy}
+                        type="button"
+                        className="text-[9px] font-[family-name:var(--font-mono)] font-bold text-[var(--color-ink-2)] border border-[var(--color-surface-3)] bg-white px-2.5 py-1 rounded-full uppercase tracking-wider hover:bg-[var(--color-surface-2)] active:scale-[0.97] transition-all duration-150 cursor-pointer"
+                        title="Copy email address"
+                      >
+                        {copied ? (
+                          <span className="text-green-600 font-semibold">
+                            Copied
+                          </span>
+                        ) : (
+                          <span>Copy</span>
+                        )}
+                      </button>
+                    )}
+
+                    {/* Arrow Icon */}
                     <svg
-                      className="w-4 h-4 text-[var(--color-status-green)]"
+                      className="w-4 h-4 text-[var(--color-ink-3)] group-hover:text-[var(--color-ink-1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -70,44 +143,15 @@ export default function Contact() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <title>Success Checkmark</title>
-                      <polyline points="20 6 9 17 4 12" />
+                      <title>Arrow Up Right</title>
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
                     </svg>
-                    <span className="text-[var(--color-status-green)] font-semibold">
-                      Copied Address
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-4 h-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <title>Copy Icon</title>
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                    </svg>
-                    <span>Copy Address</span>
-                  </>
-                )}
-              </button>
-
-              {/* Direct Mail */}
-              <a
-                href="https://mail.google.com/mail/?view=cm&to=prajyotporje@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center py-3 px-4 rounded-full text-[12px] font-bold text-center no-underline cursor-pointer bg-[var(--color-ink-1)] text-[var(--color-ground)] hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ink-1)]"
-              >
-                <span>Write Email</span>
-              </a>
-            </div>
-          </DepthCard>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

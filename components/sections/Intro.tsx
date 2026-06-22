@@ -68,7 +68,10 @@ export default function Intro({ onComplete }: IntroProps) {
     exit: {
       opacity: 0,
       y: -12,
-      transition: { duration: 0.4, ease: [0.7, 0, 0.84, 0] as [number, number, number, number] },
+      transition: {
+        duration: 0.4,
+        ease: [0.7, 0, 0.84, 0] as [number, number, number, number],
+      },
     },
   };
 
@@ -78,7 +81,10 @@ export default function Intro({ onComplete }: IntroProps) {
         <motion.div
           exit={{
             opacity: 0,
-            transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+            transition: {
+              duration: 0.6,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            },
           }}
           style={{
             position: "fixed",
@@ -187,7 +193,12 @@ export default function Intro({ onComplete }: IntroProps) {
                     transition: {
                       delay: 0.5,
                       duration: 0.2,
-                      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+                      ease: [0.16, 1, 0.3, 1] as [
+                        number,
+                        number,
+                        number,
+                        number,
+                      ],
                     },
                   }}
                   style={{
