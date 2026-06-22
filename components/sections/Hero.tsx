@@ -427,7 +427,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
       >
 
         {/* ── BOTTOM-LEFT: Hero copy ───────────────────────── */}
-        <div className="absolute left-[var(--sp-8)] bottom-[var(--sp-28)] max-w-[480px] max-md:bottom-[var(--sp-16)]">
+        <div className="absolute left-[var(--sp-8)] top-1/2 -translate-y-1/2 max-w-[480px] max-md:top-auto max-md:translate-y-0 max-md:bottom-[var(--sp-16)]">
           {/* Location + time chip */}
           <motion.div
             ref={chipRef}

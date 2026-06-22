@@ -5,7 +5,6 @@ import About from "@/components/sections/About";
 import Achievements from "@/components/sections/Achievements";
 import CaseStudyTrack from "@/components/sections/CaseStudyTrack";
 import Contact from "@/components/sections/Contact";
-import DevStudio from "@/components/sections/DevStudio";
 import Experience from "@/components/sections/Experience";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
@@ -23,7 +22,6 @@ export default function Home() {
       <Hero isIntroActive={!introSeen} />
       <About />
       <CaseStudyTrack />
-      <DevStudio />
       <Experience />
       <Principles />
       <Achievements />

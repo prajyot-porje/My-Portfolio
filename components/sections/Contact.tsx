@@ -59,7 +59,7 @@ export default function Contact() {
       <div className="max-w-[1000px] mx-auto flex max-md:flex-col justify-between items-start gap-12">
         {/* Left Column: Headline */}
         <div className="w-[50%] max-md:w-full flex flex-col">
-          <SectionLabel label="07 / CONTACT" />
+          <SectionLabel label="06 / CONTACT" />
           <h2 className="text-[2.8rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
             Let&apos;s build something{" "}
             <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">

@@ -103,7 +103,7 @@ export default function Experience() {
       <div className="max-w-[1000px] mx-auto">
         {/* Section Header */}
         <div className="flex flex-col mb-16 max-w-[620px]">
-          <SectionLabel label="05 / TIMELINE" />
+          <SectionLabel label="03 / TIMELINE" />
           <h2 className="text-[2.5rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
             Professional track record and{" "}
             <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">

@@ -8,7 +8,7 @@ const NAV_LINKS = [
   {
     label: "Work",
     href: "#work",
-    targetIds: ["work", "studio"],
+    targetIds: ["work"],
     hideOnMobile: false,
   },
   {

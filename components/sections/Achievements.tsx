@@ -103,13 +103,13 @@ export default function Achievements() {
 
           // Append weekday labels (Sun - Sat) on the left of grid
           const weekdays = [
-            { name: "Sun", y: 35 + 0 * 8.85 + 4 },
-            { name: "Mon", y: 35 + 1 * 8.85 + 4 },
-            { name: "Tue", y: 35 + 2 * 8.85 + 4 },
-            { name: "Wed", y: 35 + 3 * 8.85 + 4 },
-            { name: "Thu", y: 35 + 4 * 8.85 + 4 },
-            { name: "Fri", y: 35 + 5 * 8.85 + 4 },
-            { name: "Sat", y: 35 + 6 * 8.85 + 4 },
+            { name: "Sun", y: 35 + 0 * 8.85 + 3.98 },
+            { name: "Mon", y: 35 + 1 * 8.85 + 3.98 },
+            { name: "Tue", y: 35 + 2 * 8.85 + 3.98 },
+            { name: "Wed", y: 35 + 3 * 8.85 + 3.98 },
+            { name: "Thu", y: 35 + 4 * 8.85 + 3.98 },
+            { name: "Fri", y: 35 + 5 * 8.85 + 3.98 },
+            { name: "Sat", y: 35 + 6 * 8.85 + 3.98 },
           ];
 
           for (const wd of weekdays) {
@@ -121,6 +121,7 @@ export default function Achievements() {
             textNode.setAttribute("y", wd.y.toFixed(2));
             textNode.setAttribute("class", "heatmap-label");
             textNode.setAttribute("text-anchor", "end");
+            textNode.setAttribute("dominant-baseline", "central");
             textNode.textContent = wd.name;
             extHeatmap.appendChild(textNode);
           }
@@ -152,6 +153,7 @@ export default function Achievements() {
               font-size: 7.5px !important;
               fill: #737373 !important;
               font-weight: 500 !important;
+              dominant-baseline: central !important;
             }
           `;
           svgEl.appendChild(styleEl);
@@ -181,7 +183,7 @@ export default function Achievements() {
       <div className="max-w-[1000px] mx-auto">
         {/* Section Header */}
         <div className="flex flex-col mb-16 max-w-[620px]">
-          <SectionLabel label="06 / CREDENTIALS" />
+          <SectionLabel label="05 / CREDENTIALS" />
           <h2 className="text-[2.5rem] max-md:text-[1.8rem] font-[family-name:var(--font-sans)] leading-tight text-[var(--color-ink-1)] tracking-tight mt-4">
             Open source contributions and{" "}
             <span className="font-[family-name:var(--font-display)] italic text-[var(--color-accent)] font-normal">
@@ -320,6 +322,96 @@ export default function Achievements() {
                 <Tag className="text-[9px] px-2 py-0.5">Data Structures</Tag>
                 <Tag className="text-[9px] px-2 py-0.5">Algorithms</Tag>
                 <Tag className="text-[9px] px-2 py-0.5">Problem Solving</Tag>
+              </div>
+            </div>
+          </DepthCard>
+
+          {/* Card 3: Open Source & Competitions */}
+          <DepthCard
+            level={1}
+            className="flex flex-col bg-white p-6 md:p-8 rounded-xl border border-[var(--color-surface-3)] shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-[transform,box-shadow] duration-200"
+          >
+            <div className="flex justify-between items-center mb-6 border-b border-[var(--color-surface-3)] pb-4 flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-[var(--color-ink-2)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <title>Git Pull Request Icon</title>
+                  <circle cx="18" cy="18" r="3" />
+                  <circle cx="6" cy="6" r="3" />
+                  <circle cx="6" cy="18" r="3" />
+                  <path d="M18 15V9a4 4 0 0 0-4-4H9" />
+                  <line x1="6" y1="9" x2="6" y2="15" />
+                </svg>
+                <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold text-[var(--color-ink-1)] uppercase tracking-wider">
+                  Open Source &amp; Competitions
+                </span>
+              </div>
+              <a
+                href="https://github.com/prajyot-porje"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] uppercase tracking-wider transition-colors duration-150 no-underline"
+              >
+                View GitHub ↗
+              </a>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left Column: JupyterLab PR */}
+                <div className="flex flex-col">
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] uppercase tracking-wider mb-2">
+                    01 / Ecosystem
+                  </span>
+                  <h4 className="text-[1.15rem] font-[family-name:var(--font-sans)] font-semibold text-[var(--color-ink-1)] mb-2">
+                    Project Jupyter / JupyterLab
+                  </h4>
+                  <p className="text-[12px] text-[var(--color-ink-2)] leading-relaxed mb-4">
+                    Contributed to the core JupyterLab repository. Resolved a critical editor bug in the font-size handler (`fileeditor:change-font-size`) by adding robust undefined parameter safety checks, preventing client-side application freezes.
+                  </p>
+                  <a
+                    href="https://github.com/jupyterlab/jupyterlab/pull/18157"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-[family-name:var(--font-mono)] text-[var(--color-accent)] hover:underline flex items-center gap-1.5 mt-auto no-underline"
+                  >
+                    Merged PR #18157 ↗
+                  </a>
+                </div>
+
+                {/* Right Column: Hackathons */}
+                <div className="flex flex-col border-t md:border-t-0 md:border-l border-[var(--color-surface-3)] pt-6 md:pt-0 md:pl-8">
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] uppercase tracking-wider mb-2">
+                    02 / Hackathons
+                  </span>
+                  <h4 className="text-[1.15rem] font-[family-name:var(--font-sans)] font-semibold text-[var(--color-ink-1)] mb-2">
+                    Competitive Engineering
+                  </h4>
+                  <ul className="flex flex-col gap-3 text-[12px] text-[var(--color-ink-2)] leading-relaxed">
+                    <li className="relative pl-4">
+                      <span className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-[var(--color-ink-3)]" />
+                      <strong>Hackathon Finalist</strong> — Finalist at ADCET 2024 and DYPDPU 1.0 2025.
+                    </li>
+                    <li className="relative pl-4">
+                      <span className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-[var(--color-ink-3)]" />
+                      <strong>State Level</strong> — Qualified for the Avishkar State-Level Innovation Championship.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mt-2 pt-4 border-t border-[var(--color-surface-3)]">
+                <Tag className="text-[9px] px-2 py-0.5">JupyterLab</Tag>
+                <Tag className="text-[9px] px-2 py-0.5">Open Source</Tag>
+                <Tag className="text-[9px] px-2 py-0.5">Hackathon Finalist</Tag>
+                <Tag className="text-[9px] px-2 py-0.5">State Level</Tag>
               </div>
             </div>
           </DepthCard>
