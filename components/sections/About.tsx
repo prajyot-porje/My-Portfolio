@@ -9,16 +9,23 @@ export default function About() {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const [isClient, setIsClient] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
     setReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     );
+    const mQuery = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mQuery.addEventListener("change", handler);
+    return () => mQuery.removeEventListener("change", handler);
   }, []);
 
   useEffect(() => {
-    if (!isClient || reducedMotion) return;
+    if (!isClient || reducedMotion || isMobile) return;
     const paragraph = paragraphRef.current;
     const section = document.getElementById("about");
     if (!paragraph || !section) return;
@@ -45,7 +52,7 @@ export default function About() {
     return () => {
       anim.pause();
     };
-  }, [isClient, reducedMotion]);
+  }, [isClient, reducedMotion, isMobile]);
 
   const lines = [
     "Hi, I'm Prajyot. I build software that works, not demos that impress.",
@@ -63,9 +70,9 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative bg-[var(--color-ground)] border-t border-[var(--color-surface-3)] h-[200vh]"
+      className="relative bg-[var(--color-ground)] border-t border-[var(--color-surface-3)] h-[200vh] max-md:h-auto"
     >
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-[var(--sp-8)] max-md:px-[var(--sp-6)] py-[var(--sp-28)] max-md:py-[var(--sp-20)]">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-[var(--sp-8)] max-md:px-[var(--sp-6)] py-[var(--sp-28)] max-md:py-[var(--sp-20)] max-md:relative max-md:h-auto max-md:top-auto">
         {/* ── CORNER MOTIFS (SVGs) ── */}
         {/* Top-Left: Code/terminal brackets */}
         <motion.div
@@ -157,7 +164,7 @@ export default function About() {
           </svg>
         </motion.div>
 
-        {/* Bottom-Right: Dev Studio diamond mark */}
+        {/* Bottom-Right: Corner diamond mark */}
         <motion.div
           initial={
             reducedMotion
@@ -193,37 +200,47 @@ export default function About() {
             The Product Engineer
           </h2>
 
-          {/* Scroll Reveal Paragraph */}
           <p
             ref={paragraphRef}
             className="font-[family-name:var(--font-sans)] text-[1.4rem] max-md:text-[1.1rem] leading-relaxed text-[var(--color-ink-1)] tracking-tight font-light mb-10 select-text text-wrap-pretty"
           >
-            {lines.map((line, lineIdx) => (
-              <span
-                // biome-ignore lint/suspicious/noArrayIndexKey: line order is static
-                key={lineIdx}
-                className="inline"
-              >
-                {line.split("").map((char, charIdx) => (
-                  <span
-                    // biome-ignore lint/suspicious/noArrayIndexKey: character order is static
-                    key={`${lineIdx}-${charIdx}-${char}`}
-                    className="about-char inline-block whitespace-pre-wrap select-text transition-opacity duration-75"
-                    style={{
-                      opacity: isClient && !reducedMotion ? 0.45 : 1,
-                    }}
-                  >
-                    {char}
-                  </span>
-                ))}
-                {lineIdx < lines.length - 1 && (
-                  <>
-                    <br className="max-md:hidden select-none" />
-                    <span className="hidden max-md:inline select-none"> </span>
-                  </>
-                )}
-              </span>
-            ))}
+            <span className="sr-only">
+              Hi, I'm Prajyot. I build software that works, not demos that
+              impress. I have engineered AI tools like DevFlow and ContextGraph,
+              also solved 417 LeetCode problems, and merged a production fix in
+              JupyterLab, and currently freelance for global clients.
+            </span>
+            <span aria-hidden="true">
+              {lines.map((line, lineIdx) => (
+                <span
+                  // biome-ignore lint/suspicious/noArrayIndexKey: line order is static
+                  key={lineIdx}
+                  className="inline"
+                >
+                  {line.split("").map((char, charIdx) => (
+                    <span
+                      // biome-ignore lint/suspicious/noArrayIndexKey: character order is static
+                      key={`${lineIdx}-${charIdx}-${char}`}
+                      className="about-char inline-block whitespace-pre-wrap select-text transition-opacity duration-75"
+                      style={{
+                        opacity:
+                          isClient && !reducedMotion && !isMobile ? 0.45 : 1,
+                      }}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {lineIdx < lines.length - 1 && (
+                    <>
+                      <br className="max-md:hidden select-none" />
+                      <span className="hidden max-md:inline select-none">
+                        {" "}
+                      </span>
+                    </>
+                  )}
+                </span>
+              ))}
+            </span>
           </p>
 
           {/* CTA Button */}

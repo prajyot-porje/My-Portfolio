@@ -76,7 +76,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "cresults",
     index: "03",
-    title: "cResults / Dev Studio",
+    title: "cResults",
     tagline: "Enterprise client portal — shipped 5 days ahead of deadline.",
     problem:
       "US client CRM sync latency caused critical data delays on a 45-day SLA.",

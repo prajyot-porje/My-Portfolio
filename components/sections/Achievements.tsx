@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import DepthCard from "../depth/DepthCard";
+import MagneticButton from "../ui/MagneticButton";
 import SectionLabel from "../ui/SectionLabel";
-import Tag from "../ui/Tag";
 
 export default function Achievements() {
   const [leetcodeSvg, setLeetcodeSvg] = useState<string>("");
@@ -217,14 +217,18 @@ export default function Achievements() {
                   GitHub / prajyot-porje
                 </span>
               </div>
-              <a
+              <MagneticButton
+                asLink
                 href="https://github.com/prajyot-porje"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] uppercase tracking-wider transition-colors duration-150 no-underline"
+                className="bg-[var(--color-ink-1)] hover:bg-[#151413] text-[var(--color-ground)] text-[9px] font-[family-name:var(--font-mono)] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-shadow duration-200 z-10 select-none cursor-pointer"
               >
-                View Profile ↗
-              </a>
+                <span>View Profile</span>
+                <span className="flex items-center justify-center w-4 h-4 rounded-full bg-white/15 text-[8px] ml-1">
+                  ↗
+                </span>
+              </MagneticButton>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -249,16 +253,6 @@ export default function Achievements() {
                   loading="lazy"
                 />
               </div>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                <Tag className="text-[9px] px-2 py-0.5">
-                  JupyterLab PR Merged
-                </Tag>
-                <Tag className="text-[9px] px-2 py-0.5">TypeScript</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">
-                  Open Source Developer
-                </Tag>
-              </div>
             </div>
           </DepthCard>
 
@@ -281,14 +275,18 @@ export default function Achievements() {
                   LeetCode / prajyot-porje
                 </span>
               </div>
-              <a
+              <MagneticButton
+                asLink
                 href="https://leetcode.com/u/prajyot-porje/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] uppercase tracking-wider transition-colors duration-150 no-underline"
+                className="bg-[var(--color-ink-1)] hover:bg-[#151413] text-[var(--color-ground)] text-[9px] font-[family-name:var(--font-mono)] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-shadow duration-200 z-10 select-none cursor-pointer"
               >
-                View Profile ↗
-              </a>
+                <span>View Profile</span>
+                <span className="flex items-center justify-center w-4 h-4 rounded-full bg-white/15 text-[8px] ml-1">
+                  ↗
+                </span>
+              </MagneticButton>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -316,12 +314,6 @@ export default function Achievements() {
                     Loading LeetCode activity...
                   </div>
                 )}
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-2">
-                <Tag className="text-[9px] px-2 py-0.5">Data Structures</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">Algorithms</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">Problem Solving</Tag>
               </div>
             </div>
           </DepthCard>
@@ -353,14 +345,6 @@ export default function Achievements() {
                   Open Source &amp; Competitions
                 </span>
               </div>
-              <a
-                href="https://github.com/prajyot-porje"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ink-3)] hover:text-[var(--color-ink-1)] uppercase tracking-wider transition-colors duration-150 no-underline"
-              >
-                View GitHub ↗
-              </a>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -374,7 +358,11 @@ export default function Achievements() {
                     Project Jupyter / JupyterLab
                   </h4>
                   <p className="text-[12px] text-[var(--color-ink-2)] leading-relaxed mb-4">
-                    Contributed to the core JupyterLab repository. Resolved a critical editor bug in the font-size handler (`fileeditor:change-font-size`) by adding robust undefined parameter safety checks, preventing client-side application freezes.
+                    Contributed to the core JupyterLab repository. Resolved a
+                    critical editor bug in the font-size handler
+                    (`fileeditor:change-font-size`) by adding robust undefined
+                    parameter safety checks, preventing client-side application
+                    freezes.
                   </p>
                   <a
                     href="https://github.com/jupyterlab/jupyterlab/pull/18157"
@@ -397,21 +385,16 @@ export default function Achievements() {
                   <ul className="flex flex-col gap-3 text-[12px] text-[var(--color-ink-2)] leading-relaxed">
                     <li className="relative pl-4">
                       <span className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-[var(--color-ink-3)]" />
-                      <strong>Hackathon Finalist</strong> — Finalist at ADCET 2024 and DYPDPU 1.0 2025.
+                      <strong>Hackathon Finalist</strong> — Finalist at ADCET
+                      2024 and DYPDPU 1.0 2025.
                     </li>
                     <li className="relative pl-4">
                       <span className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-[var(--color-ink-3)]" />
-                      <strong>State Level</strong> — Qualified for the Avishkar State-Level Innovation Championship.
+                      <strong>State Level</strong> — Qualified for the Avishkar
+                      State-Level Innovation Championship.
                     </li>
                   </ul>
                 </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-2 pt-4 border-t border-[var(--color-surface-3)]">
-                <Tag className="text-[9px] px-2 py-0.5">JupyterLab</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">Open Source</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">Hackathon Finalist</Tag>
-                <Tag className="text-[9px] px-2 py-0.5">State Level</Tag>
               </div>
             </div>
           </DepthCard>

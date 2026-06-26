@@ -1,18 +1,18 @@
 ---
 name: Prajyot Porje Portfolio
-description: Personal portfolio of Prajyot Porje, Product Engineer & Founder of Dev Studio.
+description: Personal portfolio of Prajyot Porje, Product Engineer.
 colors:
-  ground: "#f4f2ed"
+  ground: "#fafafa"
   surface-1: "#ffffff"
-  surface-2: "#fafaf8"
-  surface-3: "#eceae4"
-  surface-4: "#e0ddd6"
-  ink-1: "#0d0d0d"
-  ink-2: "#555250"
-  ink-3: "#9b9891"
-  ink-4: "#c5c2bb"
-  accent: "#94ff0b"
-  accent-hover: "#7fd600"
+  surface-2: "#f5f5f5"
+  surface-3: "#e5e5e5"
+  surface-4: "#e5e5e5"
+  ink-1: "#0a0a0a"
+  ink-2: "#404040"
+  ink-3: "#737373"
+  ink-4: "#e5e5e5"
+  accent: "#000000"
+  accent-hover: "#262626"
   dark-1: "#0a0a0a"
   dark-2: "#111111"
   dark-3: "#1a1a1a"
@@ -82,27 +82,27 @@ A personal portfolio built with extreme typographic contrast, a raw but highly-r
 **Key Characteristics:**
 - High-contrast, custom-tailored font pairing (serif display & geometric sans body).
 - Warm, neutral canvas background contrasting with crisp card surfaces.
-- A single magnetic accent color utilized sparingly to direct visual focus.
+- A clean, high-contrast monochrome accent style utilizing bold typography for focus.
 - Consistent top-overhead light source casting realistic CSS drop shadows.
 
 ## 2. Colors
 
-The color palette features muted, warm neutrals anchored by a highly-saturated, lime-accent color that functions as a single focal point.
+The color palette features clean, neutral monochrome tones anchored by crisp white card surfaces and dark background elements.
 
 ### Primary
-- **Volt Accent** (`#94ff0b`): Used ONCE per scrollable viewport, never on large surfaces. Its purpose is to act as a magnetic pull for the primary call to action or active status indication.
-- **Volt Accent Hover** (`#7fd600`): Darker, more saturated state of the accent used exclusively for interactive hovers.
+- **Monochrome Accent** (`#000000`): High-contrast primary accent used for key buttons, headings, and interfaces.
+- **Monochrome Accent Hover** (`#262626`): Dark hover state for interactive elements.
 
 ### Neutral
-- **Warm Ground** (`#f4f2ed`): The page background. A warm off-white that enables pure-white components to float visibly above it, establishing the foundational depth.
-- **Surface Card** (`#ffffff`): Card background at rest. Provides contrast against the warm ground.
-- **Surface Alt** (`#fafaf8`): Used for subtle section alternation.
-- **Surface Border** (`#eceae4`): Subtle borders and hair-thin structural lines.
-- **Surface Divider** (`#e0ddd6`): Strong division lines.
-- **Ink Primary** (`#0d0d0d`): Main headers and body copy. Excellent contrast.
-- **Ink Secondary** (`#555250`): Supporting copy and metadata.
-- **Ink Muted** (`#9b9891`): Captions, timestamps, and details.
-- **Ink Placeholder** (`#c5c2bb`): Placeholder text.
+- **Canvas Ground** (`#fafafa`): The page background. A clean, modern light off-white background.
+- **Surface Card** (`#ffffff`): Card background at rest. Provides contrast against the canvas.
+- **Surface Alt** (`#f5f5f5`): Used for subtle section alternation.
+- **Surface Border** (`#e5e5e5`): Subtle borders and hair-thin structural lines.
+- **Surface Divider** (`#e5e5e5`): Strong division lines.
+- **Ink Primary** (`#0a0a0a`): Main headers and body copy. Excellent contrast.
+- **Ink Secondary** (`#404040`): Supporting copy and metadata.
+- **Ink Muted** (`#737373`): Captions, timestamps, and details.
+- **Ink Placeholder** (`#e5e5e5`): Placeholder text.
 
 ### Dark Surfaces
 - **Dark Ground** (`#0a0a0a`): Intro section background and dark card container surfaces.
@@ -111,8 +111,8 @@ The color palette features muted, warm neutrals anchored by a highly-saturated, 
 - **Dark Divider** (`#2a2a2a`): Divider lines on dark panels.
 
 ### Named Rules
-**The Accent Spark Rule.** The accent color (`#94ff0b`) appears on at most ONE element per scrollable viewport. Its rarity is the point. Overuse turns guidance into noise.
-**The Ground Contrast Rule.** Pure white (`#ffffff`) surfaces must never sit directly against another white surface. The warm ground (`#f4f2ed`) must always act as the negative space separating card components.
+- **The Typography Style Rule.** Text emphasis relies on clean font stylistic contrasts (italic serif styles) rather than color highlights.
+- **The Ground Contrast Rule.** Pure white (`#ffffff`) surfaces sit against the light canvas ground (`#fafafa`) to create soft, minimal depth.
 
 ## 3. Typography
 
@@ -140,7 +140,7 @@ The elevation system relies on a consistent overhead light source located top-ce
 - **shadow-0**: No shadow. Used for flat text, tags, and section labels.
 - **shadow-1**: `0 1px 2px rgba(13,13,13,0.06), 0 4px 12px rgba(13,13,13,0.04)`. Used for cards at rest and proof metrics.
 - **shadow-2**: `0 2px 4px rgba(13,13,13,0.07), 0 12px 32px rgba(13,13,13,0.07), 0 24px 64px rgba(13,13,13,0.04)`. Used for cards on hover (lift state), navbars on scroll, and case study containers.
-- **shadow-3**: `0 4px 8px rgba(13,13,13,0.08), 0 24px 48px rgba(13,13,13,0.1), 0 48px 96px rgba(13,13,13,0.06)`. Used for screenshots, hero illustrations, and signature dev studio cards.
+- **shadow-3**: `0 4px 8px rgba(13,13,13,0.08), 0 24px 48px rgba(13,13,13,0.1), 0 48px 96px rgba(13,13,13,0.06)`. Used for screenshots, hero illustrations, and signature project cards.
 - **shadow-4**: `0 8px 16px rgba(13,13,13,0.08), 0 48px 96px rgba(13,13,13,0.12), 0 96px 160px rgba(13,13,13,0.08)`. Used for peak showcases and large overlay headers.
 
 ### Named Rules

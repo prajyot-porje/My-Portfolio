@@ -58,10 +58,11 @@ const Grift = localFont({
 export const metadata: Metadata = {
   title: "Prajyot Porje — Product Engineer",
   description:
-    "Full-stack engineer, founder of Dev Studio. Building production software from idea to shipped.",
+    "Product Engineer building production software from idea to shipped.",
   openGraph: {
     title: "Prajyot Porje — Product Engineer",
-    description: "Full-stack engineer and founder of Dev Studio.",
+    description:
+      "Product Engineer building production software from idea to shipped.",
     url: "https://prajyot.dev",
     siteName: "Prajyot Porje",
     type: "website",
@@ -69,7 +70,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Prajyot Porje — Product Engineer",
-    description: "Full-stack engineer and founder of Dev Studio.",
+    description:
+      "Product Engineer building production software from idea to shipped.",
   },
   metadataBase: new URL("https://prajyot.dev"),
 };

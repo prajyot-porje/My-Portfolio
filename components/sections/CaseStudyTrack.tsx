@@ -7,6 +7,16 @@ import { caseStudies } from "@/lib/data/case-studies";
 import SectionLabel from "../ui/SectionLabel";
 import Tag from "../ui/Tag";
 
+const alternateImages: Record<string, string[]> = {
+  devflow: [
+    "/images/projects/Devflow.png",
+    "/images/projects/Devflow_1.png",
+    "/images/projects/Devflow_2.png",
+  ],
+  contextgraph: ["/images/projects/contextGraph.png"],
+  cresults: ["/images/projects/Kiyomi.png"],
+};
+
 export default function CaseStudyTrack() {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -18,23 +28,29 @@ export default function CaseStudyTrack() {
     cresults: 0,
   });
 
-  const alternateImages: Record<string, string[]> = {
-    devflow: [
-      "/images/projects/Devflow.png",
-      "/images/projects/contextGraph.png",
-      "/images/projects/Namrl.png",
-    ],
-    contextgraph: [
-      "/images/projects/contextGraph.png",
-      "/images/projects/Devflow.png",
-      "/images/projects/Kiyomi.png",
-    ],
-    cresults: [
-      "/images/projects/Kiyomi.png",
-      "/images/projects/Namrl.png",
-      "/images/projects/Devflow.png",
-    ],
-  };
+  const lastManualClickRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveImages((prev) => {
+        const next = { ...prev };
+        let changed = false;
+        for (const projectId in alternateImages) {
+          const imgs = alternateImages[projectId];
+          if (imgs.length > 1) {
+            const lastClick = lastManualClickRef.current[projectId] || 0;
+            if (Date.now() - lastClick >= 10000) {
+              next[projectId] = (prev[projectId] + 1) % imgs.length;
+              changed = true;
+            }
+          }
+        }
+        return changed ? next : prev;
+      });
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -82,6 +98,7 @@ export default function CaseStudyTrack() {
 
   const handleThumbnailClick = (projectId: string, index: number) => {
     setActiveImages((prev) => ({ ...prev, [projectId]: index }));
+    lastManualClickRef.current[projectId] = Date.now();
   };
 
   const CARD_THEMES = [
@@ -309,33 +326,35 @@ export default function CaseStudyTrack() {
                 </div>
 
                 {/* Thumbnails Strip */}
-                <div className="flex gap-2 mt-3 justify-start overflow-x-auto py-1">
-                  {studyImages.map((imgUrl, tIdx) => {
-                    const isActive = activeImgIdx === tIdx;
-                    return (
-                      <button
-                        // biome-ignore lint/suspicious/noArrayIndexKey: thumbnail order is static
-                        key={`${imgUrl}-${tIdx}`}
-                        onClick={() => handleThumbnailClick(study.id, tIdx)}
-                        type="button"
-                        className={`w-[56px] h-[35px] aspect-[1.6] relative rounded overflow-hidden border transition-[transform,border-color,opacity,box-shadow] duration-200 ease-out active:scale-[0.97] cursor-pointer pointer-events-auto shrink-0 ${
-                          isActive
-                            ? theme.thumbActive
-                            : `opacity-50 hover:opacity-100 ${theme.thumbInactive}`
-                        }`}
-                        aria-label={`View screenshot variant ${tIdx + 1}`}
-                      >
-                        <Image
-                          src={imgUrl}
-                          alt="Thumbnail preview"
-                          fill
-                          className="object-cover"
-                          sizes="56px"
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
+                {studyImages.length > 1 && (
+                  <div className="flex gap-2 mt-3 justify-start overflow-x-auto py-1">
+                    {studyImages.map((imgUrl, tIdx) => {
+                      const isActive = activeImgIdx === tIdx;
+                      return (
+                        <button
+                          // biome-ignore lint/suspicious/noArrayIndexKey: thumbnail order is static
+                          key={`${imgUrl}-${tIdx}`}
+                          onClick={() => handleThumbnailClick(study.id, tIdx)}
+                          type="button"
+                          className={`w-[56px] h-[35px] aspect-[1.6] relative rounded overflow-hidden border transition-[transform,border-color,opacity,box-shadow] duration-200 ease-out active:scale-[0.97] cursor-pointer pointer-events-auto shrink-0 ${
+                            isActive
+                              ? theme.thumbActive
+                              : `opacity-50 hover:opacity-100 ${theme.thumbInactive}`
+                          }`}
+                          aria-label={`View screenshot variant ${tIdx + 1}`}
+                        >
+                          <Image
+                            src={imgUrl}
+                            alt="Thumbnail preview"
+                            fill
+                            className="object-cover"
+                            sizes="56px"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           );

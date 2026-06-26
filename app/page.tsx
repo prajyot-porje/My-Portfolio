@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <main className="min-h-screen relative w-full bg-[var(--color-ground)]">
       <Intro onComplete={() => setIntroSeen(true)} />
-      <Navbar />
+      <Navbar isIntroActive={!introSeen} />
       <Hero isIntroActive={!introSeen} />
       <About />
       <CaseStudyTrack />

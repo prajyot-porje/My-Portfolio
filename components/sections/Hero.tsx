@@ -1,7 +1,7 @@
 "use client";
 
 import { animate, onScroll } from "animejs";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import MagneticButton from "../ui/MagneticButton";
@@ -46,6 +46,8 @@ const focusItems = [
   },
 ];
 
+const mobileImages = ["/images/profile/hero.png", "/images/profile/new.png"];
+
 export default function Hero({ isIntroActive }: HeroProps) {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLElement>(null);
@@ -83,12 +85,27 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
   const [hasScrolled, setHasScrolled] = useState(false);
 
+  // Mobile circular images auto-rotation
+  const [mobileImgIndex, setMobileImgIndex] = useState(0);
+
+  useEffect(() => {
+    if (isIntroActive) return;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReduced) return;
+
+    const interval = setInterval(() => {
+      setMobileImgIndex((prev) => (prev + 1) % mobileImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isIntroActive]);
+
   // biome-ignore lint/suspicious/noExplicitAny: GSAP animation instance is loaded dynamically
   const scrollLineAnim = useRef<any>(null);
   const cursorCoordinates = useRef({ x: 0, y: 0 });
   const blobPhase = useRef(0);
-
-
 
   // ── Track scroll state ─────────────────────────────────────────────
   useEffect(() => {
@@ -99,8 +116,6 @@ export default function Hero({ isIntroActive }: HeroProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-
 
   // ── Scroll Indicator Play/Pause ────────────────────────────────────
   useEffect(() => {
@@ -371,7 +386,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
         initial={{ opacity: 0 }}
         animate={isIntroActive ? {} : { opacity: 1 }}
         transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 hidden md:block"
       >
         <div
           ref={photoRef}
@@ -417,7 +432,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
       <div
         ref={veilRef}
         aria-hidden="true"
-        className="absolute inset-0 z-[1] pointer-events-none hero-veil will-change-transform"
+        className="absolute inset-0 z-[1] pointer-events-none hero-veil will-change-transform hidden md:block"
       />
 
       {/* ── LAYER 3: Content ───────────────────────────────────── */}
@@ -425,9 +440,187 @@ export default function Hero({ isIntroActive }: HeroProps) {
         ref={contentRef}
         className="absolute inset-0 z-[2] will-change-transform"
       >
+        {/* ─────────────────────────────────────────────────────────────── */}
+        {/* ── MOBILE HERO (md:hidden) — App-native profile layout ─────── */}
+        {/* ─────────────────────────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isIntroActive ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="md:hidden absolute inset-0 flex flex-col items-center justify-center px-6 pt-14 pb-28 gap-0"
+        >
+          {/* ── Profile image zone ─── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={isIntroActive ? {} : { opacity: 1, scale: 1 }}
+            transition={{ delay: 0.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex items-center justify-center mb-7"
+          >
+            {/* Outer slow-rotating ring */}
+            <motion.div
+              aria-hidden="true"
+              className="absolute w-[228px] h-[228px] rounded-full"
+              style={{ border: "1px solid rgba(13,13,13,0.12)" }}
+              animate={prefersReducedMotion ? {} : { rotate: 360 }}
+              transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
+            />
+            {/* Inner counter-rotating dashed ring */}
+            <motion.div
+              aria-hidden="true"
+              className="absolute w-[208px] h-[208px] rounded-full"
+              style={{ border: "1px dashed rgba(13,13,13,0.14)" }}
+              animate={prefersReducedMotion ? {} : { rotate: -360 }}
+              transition={{ duration: 46, repeat: Infinity, ease: "linear" }}
+            />
+            {/* Floating avatar circle */}
+            <motion.div
+              className="w-[184px] h-[184px] rounded-full overflow-hidden bg-[var(--color-surface-2)] relative"
+              style={{
+                boxShadow:
+                  "0 0 0 3px var(--color-ink-1), 0 24px 56px rgba(13,13,13,0.13)",
+              }}
+              animate={prefersReducedMotion ? {} : { y: [-5, 5, -5] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={mobileImgIndex}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={mobileImages[mobileImgIndex]}
+                    alt="Prajyot Porje"
+                    fill
+                    priority
+                    className="object-cover object-[center_top]"
+                    unoptimized
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
 
-        {/* ── BOTTOM-LEFT: Hero copy ───────────────────────── */}
-        <div className="absolute left-[var(--sp-8)] top-1/2 -translate-y-1/2 max-w-[480px] max-md:top-auto max-md:translate-y-0 max-md:bottom-[var(--sp-16)]">
+            {/* Available badge floating below avatar */}
+            <motion.div
+              initial={{ opacity: 0, y: 6, scale: 0.85 }}
+              animate={isIntroActive ? {} : { opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.85, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-[6px] bg-[var(--color-dark-1)] rounded-full shadow-lg"
+              style={{ padding: "5px 12px" }}
+            >
+              <span className="relative flex h-[5px] w-[5px]" aria-hidden="true">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-status-green)] opacity-75" />
+                <span className="relative inline-flex rounded-full h-[5px] w-[5px] bg-[var(--color-status-green)]" />
+              </span>
+              <span
+                className="text-[var(--color-status-green)] font-semibold uppercase tracking-[0.14em]"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "9px" }}
+              >
+                Available
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* ── Name ─── */}
+          <motion.h1
+            initial={{ opacity: 0, y: 14 }}
+            animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[2.25rem] leading-none font-semibold tracking-[-0.025em] text-[var(--color-ink-1)] text-center mb-2"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            Prajyot Porje
+          </motion.h1>
+
+          {/* ── Role label ─── */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-8"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              color: "var(--color-ink-3)",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+            }}
+          >
+            Product Engineer
+          </motion.p>
+
+          {/* ── Metrics strip ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-stretch border border-[var(--color-surface-3)] rounded-2xl overflow-hidden mb-6 w-full max-w-[308px]"
+          >
+            {([
+              { value: "3+", label: "US Clients" },
+              { value: "5+", label: "Products" },
+              { value: "2yr", label: "Studio" },
+            ] as { value: string; label: string }[]).map(({ value, label }, i) => (
+              <div
+                key={label}
+                className={`flex-1 py-3 text-center${
+                  i < 2 ? " border-r border-[var(--color-surface-3)]" : ""
+                }`}
+              >
+                <span
+                  className="block leading-none mb-1 font-semibold"
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "1.2rem",
+                    color: "var(--color-ink-1)",
+                  }}
+                >
+                  {value}
+                </span>
+                <span
+                  className="block uppercase"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "8px",
+                    color: "var(--color-ink-3)",
+                    letterSpacing: "0.15em",
+                  }}
+                >
+                  {label}
+                </span>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* ── CTA ─── */}
+          <motion.a
+            href="#work"
+            initial={{ opacity: 0, y: 10 }}
+            animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
+            transition={{ delay: 0.78, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center justify-center gap-2 bg-[var(--color-ink-1)] text-[var(--color-ground)] w-full max-w-[308px] rounded-full font-medium active:scale-[0.98]"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "var(--text-sm)",
+              padding: "15px 24px",
+              transition: "transform 0.15s ease",
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              document
+                .getElementById("work")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            See the Work
+            <span style={{ color: "var(--color-accent)" }}>↓</span>
+          </motion.a>
+        </motion.div>
+        {/* ── BOTTOM-LEFT: Hero copy (desktop only) ───────────────────── */}
+        <div className="hidden md:block absolute left-[var(--sp-8)] top-1/2 -translate-y-1/2 max-w-[480px]">
           {/* Location + time chip */}
           <motion.div
             ref={chipRef}
@@ -475,7 +668,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
               }}
               className="font-[family-name:var(--font-sans)] uppercase font-semibold text-[var(--color-ink-1)]"
             >
-              Built to 
+              Built to
             </TextEffect>
             <TextEffect
               as="span"
@@ -512,8 +705,8 @@ export default function Hero({ isIntroActive }: HeroProps) {
             delay={0.8}
             className="font-[family-name:var(--font-sans)] font-normal text-wrap-pretty text-[length:var(--text-base)] text-[var(--color-ink-2)] leading-[var(--lh-body)] mb-[var(--sp-6)]"
           >
-            Product Engineer & founder of Dev Studio. I design robust
-            architectures and ship high-performance software.
+            Product Engineer. I design robust architectures and ship
+            high-performance software.
           </TextEffect>
 
           {/* CTA — Magnetic pill button with arrow interaction */}
@@ -535,9 +728,9 @@ export default function Hero({ isIntroActive }: HeroProps) {
             </span>
           </MagneticButton>
         </div>
-
         {/* ── BOTTOM-RIGHT (FLOATING CARDS): right-side hero content ───────────────── */}
-﻿        <motion.div
+        ﻿{" "}
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={{
@@ -807,7 +1000,9 @@ export default function Hero({ isIntroActive }: HeroProps) {
                     porjeprajyot@gmail.com
                   </span>
                   <span className="font-[family-name:var(--font-mono)] text-[8px] text-white/35 mt-1 block uppercase tracking-wider">
-                    {card3Copied ? "Copied to clipboard!" : "Click to copy address"}
+                    {card3Copied
+                      ? "Copied to clipboard!"
+                      : "Click to copy address"}
                   </span>
                 </button>
 
@@ -850,14 +1045,16 @@ export default function Hero({ isIntroActive }: HeroProps) {
             </div>
           </motion.div>
         </motion.div>
-
-
         {/* ── BOTTOM-RIGHT: Scroll indicator ───────────────── */}
         <motion.div
           ref={scrollIndicatorRef as any}
           initial={{ opacity: 0, y: 10 }}
           animate={isIntroActive ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+          transition={{
+            duration: 0.6,
+            delay: 1.3,
+            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+          }}
           aria-hidden="true"
           className={[
             "absolute bottom-[var(--sp-8)] right-[var(--sp-8)]",

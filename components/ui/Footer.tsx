@@ -33,7 +33,7 @@ export default function Footer() {
         <div className="flex flex-col text-right max-md:text-left text-[10px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider">
           <span>Designed &amp; Engineered in India</span>
           <span className="mt-1 text-[var(--color-ink-2)] font-semibold">
-            DEV STUDIO {"//"} FOUNDER
+            PRODUCT ENGINEER
           </span>
         </div>
       </div>
