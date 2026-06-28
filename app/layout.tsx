@@ -2,7 +2,6 @@ import { Agentation } from "agentation";
 import { GeistMono } from "geist/font/mono";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import LenisProvider from "@/components/ui/LenisProvider";
 import "./globals.css";
 
@@ -59,6 +58,9 @@ export const metadata: Metadata = {
   title: "Prajyot Porje — Product Engineer",
   description:
     "Product Engineer building production software from idea to shipped.",
+  icons: {
+    icon: "/images/icon.png",
+  },
   openGraph: {
     title: "Prajyot Porje — Product Engineer",
     description:
@@ -98,11 +100,22 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          {/* JS-detect: enables .hero-entrance hidden state only when JS runs */}
+          {/* JS-detect & Preloader protection: prevents flashing page content before JS loads */}
           <script
             // biome-ignore lint/security/noDangerouslySetInnerHtml: JS detect inline script
             dangerouslySetInnerHTML={{
-              __html: "document.documentElement.classList.add('js')",
+              __html: `
+                (function() {
+                  document.documentElement.classList.add('js');
+                  try {
+                    var seen = sessionStorage.getItem('intro-seen') === 'true';
+                    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    if (!seen && !prefersReducedMotion) {
+                      document.documentElement.classList.add('intro-pending');
+                    }
+                  } catch (e) {}
+                })()
+              `,
             }}
           />
         </head>
@@ -110,11 +123,7 @@ export default function RootLayout({
           <LenisProvider>{children}</LenisProvider>
           {/* impeccable-live-start */}
           {process.env.NODE_ENV === "development" && (
-            <Script
-              id="impeccable-live"
-              src="http://localhost:8400/live.js"
-              strategy="lazyOnload"
-            />
+            <script src="http://localhost:8400/live.js" async />
           )}
           {/* impeccable-live-end */}
         </body>

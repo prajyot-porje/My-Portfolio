@@ -1,40 +1,38 @@
 "use client";
 
 export default function Footer() {
-  const handleScrollTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleScrollTop = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-[var(--color-ground)] px-[var(--sp-8)] py-[var(--sp-12)] border-t border-[var(--color-surface-4)] max-md:px-[var(--sp-6)]">
-      <div className="max-w-[1000px] mx-auto flex max-md:flex-col justify-between items-center max-md:items-start gap-6">
-        {/* Left: Copyright */}
-        <div className="flex flex-col text-[10px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider">
-          <span>&copy; {new Date().getFullYear()} Prajyot Porje.</span>
-          <span className="mt-1">All rights reserved.</span>
-        </div>
+    <footer className="bg-[#0a0a0a]">
+      <div className="max-w-[1000px] mx-auto px-[var(--sp-8)] pb-12 pt-6 max-md:px-[var(--sp-6)]">
+        {/* ── Hairline ─────────────────────────────────── */}
+        <div className="border-t border-white/10 mb-6" />
 
-        {/* Center: Back to top */}
-        {/* biome-ignore lint/a11y/useValidAnchor: back to top scrolling link */}
-        <a
-          href="#top"
-          onClick={handleScrollTop}
-          className="group relative inline-flex items-center text-[10px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider no-underline hover:text-[var(--color-ink-1)] transition-colors cursor-pointer"
-        >
-          <span>Back to Top</span>
-          <span className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 ml-1.5">
-            ↑
+        {/* ── Tier 3: Utility ──────────────────────────── */}
+        <div className="flex max-md:flex-col items-center max-md:items-start justify-between gap-[var(--sp-3)]">
+          <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-white/25 select-none">
+            &copy; {new Date().getFullYear()} Prajyot Porje
           </span>
-          <span className="cta-underline" />
-        </a>
 
-        {/* Right: Designed & Engineered & Role */}
-        <div className="flex flex-col text-right max-md:text-left text-[10px] font-[family-name:var(--font-mono)] text-[var(--color-ink-3)] uppercase tracking-wider">
-          <span>Designed &amp; Engineered in India</span>
-          <span className="mt-1 text-[var(--color-ink-2)] font-semibold">
-            PRODUCT ENGINEER
+          <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-white/25 select-none max-md:order-2">
+            Engineered in India
           </span>
+
+          {/* Back to top */}
+          <button
+            type="button"
+            onClick={handleScrollTop}
+            aria-label="Back to top"
+            className="group font-[family-name:var(--font-mono)] text-[14px] leading-none text-white/25 transition-colors duration-200 ease-[var(--ease-gentle)] hover:text-white/60 cursor-pointer max-md:order-3 max-md:mx-auto max-md:mt-[var(--sp-4)]"
+          >
+            <span className="inline-block transition-transform duration-200 ease-[var(--ease-gentle)] group-hover:-translate-y-0.5">
+              ↑
+            </span>
+          </button>
         </div>
       </div>
     </footer>

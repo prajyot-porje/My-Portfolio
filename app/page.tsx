@@ -18,15 +18,17 @@ export default function Home() {
   return (
     <main className="min-h-screen relative w-full bg-[var(--color-ground)]">
       <Intro onComplete={() => setIntroSeen(true)} />
-      <Navbar isIntroActive={!introSeen} />
-      <Hero isIntroActive={!introSeen} />
-      <About />
-      <CaseStudyTrack />
-      <Experience />
-      <Principles />
-      <Achievements />
-      <Contact />
-      <Footer />
+      <div className="page-content">
+        <Navbar />
+        <Hero isIntroActive={!introSeen} />
+        <About />
+        <CaseStudyTrack />
+        <Experience />
+        <Principles />
+        <Achievements />
+        <Contact />
+        <Footer />
+      </div>
     </main>
   );
 }

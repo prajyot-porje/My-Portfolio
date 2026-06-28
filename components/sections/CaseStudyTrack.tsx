@@ -17,6 +17,179 @@ const alternateImages: Record<string, string[]> = {
   cresults: ["/images/projects/Kiyomi.png"],
 };
 
+function getTechIcon(tech: string) {
+  const cleanTech = tech.toLowerCase().trim();
+  switch (cleanTech) {
+    case "next.js":
+      return (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 16.424l-4.962-6.402V18.5h-1.25V9.5h1.25l4.893 6.314V9.5h1.25v9.002c-.407-.061-.83-.16-1.181-.578zM12 9.5a1 1 0 011 1v4.73l-2-2.58V10.5a1 1 0 011-1z" />
+        </svg>
+      );
+    case "typescript":
+      return (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0H1.125zm16.58 12.3c.72 0 1.343.195 1.867.585.525.39.877.945 1.058 1.665H18.78c-.12-.345-.315-.615-.585-.81-.27-.195-.615-.293-1.035-.293-.435 0-.795.12-1.08.36-.285.24-.428.555-.428.945 0 .345.105.615.315.81.21.195.585.345 1.125.45l1.035.21c1.23.255 2.145.69 2.745 1.305.6.615.9 1.44.9 2.475 0 1.11-.42 1.995-1.26 2.655-.84.66-1.95.99-3.33.99-1.26 0-2.31-.33-3.15-.99-.84-.66-1.35-1.56-1.53-2.7h1.935c.15.54.45.96.9 1.26.45.3.99.45 1.62.45.495 0 .915-.12 1.26-.36.345-.24.518-.585.518-1.035 0-.42-.15-.735-.45-.945-.3-.21-.825-.39-1.575-.54l-1.035-.21c-1.08-.225-1.905-.63-2.475-1.215-.57-.585-.855-1.35-.855-2.295 0-1.02.39-1.83 1.17-2.43.78-.6 1.785-.9 3.015-.9zm-11.46.075H13.62V14.1H10.5v8.025H8.355V14.1H5.245v-1.725z" />
+        </svg>
+      );
+    case "tailwind css":
+      return (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.714,10.662,15.026,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.288,6.138,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.225,1.238,2.537,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.288,13.338,8.976,12,6.001,12z" />
+        </svg>
+      );
+    case "postgresql":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <ellipse cx="12" cy="5" rx="9" ry="3" />
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+          <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+        </svg>
+      );
+    case "redis":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      );
+    case "three.js":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 22 8.5 22 19.5 12 22 2 19.5 2 8.5" />
+          <line x1="12" y1="22" x2="12" y2="12" />
+          <line x1="12" y1="12" x2="2" y2="8.5" />
+          <line x1="12" y1="12" x2="22" y2="8.5" />
+        </svg>
+      );
+    case "webgl":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      );
+    case "wasm":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 22 8.5 22 19.5 12 22 2 19.5 2 8.5" />
+          <line x1="12" y1="2" x2="12" y2="22" />
+          <line x1="2" y1="8.5" x2="22" y2="8.5" />
+        </svg>
+      );
+    case "babel ast":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="5" r="2.5" />
+          <circle cx="6" cy="15" r="2.5" />
+          <circle cx="18" cy="15" r="2.5" />
+          <line x1="12" y1="7.5" x2="6.5" y2="12.5" />
+          <line x1="12" y1="7.5" x2="17.5" y2="12.5" />
+        </svg>
+      );
+    case "openrouter":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="6" cy="6" r="2" />
+          <circle cx="18" cy="6" r="2" />
+          <circle cx="12" cy="18" r="2" />
+          <path d="M6 8v4a2 2 0 002 2h8a2 2 0 002-2V8" />
+          <line x1="12" y1="14" x2="12" y2="16" />
+        </svg>
+      );
+    case "isr":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 11-.57-8.38l5.67-5.67" />
+        </svg>
+      );
+    case "crm api":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="4" y="4" width="16" height="6" rx="1" />
+          <rect x="4" y="14" width="16" height="6" rx="1" />
+          <line x1="12" y1="10" x2="12" y2="14" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export default function CaseStudyTrack() {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -236,7 +409,10 @@ export default function CaseStudyTrack() {
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {study.stack.map((tag) => (
                       <Tag key={tag} className={theme.tagClass}>
-                        {tag}
+                        <span className="inline-flex items-center gap-1.5">
+                          {getTechIcon(tag)}
+                          <span>{tag}</span>
+                        </span>
                       </Tag>
                     ))}
                   </div>
@@ -320,7 +496,7 @@ export default function CaseStudyTrack() {
                     alt={`${study.title} Showcase`}
                     fill
                     priority={idx === 0}
-                    className="object-contain p-2"
+                    className="object-cover"
                     sizes="(max-width: 768px) 100vw, 40vw"
                   />
                 </div>

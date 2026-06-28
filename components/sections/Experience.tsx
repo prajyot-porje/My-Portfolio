@@ -122,8 +122,24 @@ export default function Experience() {
               // biome-ignore lint/a11y/useSemanticElements: custom styled timeline row acts as button
               <div
                 key={item.index}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseEnter={() => {
+                  if (
+                    typeof window !== "undefined" &&
+                    window.matchMedia("(hover: hover) and (pointer: fine)")
+                      .matches
+                  ) {
+                    setHoveredIndex(index);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (
+                    typeof window !== "undefined" &&
+                    window.matchMedia("(hover: hover) and (pointer: fine)")
+                      .matches
+                  ) {
+                    setHoveredIndex(null);
+                  }
+                }}
                 onClick={() => toggleExpand(index)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {

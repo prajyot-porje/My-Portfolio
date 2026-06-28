@@ -243,13 +243,13 @@ export default function Achievements() {
               </div>
 
               {/* Contribution Chart Image */}
-              <div className="w-full overflow-x-auto py-2 border border-[var(--color-surface-3)] rounded-lg bg-[var(--color-surface-2)] px-4 flex items-center justify-start md:justify-center min-h-[120px]">
+              <div className="w-full overflow-hidden md:overflow-x-auto py-2 border border-[var(--color-surface-3)] rounded-lg bg-[var(--color-surface-2)] px-4 flex items-center justify-start md:justify-center min-h-[120px]">
                 {/* Custom-colored contribution chart mapping to design system palette */}
                 {/* biome-ignore lint/performance/noImgElement: External dynamic SVG badges cannot be optimized locally */}
                 <img
                   src="https://ghchart.rshah.org/0d0d0d/prajyot-porje"
                   alt="Prajyot Porje's GitHub Contributions"
-                  className="w-full min-w-[720px] h-auto object-contain select-none"
+                  className="w-full md:min-w-[720px] min-w-0 h-auto object-contain select-none"
                   loading="lazy"
                 />
               </div>
@@ -302,10 +302,10 @@ export default function Achievements() {
               </div>
 
               {/* Contribution Chart SVG */}
-              <div className="w-full overflow-x-auto py-2 border border-[var(--color-surface-3)] rounded-lg bg-[var(--color-surface-2)] px-4 flex items-center justify-start md:justify-center min-h-[120px]">
+              <div className="w-full overflow-hidden md:overflow-x-auto py-2 border border-[var(--color-surface-3)] rounded-lg bg-[var(--color-surface-2)] px-4 flex items-center justify-start md:justify-center min-h-[120px]">
                 {leetcodeSvg ? (
                   <div
-                    className="w-full min-w-[720px] h-auto select-none leetcode-heatmap-container"
+                    className="w-full md:min-w-[720px] min-w-0 h-auto select-none leetcode-heatmap-container"
                     // biome-ignore lint/security/noDangerouslySetInnerHtml: fetched SVG is sanitized and styled locally
                     dangerouslySetInnerHTML={{ __html: leetcodeSvg }}
                   />

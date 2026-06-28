@@ -33,6 +33,7 @@ export default function Intro({ onComplete }: IntroProps) {
 
     if (seen || prefersReducedMotion) {
       setShouldShow(false);
+      document.documentElement.classList.remove("intro-pending");
       onComplete();
     } else {
       setShouldShow(true);
@@ -58,6 +59,13 @@ export default function Intro({ onComplete }: IntroProps) {
       for (const t of timers) clearTimeout(t);
     };
   }, [shouldShow, onComplete]);
+
+  // Remove intro-pending class when container starts to fade out (step 3)
+  useEffect(() => {
+    if (step === 3) {
+      document.documentElement.classList.remove("intro-pending");
+    }
+  }, [step]);
 
   if (shouldShow === null || shouldShow === false) return null;
 

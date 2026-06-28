@@ -118,24 +118,23 @@ const getMobileIcon = (label: string) => {
   }
 };
 
-interface NavbarProps {
-  isIntroActive?: boolean;
-}
-
-export default function Navbar({ isIntroActive = false }: NavbarProps) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Flag to avoid scroll observer updates during click-triggered smooth scrolls
-  const isScrollingRef = useRef(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Bug-fix #1: Track ALL intersecting sections in a persistent map (id → ratio)
+  // so we always pick the winner from the full set, not just the current callback batch.
+  const intersectionMapRef = useRef<Map<string, number>>(new Map());
 
   // Track which section is in viewport via IntersectionObserver
   useEffect(() => {
     const allTargetIds = NAV_LINKS.flatMap((l) => l.targetIds);
-    const elements = allTargetIds
+    // Bug-fix #2: Also observe the hero section as a sentinel for top-of-page
+    const sentinelId = "hero";
+    const observedIds = [sentinelId, ...allTargetIds];
+    const elements = observedIds
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
 
@@ -143,48 +142,65 @@ export default function Navbar({ isIntroActive = false }: NavbarProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isScrollingRef.current) return;
-        let bestEntry: IntersectionObserverEntry | null = null;
+        const map = intersectionMapRef.current;
+
+        // Update the map with current batch
         for (const entry of entries) {
-          if (
-            entry.isIntersecting &&
-            (!bestEntry ||
-              entry.intersectionRatio > bestEntry.intersectionRatio)
-          ) {
-            bestEntry = entry;
+          if (entry.isIntersecting) {
+            map.set(entry.target.id, entry.intersectionRatio);
+          } else {
+            map.delete(entry.target.id);
           }
         }
-        if (bestEntry) {
-          const idx = NAV_LINKS.findIndex((l) =>
-            (l.targetIds as readonly string[]).includes(bestEntry.target.id),
-          );
-          if (idx !== -1) setActiveIndex(idx);
+
+        // Pick the section with the highest ratio from the ENTIRE map
+        let bestId: string | null = null;
+        let bestRatio = 0;
+        for (const [id, ratio] of map) {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
         }
+
+        // If hero is the most visible (or nothing is intersecting), clear active
+        if (!bestId || bestId === sentinelId) {
+          setActiveIndex(null);
+          return;
+        }
+
+        // Map the winning section ID to its nav link index
+        const idx = NAV_LINKS.findIndex((l) =>
+          (l.targetIds as readonly string[]).includes(bestId),
+        );
+        if (idx !== -1) setActiveIndex(idx);
       },
       {
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0, 0.25, 0.5],
+        // Bug-fix #3: Wider detection zone (50% of viewport instead of 20%)
+        rootMargin: "-10% 0px -40% 0px",
+        threshold: [0, 0.1, 0.25, 0.5, 0.75],
       },
     );
 
     for (const el of elements) observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      intersectionMapRef.current.clear();
+    };
   }, []);
 
-  // Scroll detection for backdrop blur
+  // Bug-fix #2: Single merged scroll listener for backdrop blur + fallback top-of-page detection
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 80);
+
+      // Fallback: if no sections are intersecting and we're near the top, clear active
+      if (window.scrollY < 100 && intersectionMapRef.current.size === 0) {
+        setActiveIndex(null);
+      }
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Reset active when at the very top (hero area)
-  useEffect(() => {
-    const handleScrollTop = () => {
-      if (window.scrollY < 200) setActiveIndex(null);
-    };
-    window.addEventListener("scroll", handleScrollTop, { passive: true });
-    return () => window.removeEventListener("scroll", handleScrollTop);
   }, []);
 
   const handleClick = useCallback(
@@ -192,14 +208,8 @@ export default function Navbar({ isIntroActive = false }: NavbarProps) {
       e.preventDefault();
       const target = document.getElementById(NAV_LINKS[idx].targetIds[0]);
       if (target) {
-        isScrollingRef.current = true;
-        setActiveIndex(idx);
         target.scrollIntoView({ behavior: "smooth" });
-
-        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-        scrollTimeoutRef.current = setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 1000);
+        setActiveIndex(idx);
       }
     },
     [],
@@ -216,10 +226,7 @@ export default function Navbar({ isIntroActive = false }: NavbarProps) {
   return (
     <>
       {/* Desktop Header Navigation */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={isIntroActive ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+      <header
         data-cursor-no-ring="true"
         className="fixed top-[var(--sp-5)] left-0 right-0 z-[100] h-[52px] hidden md:flex items-center px-[var(--sp-8)] pointer-events-none"
       >
@@ -286,22 +293,17 @@ export default function Navbar({ isIntroActive = false }: NavbarProps) {
                   }}
                 >
                   {/* Active pill — white bg, slides between tabs */}
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        layoutId="nav-active-pill"
-                        className="absolute inset-0 rounded-[var(--radius-pill)]"
-                        style={{
-                          zIndex: -1,
-                          backgroundColor: "rgba(255, 255, 255, 0.93)",
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={transition}
-                      />
-                    )}
-                  </AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 rounded-[var(--radius-pill)]"
+                      style={{
+                        zIndex: -1,
+                        backgroundColor: "rgba(255, 255, 255, 0.93)",
+                      }}
+                      transition={transition}
+                    />
+                  )}
                   <span className="relative z-[1]">{label}</span>
                 </a>
               );
@@ -330,95 +332,76 @@ export default function Navbar({ isIntroActive = false }: NavbarProps) {
             Available
           </span>
         </div>
-      </motion.header>
-
-      {/* Mobile/Tablet Header (Name Wordmark) */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={isIntroActive ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-[100] h-14 flex md:hidden items-center justify-between px-[var(--sp-5)] bg-[var(--canvas)]/80 backdrop-blur-md border-b border-[var(--color-surface-3)] pointer-events-auto"
-      >
-        <span
-          className="font-semibold text-[16px] text-[var(--color-ink-1)] tracking-[var(--ls-title)]"
-          style={{
-            fontFamily: "var(--font-sans)",
-            lineHeight: 1,
-          }}
-        >
-          Prajyot Porje
-        </span>
-        <div className="flex items-center gap-[var(--sp-1)] bg-[var(--color-dark-1)] rounded-full px-[var(--sp-3)] py-[var(--sp-1)] shadow-sm">
-          <div className="w-[5px] h-[5px] bg-[var(--color-status-green)] rounded-full available-pulse" />
-          <span className="font-semibold text-[var(--color-status-green)] text-[9px] uppercase tracking-wider font-[family-name:var(--font-sans)]">
-            Available
-          </span>
-        </div>
-      </motion.header>
+      </header>
 
       {/* Mobile/Tablet Bottom Dock Navigation */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={isIntroActive ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="md:hidden fixed left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none"
-        style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom, 0px))" }}
-      >
-        <nav
+      <div className="md:hidden fixed bottom-6 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
+        <motion.nav
+          layout
           aria-label="Mobile navigation"
-          className="pointer-events-auto bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-full py-[6px] px-[8px] flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.36),0_0_0_1px_rgba(255,255,255,0.05)] w-[92%] max-w-[380px]"
+          className="pointer-events-auto bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-full py-[6px] px-[8px] flex items-center justify-between gap-[6px] shadow-[0_8px_32px_rgba(0,0,0,0.36),0_0_0_1px_rgba(255,255,255,0.05)] max-w-full"
         >
           {NAV_LINKS.map(({ label, href }, idx) => {
             const isActive = activeIndex === idx;
             return (
-              <a
+              <motion.a
+                layout
                 key={label}
                 href={href}
                 onClick={(e) => handleClick(e, idx)}
                 className={[
-                  "relative flex flex-col items-center justify-center rounded-full transition-colors duration-200 outline-none flex-1 h-11 py-1 select-none",
+                  "relative flex items-center justify-center rounded-full transition-colors duration-200 outline-none",
                   "focus-visible:outline focus-visible:outline-2",
                   "focus-visible:outline-offset-2 focus-visible:outline-white",
+                  isActive ? "px-3.5 py-[7px] gap-1.5" : "p-[10px]",
                 ].join(" ")}
                 style={{
                   color: isActive
                     ? "var(--color-dark-1)"
-                    : "rgba(255, 255, 255, 0.5)",
+                    : "rgba(255, 255, 255, 0.55)",
                   zIndex: 2,
                 }}
+                transition={transition}
               >
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      layoutId="mobile-nav-active-pill"
-                      className="absolute inset-0 bg-white rounded-full"
-                      style={{ zIndex: -1 }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={transition}
-                    />
-                  )}
-                </AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-active-pill"
+                    className="absolute inset-0 bg-white rounded-full"
+                    style={{ zIndex: -1 }}
+                    transition={transition}
+                  />
+                )}
                 <span className="relative z-10 flex items-center justify-center">
                   {getMobileIcon(label)}
                 </span>
-                <span
-                  className="relative z-10 text-[8px] font-semibold tracking-[0.03em] uppercase font-mono mt-0.5"
-                  style={{
-                    color: isActive
-                      ? "var(--color-dark-1)"
-                      : "rgba(255, 255, 255, 0.4)",
-                    transition: "color 0.2s ease",
-                  }}
-                >
-                  {label}
-                </span>
-              </a>
+                {/* Bug-fix #4: AnimatePresence prevents rapid mount/unmount flicker */}
+                <AnimatePresence mode="wait">
+                  {isActive && (
+                    <motion.span
+                      key={label}
+                      initial={
+                        prefersReducedMotion
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0, scale: 0.8 }
+                      }
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={
+                        prefersReducedMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, scale: 0.8 }
+                      }
+                      className="relative z-10 text-[10px] font-semibold tracking-wider uppercase font-[family-name:var(--font-sans)] select-none whitespace-nowrap flex-shrink-0"
+                      transition={transition}
+                    >
+                      {label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.a>
             );
           })}
-        </nav>
-      </motion.div>
+        </motion.nav>
+      </div>
     </>
   );
 }

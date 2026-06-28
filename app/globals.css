@@ -178,6 +178,20 @@
     overflow-x: hidden;
   }
 
+  /* ── Preloader protection ────────────────────────────── */
+  html.intro-pending body {
+    background-color: var(--color-dark-1) !important;
+    overflow: hidden;
+    height: 100vh;
+  }
+  html.intro-pending main {
+    background-color: var(--color-dark-1) !important;
+  }
+  html.intro-pending .page-content {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   /* ── Reduced motion override ─────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     *,
