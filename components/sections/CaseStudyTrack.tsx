@@ -14,7 +14,11 @@ const alternateImages: Record<string, string[]> = {
     "/images/projects/Devflow_2.png",
   ],
   contextgraph: ["/images/projects/contextGraph.png"],
-  cresults: ["/images/projects/Kiyomi.png"],
+  jobtracker: [
+    "/images/projects/Jobtracker.png",
+    "/images/projects/Jobtracker1.png",
+    "/images/projects/Jobtracker2.png",
+  ],
 };
 
 function getTechIcon(tech: string) {
@@ -23,18 +27,21 @@ function getTechIcon(tech: string) {
     case "next.js":
       return (
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <title>Next.js</title>
           <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 16.424l-4.962-6.402V18.5h-1.25V9.5h1.25l4.893 6.314V9.5h1.25v9.002c-.407-.061-.83-.16-1.181-.578zM12 9.5a1 1 0 011 1v4.73l-2-2.58V10.5a1 1 0 011-1z" />
         </svg>
       );
     case "typescript":
       return (
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <title>TypeScript</title>
           <path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0H1.125zm16.58 12.3c.72 0 1.343.195 1.867.585.525.39.877.945 1.058 1.665H18.78c-.12-.345-.315-.615-.585-.81-.27-.195-.615-.293-1.035-.293-.435 0-.795.12-1.08.36-.285.24-.428.555-.428.945 0 .345.105.615.315.81.21.195.585.345 1.125.45l1.035.21c1.23.255 2.145.69 2.745 1.305.6.615.9 1.44.9 2.475 0 1.11-.42 1.995-1.26 2.655-.84.66-1.95.99-3.33.99-1.26 0-2.31-.33-3.15-.99-.84-.66-1.35-1.56-1.53-2.7h1.935c.15.54.45.96.9 1.26.45.3.99.45 1.62.45.495 0 .915-.12 1.26-.36.345-.24.518-.585.518-1.035 0-.42-.15-.735-.45-.945-.3-.21-.825-.39-1.575-.54l-1.035-.21c-1.08-.225-1.905-.63-2.475-1.215-.57-.585-.855-1.35-.855-2.295 0-1.02.39-1.83 1.17-2.43.78-.6 1.785-.9 3.015-.9zm-11.46.075H13.62V14.1H10.5v8.025H8.355V14.1H5.245v-1.725z" />
         </svg>
       );
     case "tailwind css":
       return (
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <title>Tailwind CSS</title>
           <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.714,10.662,15.026,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.288,6.138,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.225,1.238,2.537,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.288,13.338,8.976,12,6.001,12z" />
         </svg>
       );
@@ -49,6 +56,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>PostgreSQL</title>
           <ellipse cx="12" cy="5" rx="9" ry="3" />
           <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
           <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
@@ -65,6 +73,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>Redis</title>
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
@@ -81,6 +90,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>Three.js</title>
           <polygon points="12 2 22 8.5 22 19.5 12 22 2 19.5 2 8.5" />
           <line x1="12" y1="22" x2="12" y2="12" />
           <line x1="12" y1="12" x2="2" y2="8.5" />
@@ -98,6 +108,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>WebGL</title>
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
@@ -114,6 +125,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>WASM</title>
           <polygon points="12 2 22 8.5 22 19.5 12 22 2 19.5 2 8.5" />
           <line x1="12" y1="2" x2="12" y2="22" />
           <line x1="2" y1="8.5" x2="22" y2="8.5" />
@@ -130,6 +142,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>Babel AST</title>
           <circle cx="12" cy="5" r="2.5" />
           <circle cx="6" cy="15" r="2.5" />
           <circle cx="18" cy="15" r="2.5" />
@@ -148,6 +161,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>OpenRouter</title>
           <circle cx="6" cy="6" r="2" />
           <circle cx="18" cy="6" r="2" />
           <circle cx="12" cy="18" r="2" />
@@ -166,6 +180,7 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>ISR</title>
           <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 11-.57-8.38l5.67-5.67" />
         </svg>
       );
@@ -180,9 +195,92 @@ function getTechIcon(tech: string) {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
+          <title>CRM API</title>
           <rect x="4" y="4" width="16" height="6" rx="1" />
           <rect x="4" y="14" width="16" height="6" rx="1" />
           <line x1="12" y1="10" x2="12" y2="14" />
+        </svg>
+      );
+    case "expo":
+      return (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <title>Expo</title>
+          <path d="M12 2.5L2 19.5h20L12 2.5zM12 7.7l6.8 10H5.2l6.8-10z" />
+        </svg>
+      );
+    case "react native":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <title>React Native</title>
+          <ellipse
+            cx="12"
+            cy="12"
+            rx="10"
+            ry="4"
+            transform="rotate(30 12 12)"
+          />
+          <ellipse
+            cx="12"
+            cy="12"
+            rx="10"
+            ry="4"
+            transform="rotate(90 12 12)"
+          />
+          <ellipse
+            cx="12"
+            cy="12"
+            rx="10"
+            ry="4"
+            transform="rotate(150 12 12)"
+          />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+        </svg>
+      );
+    case "supabase":
+      return (
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+          <title>Supabase</title>
+          <path d="M21 10.74h-7.8l4.4-8.8a.4.4 0 00-.35-.6H8.25a.4.4 0 00-.38.26l-5.1 11.56a.4.4 0 00.37.54h7.8l-4.4 8.8a.4.4 0 00.35.6h9a.4.4 0 00.38-.26l5.1-11.56a.4.4 0 00-.37-.54z" />
+        </svg>
+      );
+    case "victory native":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <title>Victory Native</title>
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>
+      );
+    case "reanimated":
+      return (
+        <svg
+          className="w-3 h-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <title>Reanimated</title>
+          <path d="M3 12h3l3-9 6 18 3-9h3" />
         </svg>
       );
     default:
@@ -198,7 +296,7 @@ export default function CaseStudyTrack() {
   const [activeImages, setActiveImages] = useState<Record<string, number>>({
     devflow: 0,
     contextgraph: 0,
-    cresults: 0,
+    jobtracker: 0,
   });
 
   const lastManualClickRef = useRef<Record<string, number>>({});
@@ -362,7 +460,7 @@ export default function CaseStudyTrack() {
                   "--card-top": `calc(6.5rem + ${idx * 48}px)`,
                 } as React.CSSProperties
               }
-              className={`relative md:sticky top-auto md:top-[var(--card-top)] w-full min-h-[480px] md:h-[65vh] md:max-h-[580px] flex flex-col-reverse md:flex-row items-stretch justify-between rounded-2xl p-6 md:p-10 overflow-hidden gap-6 md:gap-8 border transition-colors duration-300 ${theme.container}`}
+              className={`relative md:sticky top-auto md:top-[var(--card-top)] w-full min-h-[480px] md:h-[65vh] md:max-h-[580px] flex flex-col-reverse md:flex-row items-stretch justify-between rounded-xl p-6 md:p-10 overflow-hidden gap-6 md:gap-8 border transition-colors duration-300 ${theme.container}`}
             >
               {/* Left Column: Copy & Metrics */}
               <div className="flex-[1.2] flex flex-col justify-between text-left">

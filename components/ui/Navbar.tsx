@@ -233,7 +233,7 @@ export default function Navbar() {
         {/* LEFT — Name wordmark */}
         <div className="hidden md:flex flex-shrink-0 pointer-events-auto h-11 items-center">
           <span
-            className="font-semibold text-[18px] text-[var(--color-ink-1)] tracking-[var(--ls-title)]"
+            className="font-bold text-[22px] text-[var(--color-ink-1)] tracking-[-0.03em]"
             style={{
               fontFamily: "var(--font-sans)",
               lineHeight: 1,
@@ -311,27 +311,20 @@ export default function Navbar() {
           </div>
         </motion.nav>
 
-        {/* RIGHT — Available tag */}
-        <div
+        {/* RIGHT — Blog button */}
+        <a
+          href="/blog"
           className={[
             "hidden md:flex ml-auto flex-shrink-0 pointer-events-auto",
             "h-11 items-center justify-center rounded-[var(--radius-pill)]",
-            "px-[var(--sp-5)] gap-[var(--sp-2)]",
-            "bg-[var(--color-dark-1)]",
+            "px-[var(--sp-5)] bg-[var(--color-dark-1)] hover:bg-[#151413] transition-colors duration-200",
             "shadow-[0_0_0_0.5px_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.28)]",
+            "text-white/80 hover:text-white font-medium text-[length:var(--text-sm)] font-[family-name:var(--font-sans)] no-underline",
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]",
           ].join(" ")}
         >
-          <div className="w-[6px] h-[6px] bg-[var(--color-status-green)] rounded-full available-pulse" />
-          <span
-            className="font-normal text-[var(--color-status-green)] tracking-[0.02em]"
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "var(--text-sm)",
-            }}
-          >
-            Available
-          </span>
-        </div>
+          View Blog
+        </a>
       </header>
 
       {/* Mobile/Tablet Bottom Dock Navigation */}

@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Agentation } from "agentation";
 import { GeistMono } from "geist/font/mono";
 import type { Metadata } from "next";
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     title: "Prajyot Porje — Product Engineer",
     description:
       "Product Engineer building production software from idea to shipped.",
-    url: "https://prajyot.dev",
+    url: "https://www.prajyotporje.in",
     siteName: "Prajyot Porje",
     type: "website",
   },
@@ -75,7 +76,7 @@ export const metadata: Metadata = {
     description:
       "Product Engineer building production software from idea to shipped.",
   },
-  metadataBase: new URL("https://prajyot.dev"),
+  metadataBase: new URL("https://www.prajyotporje.in"),
 };
 
 export const viewport = {
@@ -121,6 +122,7 @@ export default function RootLayout({
         </head>
         <body>
           <LenisProvider>{children}</LenisProvider>
+          <Analytics />
           {/* impeccable-live-start */}
           {process.env.NODE_ENV === "development" && (
             <script src="http://localhost:8400/live.js" async />

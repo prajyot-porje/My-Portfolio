@@ -560,7 +560,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
                   {/* Label */}
                   <div className="flex justify-between items-center">
-                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.15em] uppercase text-white/35">
+                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase text-white/40">
                       GITHUB {"//"} ACTIVITY
                     </span>
                   </div>
@@ -568,11 +568,11 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   {/* Commit Sparkline Bar Chart Visual */}
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex flex-col gap-1 text-left select-none">
-                      <span className="font-[family-name:var(--font-sans)] text-[22px] font-bold text-white leading-none tracking-tight">
-                        1,420+
+                      <span className="font-[family-name:var(--font-sans)] text-[26px] font-bold text-white leading-none tracking-tight">
+                        680+
                       </span>
-                      <span className="font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-wider text-white/30">
-                        Commits / Year
+                      <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-white/40">
+                        Lifetime Commits
                       </span>
                     </div>
 
@@ -639,12 +639,12 @@ export default function Hero({ isIntroActive }: HeroProps) {
 
                 <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
                   {/* Label */}
-                  <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.15em] uppercase text-white/35">
+                  <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase text-white/40">
                     LEETCODE {"//"} METRICS
                   </span>
 
                   {/* Donut Chart and Stats breakdown */}
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center justify-between gap-8">
                     {/* Donut chart on left */}
                     <div className="relative w-[72px] h-[72px] shrink-0 select-none">
                       <svg className="w-full h-full" viewBox="0 0 36 36">
@@ -668,11 +668,11 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             cy="18"
                             r="15.9155"
                             fill="none"
-                            stroke="rgba(255, 255, 255, 0.85)"
+                            stroke="rgba(255, 255, 255, 0.95)"
                             strokeWidth="3.5"
-                            strokeDasharray="53.3 100"
-                            strokeDashoffset="0"
                             strokeLinecap="round"
+                            strokeDasharray="47.8 100"
+                            strokeDashoffset="-2.75"
                           />
                           {/* Medium Segment (39.2%) */}
                           <circle
@@ -680,11 +680,11 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             cy="18"
                             r="15.9155"
                             fill="none"
-                            stroke="rgba(255, 255, 255, 0.5)"
+                            stroke="rgba(255, 255, 255, 0.60)"
                             strokeWidth="3.5"
-                            strokeDasharray="39.2 100"
-                            strokeDashoffset="-53.3"
                             strokeLinecap="round"
+                            strokeDasharray="33.7 100"
+                            strokeDashoffset="-56.05"
                           />
                           {/* Hard Segment (7.5%) */}
                           <circle
@@ -692,20 +692,20 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             cy="18"
                             r="15.9155"
                             fill="none"
-                            stroke="rgba(255, 255, 255, 0.2)"
+                            stroke="rgba(255, 255, 255, 0.35)"
                             strokeWidth="3.5"
-                            strokeDasharray="7.5 100"
-                            strokeDashoffset="-92.5"
                             strokeLinecap="round"
+                            strokeDasharray="2.0 100"
+                            strokeDashoffset="-95.25"
                           />
                         </g>
                       </svg>
                       {/* Central Text */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
-                        <span className="font-[family-name:var(--font-sans)] text-[15px] font-bold text-white leading-none">
+                        <span className="font-[family-name:var(--font-sans)] text-base font-bold text-white leading-none">
                           424
                         </span>
-                        <span className="font-[family-name:var(--font-mono)] text-[5px] tracking-wider text-white/35 mt-0.5">
+                        <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.12em] text-white/45 mt-0.5">
                           SOLVED
                         </span>
                       </div>
@@ -715,35 +715,35 @@ export default function Hero({ isIntroActive }: HeroProps) {
                     <div className="flex flex-col gap-1.5 text-left select-none grow">
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-white/85" />
-                          <span className="font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-wider text-white/50 leading-none">
+                          <span className="w-1.5 h-1.5 rounded-full bg-white/95" />
+                          <span className="font-[family-name:var(--font-mono)] text-[11px] font-medium tracking-wider text-white/60 leading-none">
                             Easy
                           </span>
                         </div>
-                        <span className="font-[family-name:var(--font-mono)] text-[9px] font-semibold text-white/85 leading-none">
-                          226<span className="text-white/20">/951</span>
+                        <span className="font-[family-name:var(--font-mono)] text-[11px] font-semibold text-white/90 leading-none">
+                          226<span className="text-white/35">/951</span>
                         </span>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-                          <span className="font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-wider text-white/50 leading-none">
+                          <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                          <span className="font-[family-name:var(--font-mono)] text-[11px] font-medium tracking-wider text-white/60 leading-none">
                             Med
                           </span>
                         </div>
-                        <span className="font-[family-name:var(--font-mono)] text-[9px] font-semibold text-white/85 leading-none">
-                          166<span className="text-white/20">/2074</span>
+                        <span className="font-[family-name:var(--font-mono)] text-[11px] font-semibold text-white/90 leading-none">
+                          166<span className="text-white/35">/2074</span>
                         </span>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                          <span className="font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-wider text-white/50 leading-none">
+                          <span className="w-1.5 h-1.5 rounded-full bg-white/35" />
+                          <span className="font-[family-name:var(--font-mono)] text-[11px] font-medium tracking-wider text-white/60 leading-none">
                             Hard
                           </span>
                         </div>
-                        <span className="font-[family-name:var(--font-mono)] text-[9px] font-semibold text-white/85 leading-none">
-                          32<span className="text-white/20">/948</span>
+                        <span className="font-[family-name:var(--font-mono)] text-[11px] font-semibold text-white/90 leading-none">
+                          32<span className="text-white/35">/948</span>
                         </span>
                       </div>
                     </div>
@@ -799,7 +799,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                 <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
                   {/* Label */}
                   <div className="flex justify-between items-center">
-                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.15em] uppercase text-white/35">
+                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase text-white/40">
                       GATEWAY {"//"} CONNECT
                     </span>
                   </div>
@@ -810,13 +810,13 @@ export default function Hero({ isIntroActive }: HeroProps) {
                     type="button"
                     className="group/mail text-left w-full outline-none cursor-pointer"
                   >
-                    <span className="font-[family-name:var(--font-mono)] tracking-tight text-[13px] text-white/80 group-hover/mail:text-white transition-colors duration-200 ease-[var(--ease-gentle)] block">
+                    <span className="font-[family-name:var(--font-mono)] tracking-tight text-[15px] text-white/80 group-hover/mail:text-white transition-colors duration-200 ease-[var(--ease-gentle)] block">
                       porjeprajyot@gmail.com
                     </span>
                   </button>
 
-                  <div className="flex justify-between items-center text-white/35">
-                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.12em] uppercase">
+                  <div className="flex justify-between items-center text-white/40">
+                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase">
                       {card3Copied
                         ? "COPIED TO CLIPBOARD"
                         : "CLICK TO COPY EMAIL"}
@@ -876,7 +876,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
         {/* Mobile Top Header */}
         <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
           <span
-            className="font-semibold text-[18px] text-[var(--color-ink-1)] tracking-[var(--ls-title)]"
+            className="font-bold text-[22px] text-[var(--color-ink-1)] tracking-[-0.03em]"
             style={{
               fontFamily: "var(--font-sans)",
               lineHeight: 1,
@@ -884,19 +884,18 @@ export default function Hero({ isIntroActive }: HeroProps) {
           >
             Prajyot Porje
           </span>
-          <div className="flex items-center gap-1.5 bg-[#0a0a0a] border border-white/10 rounded-full px-3 py-1 shadow-sm">
-            <div className="w-[6px] h-[6px] bg-[var(--color-status-green)] rounded-full available-pulse" />
-            <span
-              className="font-normal text-[var(--color-status-green)] tracking-[0.02em]"
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "var(--text-sm)",
-                lineHeight: 1,
-              }}
-            >
-              Available
-            </span>
-          </div>
+          <a
+            href="/blog"
+            className={[
+              "flex items-center justify-center rounded-[var(--radius-pill)]",
+              "px-4 py-1.5 bg-[var(--color-dark-1)] hover:bg-[#151413] transition-colors duration-200",
+              "shadow-[0_0_0_0.5px_rgba(255,255,255,0.10),0_4px_12px_rgba(0,0,0,0.15)]",
+              "text-white/80 hover:text-white font-medium text-[12px] font-[family-name:var(--font-sans)] no-underline",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]",
+            ].join(" ")}
+          >
+            View Blog
+          </a>
         </div>
 
         {/* Mobile Circular Portrait Card with Switching Images */}

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Footer() {
   const handleScrollTop = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -18,9 +20,18 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Prajyot Porje
           </span>
 
-          <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-white/25 select-none max-md:order-2">
-            Engineered in India
-          </span>
+          <div className="flex items-center gap-3 max-md:order-2">
+            <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-white/25 select-none">
+              Engineered in India
+            </span>
+            <span className="text-white/10 text-[9px] select-none">|</span>
+            <Link
+              href="/blog"
+              className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-white/25 hover:text-white/60 no-underline transition-colors duration-200"
+            >
+              Blog
+            </Link>
+          </div>
 
           {/* Back to top */}
           <button
