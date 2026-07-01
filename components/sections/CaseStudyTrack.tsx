@@ -300,6 +300,18 @@ export default function CaseStudyTrack() {
   });
 
   const lastManualClickRef = useRef<Record<string, number>>({});
+  const [activeMobileCard, setActiveMobileCard] = useState(0);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleMobileScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollLeft = container.scrollLeft;
+    const cardWidth = container.clientWidth * 0.85;
+    const index = Math.round(scrollLeft / (cardWidth + 20));
+    if (index >= 0 && index < caseStudies.length) {
+      setActiveMobileCard(index);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -442,8 +454,8 @@ export default function CaseStudyTrack() {
         </h2>
       </div>
 
-      {/* ── STICKY CARD STACK ── */}
-      <div className="flex flex-col gap-12 md:gap-16 px-[var(--sp-8)] max-md:px-[var(--sp-6)] max-w-7xl mx-auto py-12 pb-12 md:pb-24">
+      {/* ── DESKTOP STICKY CARD STACK (Desktop only) ── */}
+      <div className="hidden md:flex flex-col gap-12 md:gap-16 px-[var(--sp-8)] max-w-7xl mx-auto py-12 pb-24">
         {caseStudies.map((study, idx) => {
           const activeImgIdx = activeImages[study.id] ?? 0;
           const studyImages = alternateImages[study.id] || [study.image];
@@ -477,7 +489,7 @@ export default function CaseStudyTrack() {
                     {study.title}
                   </h3>
 
-                  {/* Scannable breakdown instead of a big paragraph block */}
+                  {/* Scannable breakdown */}
                   <div
                     className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 pt-6 border-t ${theme.divider} text-[13px] leading-relaxed`}
                   >
@@ -583,9 +595,8 @@ export default function CaseStudyTrack() {
                 </div>
               </div>
 
-              {/* Right Column: Aspect-ratio Safe Showcase Image & Interactive Thumbnails */}
+              {/* Right Column: Image & Thumbnails */}
               <div className="flex-[0.8] flex flex-col justify-center items-stretch shrink-0">
-                {/* 3:2 Showcase frame */}
                 <div
                   className={`w-full aspect-[3/2] rounded-xl border overflow-hidden relative flex items-center justify-center ${theme.imageFrame}`}
                 >
@@ -606,8 +617,7 @@ export default function CaseStudyTrack() {
                       const isActive = activeImgIdx === tIdx;
                       return (
                         <button
-                          // biome-ignore lint/suspicious/noArrayIndexKey: thumbnail order is static
-                          key={`${imgUrl}-${tIdx}`}
+                          key={imgUrl}
                           onClick={() => handleThumbnailClick(study.id, tIdx)}
                           type="button"
                           className={`w-[56px] h-[35px] aspect-[1.6] relative rounded overflow-hidden border transition-[transform,border-color,opacity,box-shadow] duration-200 ease-out active:scale-[0.97] cursor-pointer pointer-events-auto shrink-0 ${
@@ -633,6 +643,133 @@ export default function CaseStudyTrack() {
             </div>
           );
         })}
+      </div>
+
+      {/* ── MOBILE SWIPEABLE CARDS (Mobile only) ── */}
+      <div className="md:hidden w-full overflow-hidden py-10 pb-16 max-md:px-[var(--sp-6)]">
+        <div
+          ref={mobileScrollRef}
+          onScroll={handleMobileScroll}
+          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-5 pb-4 scroll-smooth"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {caseStudies.map((study, idx) => {
+            const activeImgIdx = activeImages[study.id] ?? 0;
+            const studyImages = alternateImages[study.id] || [study.image];
+            const theme = CARD_THEMES[idx] || CARD_THEMES[0];
+
+            return (
+              <div
+                key={study.id}
+                className={`snap-center shrink-0 w-[90vw] max-w-[420px] h-auto flex flex-col justify-between rounded-xl p-6 border ${theme.container}`}
+              >
+                {/* Top: Title & Index */}
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span
+                      className={`font-[family-name:var(--font-mono)] text-[9px] font-semibold tracking-wider uppercase ${theme.indexLabel}`}
+                    >
+                      PROJECT {study.index}
+                    </span>
+                  </div>
+                  <h3
+                    className={`text-[1.35rem] font-[family-name:var(--font-sans)] leading-tight tracking-tight mb-3 font-bold ${theme.title}`}
+                  >
+                    {study.title}
+                  </h3>
+
+                  {/* Context & Description */}
+                  <div
+                    className={`flex flex-col gap-3 text-[11px] leading-relaxed mb-4 border-t pt-3 ${theme.divider}`}
+                  >
+                    <div>
+                      <span className="font-semibold block mb-0.5 text-[9px] uppercase tracking-wider opacity-85">
+                        Context
+                      </span>
+                      <p className={theme.description}>{study.problem}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold block mb-0.5 text-[9px] uppercase tracking-wider opacity-85">
+                        Execution
+                      </span>
+                      <p className={theme.description}>{study.decision}</p>
+                    </div>
+                  </div>
+
+                  {/* Tech stack */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {study.stack.map((tag) => (
+                      <Tag
+                        key={tag}
+                        className={`${theme.tagClass} text-[9px] px-2 py-0.5`}
+                      >
+                        {tag}
+                      </Tag>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom: Image & CTAs */}
+                <div className="flex flex-col gap-4 mt-auto">
+                  {/* Small showcase image */}
+                  <div
+                    className={`w-full aspect-[16/9] rounded-lg border overflow-hidden relative shrink-0 ${theme.imageFrame}`}
+                  >
+                    <Image
+                      src={studyImages[activeImgIdx]}
+                      alt={`${study.title} Mobile Showcase`}
+                      fill
+                      className="object-cover"
+                      sizes="80vw"
+                    />
+                  </div>
+
+                  {/* CTAs */}
+                  <div className="flex gap-2">
+                    {study.liveUrl && (
+                      <a
+                        href={study.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex-1 inline-flex items-center justify-center py-2 rounded-full border active:scale-[0.97] font-semibold text-[10px] shadow-sm ${theme.button}`}
+                      >
+                        <span>Explore Live ↗</span>
+                      </a>
+                    )}
+                    {study.githubUrl && (
+                      <a
+                        href={study.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex-1 inline-flex items-center justify-center py-2 rounded-full border active:scale-[0.97] font-semibold text-[10px] shadow-sm ${
+                          idx === 1
+                            ? "border-[var(--color-surface-3)] bg-[var(--color-surface-2)] text-[var(--color-ink-1)]"
+                            : "border-white/10 bg-white/5 text-white"
+                        }`}
+                      >
+                        <span>Repository</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Swiper Indicators */}
+        <div className="flex justify-center items-center gap-1.5 mt-2">
+          {caseStudies.map((study, idx) => (
+            <div
+              key={study.id}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                activeMobileCard === idx
+                  ? "bg-[var(--color-ink-1)] w-3"
+                  : "bg-[var(--color-surface-3)]/60"
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

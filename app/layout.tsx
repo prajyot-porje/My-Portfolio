@@ -76,6 +76,9 @@ export const metadata: Metadata = {
     description:
       "Product Engineer building production software from idea to shipped.",
   },
+  verification: {
+    google: "4cfF8PFW8A9eQslGcZdt1RodUL0tjCvbFWRt4MBlNek",
+  },
   metadataBase: new URL("https://www.prajyotporje.in"),
 };
 

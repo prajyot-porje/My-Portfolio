@@ -18,9 +18,9 @@ const NAV_LINKS = [
     hideOnMobile: true,
   },
   {
-    label: "Achievements",
-    href: "#achievements",
-    targetIds: ["achievements"],
+    label: "Activity",
+    href: "#activity",
+    targetIds: ["activity"],
     hideOnMobile: true,
   },
   {
@@ -81,7 +81,7 @@ const getMobileIcon = (label: string) => {
           <line x1="12" y1="19" x2="20" y2="19" />
         </svg>
       );
-    case "Achievements":
+    case "Activity":
       return (
         <svg
           className="w-4 h-4"
@@ -93,8 +93,7 @@ const getMobileIcon = (label: string) => {
           strokeLinejoin="round"
           aria-hidden="true"
         >
-          <circle cx="12" cy="8" r="7" />
-          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
       );
     case "Contact":
@@ -315,15 +314,18 @@ export default function Navbar() {
         <a
           href="/blog"
           className={[
-            "hidden md:flex ml-auto flex-shrink-0 pointer-events-auto",
-            "h-11 items-center justify-center rounded-[var(--radius-pill)]",
-            "px-[var(--sp-5)] bg-[var(--color-dark-1)] hover:bg-[#151413] transition-colors duration-200",
+            "flex items-center gap-2 ml-auto flex-shrink-0 pointer-events-auto",
+            "h-11 rounded-[var(--radius-pill)]",
+            "pl-[var(--sp-5)] pr-3 bg-[var(--color-dark-1)] hover:bg-[#151413] transition-all duration-200 active:scale-[0.98]",
             "shadow-[0_0_0_0.5px_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.28)]",
             "text-white/80 hover:text-white font-medium text-[length:var(--text-sm)] font-[family-name:var(--font-sans)] no-underline",
             "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]",
           ].join(" ")}
         >
-          View Blog
+          <span>View Blog</span>
+          <span className="flex items-center justify-center w-[22px] h-[22px] rounded-full bg-white/15 text-[10px] ml-1 select-none font-mono">
+            ↗
+          </span>
         </a>
       </header>
 

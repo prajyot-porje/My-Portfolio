@@ -571,7 +571,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                       <span className="font-[family-name:var(--font-sans)] text-[26px] font-bold text-white leading-none tracking-tight">
                         680+
                       </span>
-                      <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-white/40">
+                      <span className="font-[family-name:var(--font-mono)] text-[8.5px] uppercase tracking-wider text-white/40 whitespace-nowrap">
                         Lifetime Commits
                       </span>
                     </div>
@@ -662,7 +662,7 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             stroke="rgba(255, 255, 255, 0.05)"
                             strokeWidth="3.5"
                           />
-                          {/* Easy Segment (53.3%) */}
+                          {/* Easy Segment */}
                           <circle
                             cx="18"
                             cy="18"
@@ -671,10 +671,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             stroke="rgba(255, 255, 255, 0.95)"
                             strokeWidth="3.5"
                             strokeLinecap="round"
-                            strokeDasharray="47.8 100"
+                            strokeDasharray="45.8 100"
                             strokeDashoffset="-2.75"
                           />
-                          {/* Medium Segment (39.2%) */}
+                          {/* Medium Segment */}
                           <circle
                             cx="18"
                             cy="18"
@@ -683,10 +683,10 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             stroke="rgba(255, 255, 255, 0.60)"
                             strokeWidth="3.5"
                             strokeLinecap="round"
-                            strokeDasharray="33.7 100"
-                            strokeDashoffset="-56.05"
+                            strokeDasharray="31.7 100"
+                            strokeDashoffset="-54.05"
                           />
-                          {/* Hard Segment (7.5%) */}
+                          {/* Hard Segment */}
                           <circle
                             cx="18"
                             cy="18"
@@ -695,8 +695,8 @@ export default function Hero({ isIntroActive }: HeroProps) {
                             stroke="rgba(255, 255, 255, 0.35)"
                             strokeWidth="3.5"
                             strokeLinecap="round"
-                            strokeDasharray="2.0 100"
-                            strokeDashoffset="-95.25"
+                            strokeDasharray="6.0 100"
+                            strokeDashoffset="-91.25"
                           />
                         </g>
                       </svg>
@@ -796,31 +796,111 @@ export default function Hero({ isIntroActive }: HeroProps) {
                   }}
                 />
 
-                <div className="relative z-[1] px-5 py-4 h-full flex flex-col justify-between">
+                <div className="relative z-[1] w-full h-full flex flex-col justify-between p-4">
                   {/* Label */}
-                  <div className="flex justify-between items-center">
-                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase text-white/40">
-                      GATEWAY {"//"} CONNECT
+                  <div className="flex justify-between items-center select-none pb-2 border-b border-white/[0.08]">
+                    <span className="font-[family-name:var(--font-mono)] text-[8px] tracking-[0.16em] uppercase text-white/30">
+                      CONNECT DIRECTORY
+                    </span>
+                    <span className="font-[family-name:var(--font-mono)] text-[8px] text-white/30 uppercase tracking-[0.08em]">
+                      INDEX // 06
                     </span>
                   </div>
 
-                  {/* Email — single functional element */}
-                  <button
-                    onClick={handleCard3Click}
-                    type="button"
-                    className="group/mail text-left w-full outline-none cursor-pointer"
-                  >
-                    <span className="font-[family-name:var(--font-mono)] tracking-tight text-[15px] text-white/80 group-hover/mail:text-white transition-colors duration-200 ease-[var(--ease-gentle)] block">
-                      porjeprajyot@gmail.com
-                    </span>
-                  </button>
+                  {/* List layout */}
+                  <div className="flex flex-col mt-2 grow justify-around gap-1 font-[family-name:var(--font-mono)]">
+                    {/* Gmail */}
+                    <button
+                      onClick={handleCard3Click}
+                      type="button"
+                      className="group/item flex items-center justify-between text-left py-1 outline-none cursor-pointer border-b border-white/[0.03]"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-[var(--color-accent)] transition-colors duration-150">
+                        EMAIL
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        {card3Copied ? "copied to clipboard" : "porjeprajyot@gmail.com"}
+                        {!card3Copied && <span className="text-[9px] opacity-25 group-hover/item:opacity-80 transition-opacity">📋</span>}
+                      </span>
+                    </button>
 
-                  <div className="flex justify-between items-center text-white/40">
-                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase">
-                      {card3Copied
-                        ? "COPIED TO CLIPBOARD"
-                        : "CLICK TO COPY EMAIL"}
-                    </span>
+                    {/* GitHub */}
+                    <a
+                      href="https://github.com/prajyot-porje"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/item flex items-center justify-between py-1 no-underline border-b border-white/[0.03]"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-white transition-colors duration-150">
+                        GITHUB
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        github.com/prajyot-porje
+                        <span className="text-[8px] opacity-25 group-hover/item:opacity-80 transition-opacity">↗</span>
+                      </span>
+                    </a>
+
+                    {/* LinkedIn */}
+                    <a
+                      href="https://linkedin.com/in/prajyot-porje"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/item flex items-center justify-between py-1 no-underline border-b border-white/[0.03]"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-white transition-colors duration-150">
+                        LINKEDIN
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        linkedin.com/in/prajyot-porje
+                        <span className="text-[8px] opacity-25 group-hover/item:opacity-80 transition-opacity">↗</span>
+                      </span>
+                    </a>
+
+                    {/* LeetCode */}
+                    <a
+                      href="https://leetcode.com/u/prajyot-porje/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/item flex items-center justify-between py-1 no-underline border-b border-white/[0.03]"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-white transition-colors duration-150">
+                        LEETCODE
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        leetcode.com/u/prajyot-porje
+                        <span className="text-[8px] opacity-25 group-hover/item:opacity-80 transition-opacity">↗</span>
+                      </span>
+                    </a>
+
+                    {/* Blog */}
+                    <a
+                      href="/blog"
+                      className="group/item flex items-center justify-between py-1 no-underline border-b border-white/[0.03]"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-white transition-colors duration-150">
+                        BLOG
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        prajyot-porje/blog
+                        <span className="text-[8px] opacity-25 group-hover/item:opacity-80 transition-opacity">↗</span>
+                      </span>
+                    </a>
+
+                    {/* Resume */}
+                    <a
+                      href="/Full_Stack_Developer_Resume.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/item flex items-center justify-between py-1 no-underline"
+                    >
+                      <span className="text-[8px] text-white/35 group-hover/item:text-white transition-colors duration-150">
+                        RESUME
+                      </span>
+                      <span className="text-[9px] text-white/60 group-hover/item:text-white transition-colors duration-150 flex items-center gap-1">
+                        Full_Stack_Developer_Resume.pdf
+                        <span className="text-[8px] opacity-25 group-hover/item:opacity-80 transition-opacity">↗</span>
+                      </span>
+                    </a>
                   </div>
                 </div>
               </div>
